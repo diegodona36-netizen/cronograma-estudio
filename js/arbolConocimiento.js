@@ -15,7 +15,7 @@ import {
 export class ArbolConocimientoManager {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
-    this.materiaActivaCodigo = 'SIS-OPSEC';
+    this.materiaActivaCodigo = 'MAT-ING';
     this.progresoNodos = this.cargarProgreso();
     this.filtroNivel = 'todos'; // 'todos' | 'axiomas' | 'conceptos' | 'detalles'
   }

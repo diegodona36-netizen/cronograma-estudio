@@ -83,6 +83,7 @@ class EstudioApp {
   }
 
   init() {
+    this.bindEvents();
     this.arbolManager = new ArbolConocimientoManager('contenedor-arbol-conocimiento');
     window.arbolManager = this.arbolManager;
     window.geminiTutor = geminiTutor;
@@ -828,6 +829,7 @@ window.guardarConfiguracionIAForm = () => app.guardarConfiguracionIAForm();
 window.probarTelegramTest = () => app.probarTelegramTest();
 
 window.exportarItinerarioMarkdown = () => app.exportarItinerarioMarkdown();
+window.cambiarVista = (vista) => app.cambiarVista(vista);
 
 window.abrirGuiaDeMateria = (materiaCod) => {
   app.cambiarVista('guias');

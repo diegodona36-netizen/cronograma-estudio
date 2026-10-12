@@ -6,7 +6,7 @@
   <title>AXIOM • Sistema Personal de Estudio Inteligente</title>
 
   <meta name="theme-color" content="#0e092e">
-  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="icon" type="image/png" href="../assets/logo-migato.png">
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -14,7 +14,7 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Tailwind CSS -->
-  <script src="vendor/tailwindcss.js"></script>
+  <script src="../vendor/tailwindcss.js"></script>
   <script>
     if (!window.tailwind) {
       document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
@@ -40,7 +40,7 @@
   </script>
 
   <!-- Lucide Icons -->
-  <script src="vendor/lucide.min.js"></script>
+  <script src="../vendor/lucide.min.js"></script>
   <script>
     if (!window.lucide) {
       document.write('<script src="https://unpkg.com/lucide@latest"><\/script>');
@@ -88,15 +88,15 @@
         
         <!-- Botones de Vista Dual -->
         <div class="flex items-center p-1 bg-[#0e092e] rounded-xl border border-[#2d1f85] text-xs">
-          <button id="btn-vista-semanal" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg font-black bg-[#23176d] text-white border border-sky-400/50 shadow-sm transition cursor-pointer flex items-center gap-1.5">
+          <button id="btn-vista-semanal" onclick="window.cambiarVista('semanal')" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg font-black bg-[#23176d] text-white border border-sky-400/50 shadow-sm transition cursor-pointer flex items-center gap-1.5">
             <i data-lucide="calendar" class="w-3.5 h-3.5 text-sky-300"></i>
             <span>Semanal</span>
           </button>
-          <button id="btn-vista-guias" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition cursor-pointer flex items-center gap-1.5">
+          <button id="btn-vista-guias" onclick="window.cambiarVista('guias')" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition cursor-pointer flex items-center gap-1.5">
             <i data-lucide="book-open" class="w-3.5 h-3.5 text-amber-300"></i>
             <span>Guías (3 Niveles)</span>
           </button>
-          <button id="btn-vista-mensual" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition cursor-pointer flex items-center gap-1.5">
+          <button id="btn-vista-mensual" onclick="window.cambiarVista('mensual')" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition cursor-pointer flex items-center gap-1.5">
             <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-emerald-300"></i>
             <span>Mensual</span>
           </button>
@@ -186,13 +186,14 @@
           <span class="text-xs text-slate-400 font-bold">Filtrar:</span>
           <select id="select-filtro-materia" onchange="window.estudioApp.materiaFiltro = this.value; window.estudioApp.renderVista();" class="px-2.5 py-1 rounded-xl bg-[#140e40] border border-[#2d1f85] text-xs font-bold text-white cursor-pointer focus:outline-none">
             <option value="todas">Todas las Asignaturas</option>
-            <option value="SIS-OPSEC">Programación (SIS-OPSEC)</option>
-            <option value="ORA-RET">Oratoria y Retórica (ORA-RET)</option>
-            <option value="POL-MIG">Política y Estrategia (POL-MIG)</option>
-            <option value="ECO-OBR">Economía (ECO-OBR)</option>
-            <option value="ING-VIA">Vialidad (ING-VIA)</option>
-            <option value="ING-EST">Estructuras (ING-EST)</option>
-            <option value="GEO-MON">Geopolítica (GEO-MON)</option>
+            <option value="MAT-ING">Matemáticas Pre-Ingeniería (MAT-ING)</option>
+            <option value="SIS-ARQ">Programación & Arquitectura (SIS-ARQ)</option>
+            <option value="GEO-EST">Geopolítica & Estrategia (GEO-EST)</option>
+            <option value="ORA-CAS">Castellano & Retórica (ORA-CAS)</option>
+            <option value="ING-TEC">Inglés Técnico (ING-TEC)</option>
+            <option value="ECO-DIG">Economía Digital (ECO-DIG)</option>
+            <option value="GIM-FIT">Gimnasio & Físico (GIM-FIT)</option>
+            <option value="OCI-LIB">Ocio & Desconexión (OCI-LIB)</option>
           </select>
         </div>
       </div>
@@ -214,13 +215,12 @@
         <div class="flex items-center gap-2 shrink-0">
           <label class="text-xs font-bold text-slate-300">Asignatura:</label>
           <select id="select-materia-guia" class="px-3 py-1.5 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs font-bold text-white cursor-pointer focus:ring-1 focus:ring-sky-400">
-            <option value="SIS-OPSEC">Programación y Ciberdefensa (SIS-OPSEC)</option>
-            <option value="ORA-RET">Oratoria y Retórica (ORA-RET)</option>
-            <option value="POL-MIG">Política y Liderazgo (POL-MIG)</option>
-            <option value="ECO-OBR">Economía y Obras Públicas (ECO-OBR)</option>
-            <option value="ING-VIA">Vialidad y Pavimentos (ING-VIA)</option>
-            <option value="ING-EST">Estructuras e Hidráulica (ING-EST)</option>
-            <option value="GEO-MON">Geopolítica de Monagas (GEO-MON)</option>
+            <option value="MAT-ING">Matemáticas Pre-Ingeniería (MAT-ING)</option>
+            <option value="SIS-ARQ">Programación & Arquitectura (SIS-ARQ)</option>
+            <option value="GEO-EST">Geopolítica & Estrategia (GEO-EST)</option>
+            <option value="ORA-CAS">Castellano & Retórica (ORA-CAS)</option>
+            <option value="ING-TEC">Inglés Técnico (ING-TEC)</option>
+            <option value="ECO-DIG">Economía Digital (ECO-DIG)</option>
           </select>
         </div>
       </div>

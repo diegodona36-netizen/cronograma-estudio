@@ -193,6 +193,536 @@ export const ITINERARIO_BASE_SEMANAL = {
  * Nivel 3: Detalles (Fórmulas, Sintaxis, Casos Prácticos de Monagas/Venezuela)
  */
 export const GUIAS_CONOCIMIENTO_3_NIVELES = {
+  'MAT-ING': {
+    materiaCodigo: 'MAT-ING',
+    titulo: 'Matemáticas Pre-Ingeniería (Álgebra, Matrices & Funciones)',
+    descripcion: 'Fundamentos axiomáticos de álgebra lineal, transformaciones, sistemas lineales y análisis funcional preparatorio para ingeniería.',
+    axiomas: [
+      {
+        id: 'ax_mat_01',
+        titulo: 'Axioma de Linealidad y Transformación Espacial',
+        enunciado: 'Un operador lineal preserva la adición f(u + v) = f(u) + f(v) y la escala f(c·u) = c·f(u). Cualquier transformación lineal en dimensiones finitas queda completamente determinada por dónde envía los vectores de la base estándar.',
+        porQueFundamental: 'Toda la ingeniería moderna (análisis de estructuras, redes eléctricas, motores de renderizado 3D y machine learning) modela sistemas complejos mediante aproximaciones lineales de primer orden.',
+        criteriosDominio: [
+          'Puedo interpretar una matriz cuadrada no como una tabla de números, sino como una distorsión geométrica del espacio (rotación, escala o corte)',
+          'Puedo resolver e interpretar geométricamente un sistema Ax = b mediante eliminación Gaussiana y comprender cuándo no tiene solución o tiene infinitas soluciones',
+          'Comprendo el determinante como el factor de escala de área/volumen y sé por qué det(A) = 0 implica pérdida de dimensión'
+        ],
+        ejemploUniversal: 'Proyecciones y rotaciones 3D en OpenGL/DirectX y cálculo de tensiones en mallas de elementos finitos.',
+        ejemploVenezuela: 'Cálculo de distribución estática de cargas en la estructura de un galpón o análisis nodal en una red de distribución eléctrica de Corpoelec.',
+        gruposConceptosIds: ['cc_mat_01', 'cc_mat_02']
+      },
+      {
+        id: 'ax_mat_02',
+        titulo: 'Axioma de Conservación Funcional y Modelado de Variación',
+        enunciado: 'Una función es una relación determinista que asigna a cada elemento de un dominio un único elemento de un codominio. La razón de cambio de una función describe la dinámica del fenómeno físico subyacente.',
+        porQueFundamental: 'La física y la ingeniería son el estudio de cómo una magnitud cambia en respuesta a otra (velocidad, flujo, aceleración, consumo energético).',
+        criteriosDominio: [
+          'Puedo graficar e interpretar intuitivamente polinomios, funciones racionales, exponenciales y trigonométricas',
+          'Comprendo el concepto de asíntota y discontinuidad como límites de operación física en un sistema',
+          'Puedo despejar variables y modelar un problema verbal cotidiano en una ecuación matemática sin memorizar fórmulas mágicas'
+        ],
+        ejemploUniversal: 'La ley de enfriamiento de Newton y modelos de crecimiento logístico poblacional.',
+        ejemploVenezuela: 'Modelado del caudal de descarga del Río Guarapiche en época de lluvias o la curva de caída de tensión en líneas eléctricas largas en Monagas.',
+        gruposConceptosIds: ['cc_mat_02']
+      }
+    ],
+    gruposConceptos: [
+      {
+        id: 'cc_mat_01',
+        nombre: 'Álgebra Lineal y Sistemas Matriciales',
+        axiomasPadreIds: ['ax_mat_01'],
+        conceptos: [
+          {
+            id: 'c_mat_01',
+            nombre: 'Matrices como Transformaciones Lineales',
+            definicion: 'Mapeo lineal entre espacios vectoriales expresado mediante un arreglo bidimensional donde cada columna representa el vector de base transformado.',
+            analogia: 'Una lente óptica que deforma, rota o refleja un rayo de luz al pasar a través de ella.'
+          },
+          {
+            id: 'c_mat_02',
+            nombre: 'Sistemas de Ecuaciones e Interpretación Geométrica',
+            definicion: 'Conjunto de hiperplanos que se intersectan en un único punto (solución única), en una recta/plano (infinitas) o nunca se cruzan (inconsistente).',
+            analogia: 'Dos hojas de papel que se intersectan en una línea recta en el espacio 3D.'
+          }
+        ],
+        detalles: [
+          {
+            id: 'det_mat_01',
+            conceptoId: 'c_mat_01',
+            tipo: 'formula',
+            titulo: 'Multiplicación de Matrices como Combinación Lineal',
+            contenido: 'C[:, j] = sum(B[k, j] * A[:, k]) para k=1..p. La columna j del producto es una combinación lineal de las columnas de A.',
+            notas: 'Clave para programación eficiente con bibliotecas numéricas como NumPy o shaders en WebGL.'
+          },
+          {
+            id: 'det_mat_02',
+            conceptoId: 'c_mat_02',
+            tipo: 'procedimiento',
+            titulo: 'Eliminación Gauss-Jordan por Operaciones Elementales de Fila',
+            contenido: '1. Pivoteo. 2. Hacer ceros debajo y arriba del pivote. 3. Obtener la matriz en forma escalonada reducida (RREF).',
+            notas: 'Algoritmo determinista base para calcular rangos, inversas de matrices y resolver circuitos eléctricos.'
+          }
+        ]
+      },
+      {
+        id: 'cc_mat_02',
+        nombre: 'Teoría de Funciones, Polinomios y Precálculo',
+        axiomasPadreIds: ['ax_mat_02'],
+        conceptos: [
+          {
+            id: 'c_mat_03',
+            nombre: 'Comportamiento Asintótico y Límites Intuitivos',
+            definicion: 'Estudio de la tendencia de una función cuando la variable independiente tiende a infinito o a puntos críticos de indeterminación.',
+            analogia: 'Un vehículo acercándose a una barrera de peaje sin llegar a tocarla jamás.'
+          }
+        ],
+        detalles: [
+          {
+            id: 'det_mat_03',
+            conceptoId: 'c_mat_03',
+            tipo: 'formula',
+            titulo: 'Factorización de Polinomios y Teorema del Resto',
+            contenido: 'P(x) = (x - r) · Q(x) + R. Si P(r) = 0, entonces (x - r) es factor exacto de P(x).',
+            notas: 'Herramienta fundamental para simplificar expresiones racionales y encontrar polos de estabilidad en sistemas dinámicos.'
+          }
+        ]
+      }
+    ]
+  },
+
+  'SIS-ARQ': {
+    materiaCodigo: 'SIS-ARQ',
+    titulo: 'Programación, Arquitectura de Sistemas & Explicación Técnica',
+    descripcion: 'Diseño de software desacoplado, persistencia local-first, bases de datos relacionales y comunicación técnica asertiva hacia audiencias no especializadas.',
+    axiomas: [
+      {
+        id: 'ax_sisarq_01',
+        titulo: 'Toda Computación es Mutación Determinista de Estados',
+        enunciado: 'Un sistema de software no es magia: es un conjunto finito de transformaciones de datos que reciben una entrada determinista, leen/modifican un estado y generan una salida predecible.',
+        porQueFundamental: 'Desmitifica la programación. Si aislas el estado del flujo de datos, el código es comprensible, testeable y resistente a fallos en cascada.',
+        criteriosDominio: [
+          'Puedo trazar mentalmente el ciclo de vida de los datos desde el input del usuario hasta el disco SQLite',
+          'Sé estructurar aplicaciones separando lógica de negocio pura, persistencia y componentes de interfaz gráfica',
+          'Entiendo la diferencia entre complejidad accidental (frameworks innecesarios) y complejidad esencial del problema'
+        ],
+        ejemploUniversal: 'El patrón Modelo-Vista-Controlador (MVC) y la arquitectura hexagonal o puertos y adaptadores.',
+        ejemploVenezuela: 'Sistemas que almacenan censos o inventarios de repuestos en SQLite local para funcionar aunque se caiga CANTV o Movistar en Monagas.',
+        gruposConceptosIds: ['cc_sisarq_01', 'cc_sisarq_02']
+      },
+      {
+        id: 'ax_sisarq_02',
+        titulo: 'La Claridad Conceptual Precede a la Jerga Tecnológica',
+        enunciado: 'Si no puedes explicar una solución técnica en 60 segundos a una persona de 60 años sin usar siglas crípticas, significa que tú mismo no comprendes la arquitectura a fondo.',
+        porQueFundamental: 'En el mundo real, los presupuestos, acuerdos y decisiones los toman personas no técnicas. El ingeniero que solo sabe hablar en jerga técnica es ignorado o relegado.',
+        criteriosDominio: [
+          'Puedo explicar qué es una base de datos relacional usando la metáfora de un archivador físico con carpetas enlazadas',
+          'Sé defender una decisión tecnológica basándome en costos operativos, velocidad y resiliencia en vez de modas',
+          'Puedo estructurar un pitch de arquitectura técnica en tres actos: Problema Crítico ➔ Solución Estructural ➔ Beneficio Medible'
+        ],
+        ejemploUniversal: 'Steve Jobs presentando el iPod: "1,000 canciones en tu bolsillo", no "un disco duro Toshiba de 5 GB con bus FireWire".',
+        ejemploVenezuela: 'Explicar a un líder comunitario o político que un sistema "funciona sin internet y no depende de servidores en el extranjero", en vez de hablar de "Local-First PWA con SQLite".',
+        gruposConceptosIds: ['cc_sisarq_02']
+      }
+    ],
+    gruposConceptos: [
+      {
+        id: 'cc_sisarq_01',
+        nombre: 'Arquitectura Local-First y Bases de Datos',
+        axiomasPadreIds: ['ax_sisarq_01'],
+        conceptos: [
+          {
+            id: 'c_sisarq_01',
+            nombre: 'Persistencia Local Soberana (SQLite / File-based)',
+            definicion: 'Almacenar los datos primarios en el propio dispositivo del usuario en archivos compactos y autónomos sin necesidad de conexión de red.',
+            analogia: 'Llevar un cuaderno de notas físico en el bolsillo en lugar de tener que llamar por teléfono a un asistente cada vez que quieres escribir una línea.'
+          },
+          {
+            id: 'c_sisarq_02',
+            nombre: 'Separación Estricta de Responsabilidades (SoC)',
+            definicion: 'Dividir el código en módulos donde los motores de cálculo no conocen el navegador ni el HTML, permitiendo reutilizarlos en CLI o pruebas automatizadas.',
+            analogia: 'El motor de un tractor agrícola: funciona exactamente igual si la cabina es de lona o de metal con aire acondicionado.'
+          }
+        ],
+        detalles: [
+          {
+            id: 'det_sisarq_01',
+            conceptoId: 'c_sisarq_01',
+            tipo: 'codigo',
+            titulo: 'Esquema Relacional SQLite con Restricciones de Integridad',
+            contenido: 'CREATE TABLE sesiones (id TEXT PRIMARY KEY, materia_id TEXT NOT NULL, duracion_min INTEGER CHECK(duracion_min > 0), timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);',
+            notas: 'Garantiza consistencia a nivel de base de datos sin depender de validaciones frágiles en el frontend.'
+          }
+        ]
+      },
+      {
+        id: 'cc_sisarq_02',
+        nombre: 'Pedagogía Técnica y Pitch a Decisores',
+        axiomasPadreIds: ['ax_sisarq_02'],
+        conceptos: [
+          {
+            id: 'c_sisarq_03',
+            nombre: 'Traducción Semántica de Ingeniería a Negocio',
+            definicion: 'Mapear conceptos abstractos de sistemas a métricas palpables: tiempo ahorrado, costo en dólares, seguridad frente a censura y facilidad de uso.',
+            analogia: 'Un traductor diplomático en la ONU que traduce entre dos idiomas radicalmente distintos sin perder el mensaje central.'
+          }
+        ],
+        detalles: [
+          {
+            id: 'det_sisarq_02',
+            conceptoId: 'c_sisarq_03',
+            tipo: 'procedimiento',
+            titulo: 'Estructura de Explicación de 3 Pasos (Axiomática)',
+            contenido: '1. ¿Qué dolor resuelve? (Ej: "Evitamos perder datos cuando se corta la luz"). 2. ¿Cómo lo hace? ("Guardamos todo en disco local cada segundo"). 3. ¿Qué garantía ofrece? ("Cero costos mensuales y 100% de operatividad").',
+            notas: 'Plantilla universal para reuniones con directores, profesores de ingeniería o líderes políticos.'
+          }
+        ]
+      }
+    ]
+  },
+
+  'GEO-EST': {
+    materiaCodigo: 'GEO-EST',
+    titulo: 'Geopolítica, Guerra y Estrategia',
+    descripcion: 'Doctrina de relaciones internacionales, teorías clásicas del poder territorial y principios inmutables de estrategia militar y asimetría.',
+    axiomas: [
+      {
+        id: 'ax_geo_01',
+        titulo: 'Anarquía Internacional y Búsqueda de Supervivencia (Realismo)',
+        enunciado: 'En el sistema internacional no existe un gobierno supremo vinculante que proteja a los Estados. Por tanto, cada actor soberano debe maximizar su poder, disuasión y autosuficiencia para asegurar su supervivencia física.',
+        porQueFundamental: 'Elimina las ilusiones de ingenuidad moral en política global. Los tratados duran mientras las correlaciones de fuerza reales los sostienen.',
+        criteriosDominio: [
+          'Comprendo el Dilema de Seguridad: cómo la acción defensiva de un Estado es percibida como amenaza ofensiva por sus vecinos',
+          'Distingo entre Realismo Clásico (Morgenthau), Realismo Ofensivo (Mearsheimer) e Institucionalismo Liberal',
+          'Puedo analizar conflictos globales (Ucrania, Taiwán, Medio Oriente) analizando intereses estratégicos y energéticos concretos, no retórica moralista'
+        ],
+        ejemploUniversal: 'La Guerra del Peloponeso analizada por Tucídides: "Los fuertes hacen lo que pueden y los débiles sufren lo que deben".',
+        ejemploVenezuela: 'La posición geográfica de Venezuela como bisagra entre la Cuenca del Caribe y la Amazonía, y su rol como reserva petrolera frente a Washington, Pekín y Moscú.',
+        gruposConceptosIds: ['cc_geo_01', 'cc_geo_02']
+      },
+      {
+        id: 'ax_geo_02',
+        titulo: 'La Guerra es la Continuación de la Política por Otros Medios (Clausewitz)',
+        enunciado: 'La violencia armada o el conflicto estratégico nunca es un fin en sí mismo: es un instrumento coactivo subordinado a un objetivo político concreto. El centro de gravedad del adversario determina la victoria.',
+        porQueFundamental: 'Si el objetivo político es difuso, la victoria táctica en el terreno es inútil y conduce al desgaste ruinoso.',
+        criteriosDominio: [
+          'Sé identificar el "Centro de Gravedad" (Schwerpunkt) de un adversario: su punto neurálgico de cohesión que si se destruye o neutraliza derrumba todo su aparato',
+          'Comprendo la doctrina de guerra asimétrica de Sun Tzu: "El supremo arte de la guerra es someter al enemigo sin librar batalla"',
+          'Distingo entre táctica (ganar combates), operaciones (enlazar campañas) y gran estrategia (usar todos los recursos de la nación para la paz futura)'
+        ],
+        ejemploUniversal: 'La campaña de Aníbal Barca en Cannas frente a la estrategia de desgaste de Fabio Máximo.',
+        ejemploVenezuela: 'El control territorial de los corredores viales y petroleros en Monagas (Caripito, Temblador, Punta de Mata) como pivote de estabilidad regional.',
+        gruposConceptosIds: ['cc_geo_02']
+      }
+    ],
+    gruposConceptos: [
+      {
+        id: 'cc_geo_01',
+        nombre: 'Geografía del Poder y Cuencas Estratégicas',
+        axiomasPadreIds: ['ax_geo_01'],
+        conceptos: [
+          {
+            id: 'c_geo_01',
+            nombre: 'Teoría del Heartland y Rimland (Mackinder / Spykman)',
+            definicion: 'Quien controla el corazón terrestre de Eurasia controla la Isla Mundial, pero quien domina el cinturón costero (Rimland) frena la hegemonía continental.',
+            analogia: 'El control del centro del tablero en el ajedrez contra el control de las columnas abiertas laterales.'
+          },
+          {
+            id: 'c_geo_02',
+            nombre: 'Poder Marítimo y Estrangulamiento de Chokepoints (Mahan)',
+            definicion: 'El dominio de los estrechos y pasos marítimos críticos (Ormuz, Malaca, Suez, Panamá) permite asfixiar el comercio y la energía de cualquier rival.',
+            analogia: 'Tener una llave de paso que corta el suministro de agua a todo un edificio residencial.'
+          }
+        ],
+        detalles: [
+          {
+            id: 'det_geo_01',
+            conceptoId: 'c_geo_01',
+            tipo: 'procedimiento',
+            titulo: 'Análisis de Vulnerabilidad Geoeconómica Regional',
+            contenido: 'Mapear: 1. Rutas de transporte de crudo y gas. 2. Puntos únicos de fallo en la red eléctrica troncal. 3. Dependencia de puertos de importación de alimentos.',
+            notas: 'Marco analítico aplicable directamente al Estado Monagas y la fachada atlántica del Delta del Orinoco.'
+          }
+        ]
+      },
+      {
+        id: 'cc_geo_02',
+        nombre: 'Doctrina de Estrategia Militar y Asimetría',
+        axiomasPadreIds: ['ax_geo_02'],
+        conceptos: [
+          {
+            id: 'c_geo_03',
+            nombre: 'Guerra Asimétrica y Economía de Fuerzas',
+            definicion: 'Uso de tácticas indirectas, movilidad y conocimiento del terreno para neutralizar la superioridad numérica o tecnológica de un oponente masivo.',
+            analogia: 'David contra Goliat: evitar el choque cuerpo a cuerpo de espadas y usar una honda a distancia precisa.'
+          }
+        ],
+        detalles: [
+          {
+            id: 'det_geo_02',
+            conceptoId: 'c_geo_03',
+            tipo: 'formula',
+            titulo: 'Tríada de Clausewitz: Pueblo, Ejército y Gobierno',
+            contenido: 'La victoria requiere alineación entre las pasiones del pueblo (apoyo moral), la destreza del ejército (capacidad técnica) y la razón del gobierno (dirección política).',
+            notas: 'Si cualquiera de los tres vértices colapsa, la derrota estratégica es inevitable.'
+          }
+        ]
+      }
+    ]
+  },
+
+  'ORA-CAS': {
+    materiaCodigo: 'ORA-CAS',
+    titulo: 'Castellano, Retórica, Monólogos y Oratoria de Pie',
+    descripcion: 'Dominio de la palabra hablada, estructura argumentativa clásica de Aristóteles y Cicerón, modulación vocal y control del pánico escénico ante auditorios exigentes.',
+    axiomas: [
+      {
+        id: 'ax_ora_01',
+        titulo: 'El Trípode Retórico Aristotélico: Ethos, Pathos y Logos',
+        enunciado: 'La persuasión efectiva exige un equilibrio indisoluble: Ethos (autoridad moral y credibilidad del orador), Logos (estructura lógica irrebatible y datos comprobables) y Pathos (conexión emocional y empatía con las preocupaciones del auditorio).',
+        porQueFundamental: 'Tener datos (Logos) sin credibilidad (Ethos) genera desconfianza. Tener pasión (Pathos) sin rigor lógico produce fanatismo efímero. Conectar los tres es la única forma de convencer a personas mayores o adversarios.',
+        criteriosDominio: [
+          'Sé cómo proyectar autoridad técnica y seriedad sin arrogancia cuando me dirijo a personas de 50 o 60 años',
+          'Puedo estructurar un argumento lógico que no cometa falacias ad hominem ni hombres de paja',
+          'Sé cómo modular mi tono de voz para evitar la monotonía y mantener la atención activa de la sala'
+        ],
+        ejemploUniversal: 'La oración fúnebre de Pericles en Atenas y el discurso de Marco Antonio en el Julio César de Shakespeare.',
+        ejemploVenezuela: 'Intervenciones en salas de debate político en Monagas donde un joven técnico de 22 años debe ganarse el respeto inmediato de dirigentes experimentados.',
+        gruposConceptosIds: ['cc_ora_01', 'cc_ora_02']
+      },
+      {
+        id: 'ax_ora_02',
+        titulo: 'La Fisiología Gobierna la Mente: Respiración y Dominio Espacial',
+        enunciado: 'El miedo a hablar en público y el bloqueo mental ("quedarse callado") es una respuesta biológica del sistema nervioso simpático (lucha o huida). Se desactiva físicamente con respiración diafragmática profunda y postura erguida.',
+        porQueFundamental: 'No puedes razonar con claridad si tu cuerpo le está enviando señales de asfixia y taquicardia al cerebro. El cuerpo debe calmar a la mente antes de que las palabras salgan.',
+        criteriosDominio: [
+          'Practico la respiración 4x4 (box breathing) antes de hablar para bajar las pulsaciones por minuto',
+          'Mantengo contacto visual rotativo de 3 segundos con personas clave de la sala en vez de mirar al suelo o al techo',
+          'Sé cómo hacer pausas de silencio deliberadas de 2 segundos en lugar de llenar los vacíos con muletillas ("ehh", "este", "o sea")'
+        ],
+        ejemploUniversal: 'Entrenamiento de oratoria de los estadistas romanos como Cicerón practicando con piedras en la boca frente al mar.',
+        ejemploVenezuela: 'Pararse frente a una asamblea o reunión de comando en Maturín con voz firme y volumen que alcance el fondo del salón sin gritar.',
+        gruposConceptosIds: ['cc_ora_02']
+      }
+    ],
+    gruposConceptos: [
+      {
+        id: 'cc_ora_01',
+        nombre: 'Estructura Discursiva Clásica (Cicerón)',
+        axiomasPadreIds: ['ax_ora_01'],
+        conceptos: [
+          {
+            id: 'c_ora_01',
+            nombre: 'Los 4 Bloques Inamovibles del Discurso',
+            definicion: '1. Exordio (captar atención inmediata). 2. Narratio (exposición de los hechos claros). 3. Refutatio (anticipar y desarmar las objeciones del rival). 4. Peroratio (llamado contundente a la acción).',
+            analogia: 'Un despegue de avión: carrera potente en pista, ascenso suave, atravesar la turbulencia y aterrizaje seguro en el destino.'
+          }
+        ],
+        detalles: [
+          {
+            id: 'det_ora_01',
+            conceptoId: 'c_ora_01',
+            tipo: 'procedimiento',
+            titulo: 'Técnica del Monólogo Diario de 2 Minutos en Telegram',
+            contenido: '1. Escoger un tema diario. 2. Grabar nota de voz de 120 segundos sin parar. 3. Escuchar la grabación y evaluar muletillas, pausas y claridad de ideas.',
+            notas: 'La mejor herramienta para vencer la timidez y crear soltura lingüística sin público que juzgue.'
+          }
+        ]
+      },
+      {
+        id: 'cc_ora_02',
+        nombre: 'Dicción, Caligrafía y Proyección Física',
+        axiomasPadreIds: ['ax_ora_02'],
+        conceptos: [
+          {
+            id: 'c_ora_02',
+            nombre: 'Articulación Muscular y Caligrafía de Firma',
+            definicion: 'El control motriz fino de la articulación bucal (consonantes nítidas) y de la mano (trazos caligráficos firmes y firma profesional) reflejan disciplina interior.',
+            analogia: 'Afinar las cuerdas de una guitarra antes de dar un concierto: si las cuerdas están flojas, la música suena sucia.'
+          }
+        ],
+        detalles: [
+          {
+            id: 'det_ora_02',
+            conceptoId: 'c_ora_02',
+            tipo: 'procedimiento',
+            titulo: 'Diseño y Práctica de Firma Profesional',
+            contenido: '1. Elegir un trazo base continuo con la inicial y apellido legible. 2. Repetir 50 veces seguidas en papel con bolígrafo de gel manteniendo la misma velocidad e inclinación.',
+            notas: 'Construye memoria muscular y elimina la inseguridad gráfica en actas y documentos técnicos.'
+          }
+        ]
+      }
+    ]
+  },
+
+  'ING-TEC': {
+    materiaCodigo: 'ING-TEC',
+    titulo: 'Inglés Técnico & Inmersión Práctica',
+    descripcion: 'Adquisición acelerada de lectura de documentación técnica de ingeniería, sintaxis directa y conversación práctica sin sobrecarga gramatical teórica.',
+    axiomas: [
+      {
+        id: 'ax_ing_01',
+        titulo: 'Input Comprensible: Se Adquiere por Comprensión, no por Memorización (Krashen)',
+        enunciado: 'El cerebro humano no aprende idiomas memorizando listas aisladas de vocabulario o tablas gramaticales, sino procesando mensajes que comprende en un 80% con un 20% de contexto nuevo (Hipótesis i + 1).',
+        porQueFundamental: 'Explica por qué años de aplicaciones como Duolingo dejan a las personas estancadas: hacer ejercicios de selección múltiple no entrena la maquinaria cerebral de procesamiento lingüístico en tiempo real.',
+        criteriosDominio: [
+          'Puedo leer la documentación oficial de Python, Linux man pages o especificaciones de ingeniería sin traducir palabra por palabra en la mente',
+          'Entiendo la idea general de un video técnico en inglés con subtítulos en inglés a velocidad 1x',
+          'Dedico al menos 15 minutos diarios a consumir contenido técnico nativo en inglés sobre sistemas o matemáticas'
+        ],
+        ejemploUniversal: 'Un niño que aprende su lengua materna escuchando y asociando acciones con sonidos sin saber qué es el pretérito pluscuamperfecto.',
+        ejemploVenezuela: 'Leer los esquemas de circuitos, datasheets de microcontroladores y manuales de maquinaria pesada que solo vienen en inglés.',
+        gruposConceptosIds: ['cc_ing_01', 'cc_ing_02']
+      },
+      {
+        id: 'ax_ing_02',
+        titulo: 'El Inglés Técnico es Ultra-Determinista: Sujeto + Verbo + Objeto (SVO)',
+        enunciado: 'A diferencia del español (que permite inversiones sintácticas poéticas), el inglés técnico de ingeniería sigue una estructura geométrica rígida e invariable: Quien hace la acción (Subject) ➔ Qué hace (Verb) ➔ A qué se lo hace (Object).',
+        porQueFundamental: 'Elimina el miedo a hablar. Si armas frases de 5 palabras con la fórmula Sujeto + Verbo + Objeto, el 100% de los ingenieros del mundo te entenderán perfectamente.',
+        criteriosDominio: [
+          'Construyo oraciones directas sin ambigüedad: "The database stores the logs locally"',
+          'Domino los verbos modales clave de ingeniería: Must (obligación), Should (recomendación), May (posibilidad)',
+          'No intento sonar sofisticado; priorizo la precisión milimétrica del mensaje'
+        ],
+        ejemploUniversal: 'La redacción de los estándares RFC de la IETF y las normas de ingeniería IEEE.',
+        ejemploVenezuela: 'Escribir un issue en GitHub o reportar un bug en un software de código abierto con claridad profesional.',
+        gruposConceptosIds: ['cc_ing_01']
+      }
+    ],
+    gruposConceptos: [
+      {
+        id: 'cc_ing_01',
+        nombre: 'Sintaxis Nuclear y Vocabulario Técnico de Ingeniería',
+        axiomasPadreIds: ['ax_ing_02'],
+        conceptos: [
+          {
+            id: 'c_ing_01',
+            nombre: 'Verbos Modales y Estándares de Especificación (RFC 2119)',
+            definicion: 'Uso de palabras clave precisas que delimitan requerimientos técnicos: MUST (estricto), MUST NOT, SHOULD (deseable), MAY (opcional).',
+            analogia: 'Los colores de las luces de tránsito: verde, amarillo y rojo tienen significados operacionales exactos.'
+          }
+        ],
+        detalles: [
+          {
+            id: 'det_ing_01',
+            conceptoId: 'c_ing_01',
+            tipo: 'formula',
+            titulo: 'Fórmula de Pregunta Técnica en Inglés',
+            contenido: 'Auxiliar (Does/Is/Can) + Sujeto + Verbo Base + Objeto? -> "Does this function handle offline errors?"',
+            notas: 'Plantilla universal para interactuar con documentación técnica y LLMs en modo voz.'
+          }
+        ]
+      },
+      {
+        id: 'cc_ing_02',
+        nombre: 'Inmersión Práctica con Gemini Voice y Asistentes',
+        axiomasPadreIds: ['ax_ing_01'],
+        conceptos: [
+          {
+            id: 'c_ing_02',
+            nombre: 'Shadowing y Práctica Conversacional Asistida por IA',
+            definicion: 'Repetir en voz alta frases inmediatamente después de escucharlas para adaptar los músculos de la mandíbula y lengua a la fonética anglosajona.',
+            analogia: 'Tocar una canción en guitarra imitando nota por nota al maestro mientras suena la pista de fondo.'
+          }
+        ],
+        detalles: [
+          {
+            id: 'det_ing_02',
+            conceptoId: 'c_ing_02',
+            tipo: 'procedimiento',
+            titulo: 'Rutina de 10 Minutos con Gemini Voice en el Teléfono',
+            contenido: '1. Abrir app de Gemini en modo voz. 2. Dar instrucción: "Act as my English tutor for a pre-engineering student. Let\'s have a 5-minute conversation about computers. Correct my pronunciation gently." 3. Hablar 5 minutos diarios.',
+            notas: 'Cero costo, disponibilidad 24/7 y sin la vergüenza de hablar con un humano al inicio.'
+          }
+        ]
+      }
+    ]
+  },
+
+  'ECO-DIG': {
+    materiaCodigo: 'ECO-DIG',
+    titulo: 'Economía Digital, Comercio & Criptoactivos',
+    descripcion: 'Mecanismos de dinero fiduciario vs activos duros, infraestructura de pagos electrónicos, conversión de valor y logística de comercio digital en economías complejas.',
+    axiomas: [
+      {
+        id: 'ax_eco_01',
+        titulo: 'El Dinero es un Sistema de Contabilidad Social sobre la Escasez',
+        enunciado: 'El dinero no tiene valor intrínseco por decreto; funciona como medio de intercambio, reserva de valor y unidad de cuenta únicamente cuando sus participantes confían en su escasez predecible y en la dificultad de falsificarlo o confiscarlo.',
+        porQueFundamental: 'Permite comprender por qué las monedas fiduciarias sin respaldo sufren hiperinflación y cómo la tecnología criptográfica reintroduce la escasez digital estricta.',
+        criteriosDominio: [
+          'Entiendo la diferencia entre dinero respaldado por emisión estatal centralizada y redes monetarias descentralizadas basadas en consenso criptográfico',
+          'Comprendo cómo la inflación funciona como un impuesto invisible sobre el ahorro que destruye la planificación a largo plazo',
+          'Sé cómo funciona el arbitraje cambiario y la tasa marginal de precios en mercados libres'
+        ],
+        ejemploUniversal: 'La evolución desde el patrón oro hasta los acuerdos de Bretton Woods y la aparición de Bitcoin tras la crisis de 2008.',
+        ejemploVenezuela: 'La historia monetaria del Bolívar frente al Dólar y la adopción masiva de USDT en plataformas P2P (Binance, El Dorado) para transacciones comerciales diarias en Monagas.',
+        gruposConceptosIds: ['cc_eco_01', 'cc_eco_02']
+      },
+      {
+        id: 'ax_eco_02',
+        titulo: 'El Comercio Digital es Reducción de Fricción de Búsqueda y Confianza',
+        enunciado: 'Un negocio de e-commerce exitoso no vende productos; vende conveniencia, velocidad de entrega y certidumbre en la transacción. Quien controla la pasarela de pagos y el canal de distribución captura el margen económico.',
+        porQueFundamental: 'Hacer páginas web o catálogos es irrelevante si no existe un embudo de ventas que resuelva la entrega física y el cobro sin fricción.',
+        criteriosDominio: [
+          'Entiendo el ciclo de conversión: Tráfico ➔ Captura de Prospecto ➔ Cierre de Venta ➔ Despacho Logístico ➔ Retención',
+          'Sé por qué el canal de mensajería directa (WhatsApp Business) es el rey indiscutible de las conversiones en Venezuela por encima del email marketing',
+          'Puedo calcular el margen neto real deduciendo comisiones de pasarela, merma y costo logístico de última milla'
+        ],
+        ejemploUniversal: 'El modelo logístico de Amazon Fulfillment y las tiendas direct-to-consumer en Shopify.',
+        ejemploVenezuela: 'Ventas por WhatsApp y redes sociales con entregas en Maturín mediante motorizados y cobro por Pago Móvil o Binance Pay.',
+        gruposConceptosIds: ['cc_eco_02']
+      }
+    ],
+    gruposConceptos: [
+      {
+        id: 'cc_eco_01',
+        nombre: 'Criptoactivos y Pasarelas de Valor Soberanas',
+        axiomasPadreIds: ['ax_eco_01'],
+        conceptos: [
+          {
+            id: 'c_eco_01',
+            nombre: 'Stablecoins y Mercados Peer-to-Peer (P2P)',
+            definicion: 'Tokens digitales indexados al dólar estadounidense (USDT, USDC) transferidos a través de blockchains públicas, intercambiados por moneda local mediante plataformas P2P con custodia en fideicomiso (escrow).',
+            analogia: 'Un intercambio de fichas de casino donde un intermediario retiene las fichas hasta que ambas partes confirman que el dinero fue depositado en el banco.'
+          }
+        ],
+        detalles: [
+          {
+            id: 'det_eco_01',
+            conceptoId: 'c_eco_01',
+            tipo: 'procedimiento',
+            titulo: 'Flujo Seguro de Liquidación P2P',
+            contenido: '1. Verificar perfil con alta tasa de completitud (>98%). 2. Confirmar fondos recibidos en cuenta bancaria real ANTES de liberar los criptoactivos en la app. 3. Nunca aceptar pagos de terceros.',
+            notas: 'Regla de oro para evitar bloqueos bancarios o estafas por transferencias reversibles.'
+          }
+        ]
+      },
+      {
+        id: 'cc_eco_02',
+        nombre: 'E-Commerce Táctico y Logística Local en Venezuela',
+        axiomasPadreIds: ['ax_eco_02'],
+        conceptos: [
+          {
+            id: 'c_eco_02',
+            nombre: 'Conversión por Canales Conversacionales (Chat-Commerce)',
+            definicion: 'Modelo de venta directa donde la interacción, demostración del producto, resolución de dudas y cierre del pago ocurre dentro de aplicaciones de chat en vez de carritos de compra web tradicionales.',
+            analogia: 'Entrar a una tienda de barrio donde el dependiente te atiende en el mostrador personalmente en vez de navegar por un pasillo gigante con un carrito de metal.'
+          }
+        ],
+        detalles: [
+          {
+            id: 'det_eco_02',
+            conceptoId: 'c_eco_02',
+            tipo: 'formula',
+            titulo: 'Cálculo de Margen de Contribución Unitario',
+            contenido: 'Margen = Precio Venta - (Costo Producto + Comisión Pasarela Pago + Costo Delivery + Empaque)',
+            notas: 'Permite saber exactamente cuánta ganancia neta queda en el bolsillo por cada producto despachado.'
+          }
+        ]
+      }
+    ]
+  },
+
   'SIS-OPSEC': {
     materiaCodigo: 'SIS-OPSEC',
     titulo: 'Arquitectura de Software y Sistemas Distribuidos Soberanos',
