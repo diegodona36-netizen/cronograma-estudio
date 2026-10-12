@@ -1,0 +1,70 @@
+/**
+ * MIGATO • Módulo de Estudio Inteligente (SIGAEE • AXIOM)
+ * Hoja de Estilos de Alta Ergonomía (Estilo Notion / Linear Dark)
+ * Conducción: José Gregorio 'El Gato' Briceño | Comisión Técnica MIGATO
+ */
+
+:root {
+  --color-migato-bg: #0e092e;
+  --color-migato-card: #140e40;
+  --color-migato-surface: #100b33;
+  --color-migato-border: #2d1f85;
+  --color-migato-primary: #23176d;
+  --color-migato-hover: #31228e;
+  --color-migato-amber: #f59e0b;
+}
+
+body {
+  background-color: var(--color-migato-bg);
+  color: #f1f5f9;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tipografía de Entradas y Formularios (Mínimo 16px) */
+input, select, textarea, button {
+  font-size: 16px;
+}
+
+@media (min-width: 640px) {
+  input, select, textarea {
+    font-size: 15px;
+  }
+}
+
+/* Scrollbars ergonómicas y finas */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(14, 9, 46, 0.6);
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(45, 31, 133, 0.8);
+  border-radius: 9999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.5);
+}
+
+/* Efectos de pulso y selección */
+.badge-recuperado {
+  animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+}
