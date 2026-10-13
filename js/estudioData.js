@@ -19,15 +19,15 @@ export const MATERIAS_CONFIG = [
   },
   {
     codigo: 'SIS-ARQ',
-    nombre: 'Programación, Arquitectura & Explicación Técnica',
-    categoria: 'programacion',
+    nombre: 'Sistemas, Redes MikroTik & CCTV (Dahua / Hikvision)',
+    categoria: 'redes_tecnologia',
     metaSemanalHoras: 4.5,
     colorHex: '#38bdf8', // Sky
     colorBg: 'rgba(56, 189, 248, 0.12)',
     colorBorder: 'rgba(56, 189, 248, 0.4)',
     icono: 'terminal',
     demandaCognitiva: 'heavy',
-    descripcion: 'Dominio profundo de módulos de código, persistencia SQLite local, arquitectura cliente-servidor y técnica de pitch técnico.'
+    descripcion: 'Redes IP con MikroTik RouterOS (Winbox, DHCP, multi-WAN), videovigilancia Dahua/Hikvision (PoE, NVR, DMSS, Hik-Connect) y cálculo de respaldo con inversores.'
   },
   {
     codigo: 'GEO-EST',
@@ -43,15 +43,15 @@ export const MATERIAS_CONFIG = [
   },
   {
     codigo: 'ORA-CAS',
-    nombre: 'Castellano, Retórica y Monólogos',
+    nombre: 'Castellano, Léxico Culto & Retórica de Negocios',
     categoria: 'comunicacion',
-    metaSemanalHoras: 2.5,
+    metaSemanalHoras: 3.5,
     colorHex: '#f59e0b', // Ámbar
     colorBg: 'rgba(245, 158, 11, 0.12)',
     colorBorder: 'rgba(245, 158, 11, 0.4)',
     icono: 'mic',
     demandaCognitiva: 'medium',
-    descripcion: 'Estructura retórica clásica (exordio, narratio, refutatio), dicción, conectores argumentativos y práctica de monólogos en Telegram.'
+    descripcion: 'Lectura diaria de 25 min para incorporar vocabulario culto (técnica de las 3 palabras), eliminación de muletillas y pitch comercial para clientes.'
   },
   {
     codigo: 'ING-TEC',
@@ -141,6 +141,7 @@ export const DIAS_SEMANA = [
  * Franjas horarias estándar para Timeboxing (24h)
  */
 export const FRANJAS_HORARIAS = [
+  { id: 'f0', inicio: '08:00', fin: '08:30', duracionHoras: 0.5, tipo: 'matutina', label: 'Lectura Matutina' },
   { id: 'f1', inicio: '08:30', fin: '10:30', duracionHoras: 2.0, tipo: 'matutina', label: 'Mañana 1' },
   { id: 'f2', inicio: '10:45', fin: '12:15', duracionHoras: 1.5, tipo: 'matutina', label: 'Mañana 2' },
   { id: 'f3', inicio: '14:00', fin: '16:00', duracionHoras: 2.0, tipo: 'vespertina', label: 'Tarde 1' },
@@ -153,41 +154,46 @@ export const FRANJAS_HORARIAS = [
  */
 export const ITINERARIO_BASE_SEMANAL = {
   lunes: [
+    { id: 'b_lun_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
     { id: 'b_lun_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Álgebra: Leyes de Exponentes y Polinomios', completado: false },
     { id: 'b_lun_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Inglés: 15 min de práctica técnica', completado: false },
-    { id: 'b_lun_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Programación: Arquitectura y Módulos', completado: false },
+    { id: 'b_lun_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Redes MikroTik & Winbox: Direccionamiento IP y DHCP Server', completado: false },
     { id: 'b_lun_4', materiaCodigo: 'GEO-EST', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Geopolítica y Estrategia', completado: false },
     { id: 'b_lun_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
     { id: 'b_lun_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio (5:00 PM a 6:30 PM)', completado: false }
   ],
   martes: [
+    { id: 'b_mar_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Prosa rica - Carlos Ruiz Zafón)', completado: false },
     { id: 'b_mar_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Matemáticas: Concepto de Funciones y Dominio', completado: false },
     { id: 'b_mar_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Inglés: Lectura de Documentación Oficial', completado: false },
-    { id: 'b_mar_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Programación: Cómo Explicar un Módulo a Terceros', completado: false },
+    { id: 'b_mar_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'CCTV Profesional: Cámaras IP Dahua / Hikvision y Conexión PoE', completado: false },
     { id: 'b_mar_reu', materiaCodigo: 'REU-COM', inicio: '14:00', fin: '16:00', duracion: 2.0, tema: '🤝 REUNIÓN DE TRABAJO (A las 2:00 PM)', completado: false },
     { id: 'b_mar_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
     { id: 'b_mar_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio (5:00 PM a 6:30 PM)', completado: false }
   ],
   miercoles: [
+    { id: 'b_mie_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
     { id: 'b_mie_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Sistemas de Ecuaciones Lineales y Método de Gauss', completado: false },
     { id: 'b_mie_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Duolingo Hábitos + Audio Inmersivo en Inglés', completado: false },
-    { id: 'b_mie_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Bases de Datos Locales: SQLite y Persistencia Offline-First', completado: false },
+    { id: 'b_mie_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Acceso Remoto P2P: Configuración en DMSS (Dahua) y Hik-Connect (Hikvision)', completado: false },
     { id: 'b_mie_4', materiaCodigo: 'ECO-DIG', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'E-Commerce en Venezuela: WhatsApp Business CRM y Catálogos', completado: false },
     { id: 'b_mie_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:30', duracion: 1.5, tema: 'Ocio Extendido / Día de Descanso Físico', completado: false }
   ],
   jueves: [
+    { id: 'b_jue_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Ensayo y Retórica - Baltasar Gracián)', completado: false },
     { id: 'b_jue_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Álgebra Lineal: Matrices, Multiplicación y Determinantes', completado: false },
     { id: 'b_jue_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Práctica Dialéctica en Inglés con Sócrates', completado: false },
-    { id: 'b_jue_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Simulacro de Exposición Técnica: Arquitectura de Software', completado: false },
+    { id: 'b_jue_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Inversores de Respaldo & Baterías: Cálculo de Watts y Autonomía para CCTV', completado: false },
     { id: 'b_jue_4', materiaCodigo: 'GEO-EST', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Doctrina de la Guerra (Clausewitz y Sun Tzu) y Chokepoints', completado: false },
     { id: 'b_jue_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
     { id: 'b_jue_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio: Tracción (Espalda, Hombro Posterior y Bíceps)', completado: false }
   ],
   viernes: [
+    { id: 'b_vie_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
     { id: 'b_vie_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Taller de Ejercicios Matemáticos: Resolución y Autoevaluación', completado: false },
     { id: 'b_vie_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Duolingo Hábitos + Vocabulario Técnico', completado: false },
-    { id: 'b_vie_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Revisión y Refactorización de Módulos Operativos', completado: false },
-    { id: 'b_vie_4', materiaCodigo: 'ORA-CAS', inicio: '14:30', fin: '15:30', duracion: 1.0, tema: 'Monólogo de Cierre Semanal: Síntesis Oral en Telegram', completado: false },
+    { id: 'b_vie_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Integración & Cotizaciones: Presupuesto Comercial de Seguridad y Energía', completado: false },
+    { id: 'b_vie_4', materiaCodigo: 'ORA-CAS', inicio: '14:30', fin: '15:30', duracion: 1.0, tema: 'Pitch Comercial & Nota de Voz de Telegram (Monólogo con nuevo vocabulario)', completado: false },
     { id: 'b_vie_5', materiaCodigo: 'OCI-LIB', inicio: '15:30', fin: '17:00', duracion: 1.5, tema: 'Tarde Libre y Espacio de Juegos', completado: false },
     { id: 'b_vie_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio: Fullbody / Acondicionamiento Físico', completado: false }
   ],
@@ -218,18 +224,20 @@ export const TEMARIOS_Y_HERRAMIENTAS = {
     ]
   },
   'SIS-ARQ': {
-    nombre: 'Programación & Arquitectura de Software',
-    objetivo: 'Construir software modular que funcione sin internet y saber explicarlo a cualquier persona.',
+    nombre: 'Sistemas, Redes MikroTik & CCTV (Dahua / Hikvision)',
+    objetivo: 'Dominar redes IP con MikroTik, instalación de cámaras Dahua y Hikvision (NVR/PoE/P2P) y dimensionamiento de respaldo eléctrico con inversores.',
     temas: [
-      { id: 'sis_t1', titulo: 'Arquitectura modular (Separación de capas)', descripcion: 'Separar la lógica de cálculo de la interfaz gráfica y del almacenamiento.' },
-      { id: 'sis_t2', titulo: 'Bases de datos locales con SQLite', descripcion: 'Crear tablas, claves primarias, consultas SELECT, INSERT y filtros en SQLite.' },
-      { id: 'sis_t3', titulo: 'Arquitecturas Local-First (Offline)', descripcion: 'Hacer que las aplicaciones guarden en el disco local y no dependan de internet.' },
-      { id: 'sis_t4', titulo: 'Pitch técnico y comunicación clara', descripcion: 'Aprender a explicar tu sistema en 2 minutos a directores o clientes sin usar siglas raras.' }
+      { id: 'sis_t1', titulo: 'Fundamentos de Redes IP & MikroTik RouterOS', descripcion: 'Winbox, direccionamiento estático, rangos 192.168.x.x, DHCP Server, DNS y balanceo de carga multi-WAN (Fibra + Cantv).' },
+      { id: 'sis_t2', titulo: 'CCTV Profesional: Cámaras IP Dahua y Hikvision', descripcion: 'Diferencias analógico vs IP, compresión H.265+, switches PoE 802.3af/at, ancho de banda y cálculo de almacenamiento en TB.' },
+      { id: 'sis_t3', titulo: 'Configuración de NVR y Acceso Remoto P2P (Apps Móviles)', descripcion: 'Puesta en marcha de NVRs Dahua (app DMSS) y Hikvision (app Hik-Connect) en los teléfonos de los clientes sin IP fija.' },
+      { id: 'sis_t4', titulo: 'Sistemas de Energía de Respaldo para CCTV y Redes', descripcion: 'Cálculo de consumo en Watts de NVR, switches PoE y cámaras, y dimensionamiento de inversores híbridos y bancos de baterías.' },
+      { id: 'sis_t5', titulo: 'Arquitectura de Software y Persistencia Offline (SQLite)', descripcion: 'Separación modular de código y almacenamiento local seguro en Linux sin depender de internet.' }
     ],
     herramientas: [
-      { tipo: 'practica', nombre: 'Editor de código local (VS Code / Linux)', desc: 'Escribir pequeños scripts en Python o JavaScript Vanilla probando cada módulo.', url: 'https://code.visualstudio.com' },
-      { tipo: 'doc', nombre: 'Documentación Oficial de Python SQLite3 / MDN Web Docs', desc: 'La referencia más confiable y libre de distracciones.', url: 'https://developer.mozilla.org/es/' },
-      { tipo: 'video', nombre: 'YouTube: Midudev / Fazt Code (Arquitectura Limpia)', desc: 'Buenas prácticas de desarrollo explicadas de forma práctica.', url: 'https://www.youtube.com/@midudev' }
+      { tipo: 'practica', nombre: 'MikroTik Winbox & RouterOS Software', desc: 'Herramienta oficial de administración de routers y switches MikroTik.', url: 'https://mikrotik.com/download' },
+      { tipo: 'doc', nombre: 'Hikvision & Dahua Calculadoras de Ancho de Banda y Lentes', desc: 'Herramientas de escritorio oficiales para calcular discos duros y ángulos de visión.', url: 'https://www.hikvision.com/es-la/support/tools/desktop-tools/' },
+      { tipo: 'video', nombre: 'YouTube: Cursos de MikroTik y CCTV Dahua/Hikvision en Español', desc: 'Explicaciones paso a paso de cableado, crimpado y configuración de grabadores.', url: 'https://www.youtube.com/results?search_query=curso+mikrotik+winbox+dahua+hikvision' },
+      { tipo: 'practica', nombre: 'Editor de código VS Code / Linux Terminal', desc: 'Para scripts de automatización de red y pruebas de bases de datos.', url: 'https://code.visualstudio.com' }
     ]
   },
   'GEO-EST': {
@@ -247,17 +255,18 @@ export const TEMARIOS_Y_HERRAMIENTAS = {
     ]
   },
   'ORA-CAS': {
-    nombre: 'Castellano, Retórica y Oratoria de Pie',
-    objetivo: 'Aprender a hablar con seguridad frente a líderes y adultos sin quedarse callado ni agobiado.',
+    nombre: 'Castellano, Léxico Culto & Retórica de Negocios',
+    objetivo: 'Incorporar vocabulario de alto nivel mediante lectura de 25 min diarios, dominar pausas de silencio y defender propuestas comerciales con solvencia.',
     temas: [
-      { id: 'ora_t1', titulo: 'Estructura PREP para hablar de pie', descripcion: 'Punto principal (directo) -> Razón -> Ejemplo concreto -> Conclusión firme.' },
-      { id: 'ora_t2', titulo: 'Modulación de voz y respiración diafragmática', descripcion: 'Bajar la velocidad al hablar, proyectar la voz desde el pecho y evitar tonos agudos.' },
-      { id: 'ora_t3', titulo: 'Eliminación de muletillas con pausas de silencio', descripcion: 'Reemplazar los «este...» y «o sea...» por 2 segundos de silencio con la boca cerrada.' },
-      { id: 'ora_t4', titulo: 'Práctica de firma profesional y caligrafía clara', descripcion: 'Memoria muscular para firmar con trazo seguro en documentos oficiales y actas.' }
+      { id: 'ora_t1', titulo: 'Lectura Diaria de Prosa Rica (25 minutos diarios)', descripcion: 'Lectura de autores de alta precisión léxica (Carlos Ruiz Zafón, Borges, García Márquez) para absorber giros y adjetivación natural.' },
+      { id: 'ora_t2', titulo: 'La Técnica de las 3 Palabras al Día', descripcion: 'Identificar 3 términos cultos por sesión de lectura y verbalizarlos conscientemente en notas de voz y conversaciones del día.' },
+      { id: 'ora_t3', titulo: 'Estructura PREP y Pitch Comercial para Clientes', descripcion: 'Punto directo -> Razón técnica -> Ejemplo de presupuesto -> Conclusión firme para cotizar instalaciones de cámaras e inversores.' },
+      { id: 'ora_t4', titulo: 'Modulación de voz, respiración diafragmática y pausas', descripcion: 'Eliminar muletillas («este...», «o sea») sustituyéndolas por pausas de silencio de 2 segundos con postura erguida.' }
     ],
     herramientas: [
-      { tipo: 'audio', nombre: 'Notas de Voz de 2 minutos en Telegram', desc: 'Grabar un monólogo diario respondiendo una pregunta y escuchar tu ritmo y claridad.', url: 'https://t.me' },
-      { tipo: 'practica', nombre: 'Libreta de caligrafía y bolígrafo de gel', desc: 'Practicar 20 firmas seguidas con inclinación y velocidad constante.', url: 'https://es.wikipedia.org/wiki/Caligraf%C3%ADa' }
+      { tipo: 'lectura', nombre: 'Lectura Recomendada: La Sombra del Viento / Borges', desc: 'Prosa rica, adictiva y con el más alto nivel de vocabulario narrativo en español.', url: 'https://es.wikipedia.org/wiki/La_sombra_del_viento' },
+      { tipo: 'doc', nombre: 'Diccionario de la Real Academia Española (DLE)', desc: 'Consulta inmediata del significado exacto y sinónimos de palabras nuevas.', url: 'https://dle.rae.es/' },
+      { tipo: 'audio', nombre: 'Notas de Voz de 2 minutos en Telegram', desc: 'Grabar un monólogo diario poniendo a prueba las 3 palabras nuevas de la sesión de lectura.', url: 'https://t.me' }
     ]
   },
   'ING-TEC': {

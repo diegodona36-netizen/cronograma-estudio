@@ -171,9 +171,9 @@ export class ArbolConocimientoManager {
     // Lista de materias con cálculo de avance para cada una
     const listaMaterias = [
       { cod: 'MAT-ING', nom: 'Matemáticas' },
-      { cod: 'SIS-ARQ', nom: 'Programación' },
+      { cod: 'SIS-ARQ', nom: 'Redes & CCTV' },
       { cod: 'GEO-EST', nom: 'Geopolítica' },
-      { cod: 'ORA-CAS', nom: 'Oratoria' },
+      { cod: 'ORA-CAS', nom: 'Léxico & Retórica' },
       { cod: 'ING-TEC', nom: 'Inglés' },
       { cod: 'ECO-DIG', nom: 'E-Commerce' }
     ].map(m => {

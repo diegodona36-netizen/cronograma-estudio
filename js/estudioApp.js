@@ -51,7 +51,7 @@ class EstudioApp {
   }
 
   cargarItinerario() {
-    const CURRENT_VERSION = 'v3_con_reunion_martes_limpio';
+    const CURRENT_VERSION = 'v4_mikrotik_cctv_inversores_lectura';
     try {
       const versionGuardada = localStorage.getItem('axiom_itinerario_version');
       if (versionGuardada === CURRENT_VERSION) {
