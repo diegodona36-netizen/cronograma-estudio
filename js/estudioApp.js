@@ -40,6 +40,14 @@ class EstudioApp {
     this.bitacoraBloqueActivo = null;
     this.campoDictadoActivo = null;
     this.audioDataTemporal = null;
+
+    // Estado del Temporizador de Enfoque (Focus Mode)
+    this.timerDuracionMinutos = 25;
+    this.timerSegundosRestantes = 25 * 60;
+    this.timerInterval = null;
+    this.timerCorriendo = false;
+    this.timerMateriaCodigo = 'MAT-ING';
+    this.timerTemaTitulo = '';
   }
 
   cargarItinerario() {
@@ -189,6 +197,17 @@ class EstudioApp {
         }
       }
     });
+
+    // Actualizar Breadcrumb Dinámico Superior
+    const breadcrumbActive = document.getElementById('breadcrumb-active-view');
+    if (breadcrumbActive) {
+      if (nuevaVista === 'semanal') {
+        breadcrumbActive.innerHTML = `<span>📅</span><span class="truncate font-semibold">Tablero Semanal</span>`;
+      } else if (nuevaVista === 'mensual') {
+        breadcrumbActive.innerHTML = `<span>📊</span><span class="truncate font-semibold">Resumen del Mes</span>`;
+      }
+      // 'guias' se actualiza dentro de arbolManager.render() con el nombre de la materia
+    }
 
     this.renderVista();
     if (window.lucide) window.lucide.createIcons();
@@ -1206,6 +1225,113 @@ class EstudioApp {
       alert(res.textoMarkdown);
     });
   }
+
+  // Temporizador de Enfoque (Focus Mode / Pomodoro)
+  abrirModalTemporizador(materiaCodigo, temaTitulo) {
+    this.timerMateriaCodigo = materiaCodigo || 'MAT-ING';
+    this.timerTemaTitulo = temaTitulo || 'Sesión de Estudio';
+
+    const modal = document.getElementById('modal-temporizador-enfoque');
+    const labelMat = document.getElementById('timer-materia-label');
+    const labelTema = document.getElementById('timer-tema-titulo');
+    
+    if (labelMat) {
+      const cfg = MATERIAS_CONFIG.find(m => m.codigo === this.timerMateriaCodigo);
+      labelMat.textContent = cfg ? cfg.nombre : this.timerMateriaCodigo;
+    }
+    if (labelTema) labelTema.textContent = this.timerTemaTitulo;
+
+    this.ajustarDuracionTimer(25);
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+  }
+
+  cerrarModalTemporizador() {
+    this.pausarTimerEnfoque();
+    const modal = document.getElementById('modal-temporizador-enfoque');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+  }
+
+  ajustarDuracionTimer(minutos) {
+    this.pausarTimerEnfoque();
+    this.timerDuracionMinutos = minutos;
+    this.timerSegundosRestantes = minutos * 60;
+    this.actualizarTimerDisplay();
+  }
+
+  toggleTimerEnfoque() {
+    if (this.timerCorriendo) {
+      this.pausarTimerEnfoque();
+    } else {
+      this.iniciarTimerEnfoque();
+    }
+  }
+
+  iniciarTimerEnfoque() {
+    if (this.timerCorriendo) return;
+    this.timerCorriendo = true;
+    const btnLabel = document.getElementById('btn-timer-label');
+    if (btnLabel) btnLabel.textContent = 'Pausar';
+    const statusMsg = document.getElementById('timer-status-msg');
+    if (statusMsg) statusMsg.textContent = '⏱️ Sesión activa. Concéntrate plenamente en el tema.';
+
+    this.timerInterval = setInterval(() => {
+      if (this.timerSegundosRestantes > 0) {
+        this.timerSegundosRestantes--;
+        this.actualizarTimerDisplay();
+      } else {
+        this.pausarTimerEnfoque();
+        alert('🎉 ¡Tiempo cumplido! Excelente sesión de estudio. Es momento de registrar tu bitácora de conclusiones.');
+        this.concluirSesionTimerYGrabar();
+      }
+    }, 1000);
+  }
+
+  pausarTimerEnfoque() {
+    this.timerCorriendo = false;
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+    const btnLabel = document.getElementById('btn-timer-label');
+    if (btnLabel) btnLabel.textContent = 'Reanudar';
+    const statusMsg = document.getElementById('timer-status-msg');
+    if (statusMsg) statusMsg.textContent = 'Sesión en pausa. Puedes reanudar cuando estés listo.';
+  }
+
+  reiniciarTimerEnfoque() {
+    this.ajustarDuracionTimer(this.timerDuracionMinutos);
+  }
+
+  actualizarTimerDisplay() {
+    const mins = Math.floor(this.timerSegundosRestantes / 60);
+    const secs = this.timerSegundosRestantes % 60;
+    const display = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    const el = document.getElementById('timer-display');
+    if (el) el.textContent = display;
+  }
+
+  concluirSesionTimerYGrabar() {
+    const tema = this.timerTemaTitulo;
+    const mat = this.timerMateriaCodigo;
+    this.cerrarModalTemporizador();
+
+    const diaHoy = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'][new Date().getDay()] || 'lunes';
+    const diaKey = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'].includes(diaHoy) ? diaHoy : 'lunes';
+    const bloqueDia = (this.itinerario[diaKey] || []).find(b => b.materiaCodigo === mat) || { id: `b_custom_${Date.now()}` };
+    
+    this.abrirModalBitacora(diaKey, bloqueDia.id);
+    
+    const inputTema = document.getElementById('bitacora-input-tema');
+    if (inputTema && tema) {
+      inputTema.textContent = tema;
+    }
+  }
 }
 
 // Inicialización global
@@ -1234,6 +1360,14 @@ window.eliminarAudioBitacora = () => app.eliminarAudioBitacora();
 window.abrirModalListaBitacoras = () => app.abrirModalListaBitacoras();
 window.cerrarModalListaBitacoras = () => app.cerrarModalListaBitacoras();
 window.copiarTodasBitacorasMarkdown = () => app.copiarTodasBitacorasMarkdown();
+
+// Métodos del Temporizador de Enfoque en Window
+window.abrirModalTemporizador = (mat, tema) => app.abrirModalTemporizador(mat, tema);
+window.cerrarModalTemporizador = () => app.cerrarModalTemporizador();
+window.ajustarDuracionTimer = (mins) => app.ajustarDuracionTimer(mins);
+window.toggleTimerEnfoque = () => app.toggleTimerEnfoque();
+window.reiniciarTimerEnfoque = () => app.reiniciarTimerEnfoque();
+window.concluirSesionTimerYGrabar = () => app.concluirSesionTimerYGrabar();
 
 window.abrirModalAgregarBloque = (dia) => app.abrirModalAgregarBloque(dia);
 window.cerrarModalAgregarBloque = () => app.cerrarModalAgregarBloque();

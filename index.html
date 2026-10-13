@@ -94,12 +94,12 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
       
       <!-- Lado Izquierdo: Breadcrumbs estilo Notion -->
-      <div class="flex items-center gap-2 text-sm text-[var(--notion-text-muted)] min-w-0">
-        <span onclick="window.cambiarVista('semanal')" class="hover:text-[var(--notion-text)] cursor-pointer transition" title="Ir al Tablero Semanal">Workspace</span>
+      <div id="breadcrumb-container" class="flex items-center gap-1.5 text-xs sm:text-sm text-[var(--notion-text-muted)] min-w-0">
+        <span onclick="window.cambiarVista('semanal')" class="hover:text-[var(--notion-text)] cursor-pointer transition font-medium" title="Ir al Tablero Semanal">Workspace</span>
         <span>/</span>
-        <div class="flex items-center gap-1.5 font-medium text-[var(--notion-text)] truncate">
+        <div id="breadcrumb-active-view" class="flex items-center gap-1.5 font-medium text-[var(--notion-text)] truncate">
           <span>📅</span>
-          <span class="truncate">Horario Semanal & Temas</span>
+          <span class="truncate">Horario Semanal</span>
         </div>
       </div>
 
@@ -140,7 +140,7 @@
   <!-- ============================================================== -->
   <!-- 2. ENCABEZADO DE PÁGINA NOTION & VISTAS                        -->
   <!-- ============================================================== -->
-  <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 pt-6 pb-2 space-y-4">
+  <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 pt-5 pb-2 space-y-4">
     
     <!-- Título de Página con Icono Notion -->
     <div class="space-y-1">
@@ -153,8 +153,8 @@
       </p>
     </div>
 
-    <!-- Barra de Vistas de Base de Datos estilo Notion -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--notion-border)] pb-2 pt-2">
+    <!-- Barra de Vistas de Base de Datos estilo Notion (Adhesiva al Scroll) -->
+    <div id="barra-vistas-notion" class="sticky top-[49px] z-20 bg-[var(--notion-bg)]/95 backdrop-blur-xs py-2 border-b border-[var(--notion-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <!-- Tabs de Vistas -->
       <div class="flex items-center gap-1 overflow-x-auto scrollbar-thin">
         <button id="btn-vista-semanal" onclick="window.cambiarVista('semanal')" type="button" class="notion-view-btn active">
@@ -572,6 +572,65 @@
         </button>
         <button type="button" onclick="window.cerrarModalListaBitacoras()" class="px-3.5 py-1.5 rounded-md bg-[var(--notion-accent)] text-white font-medium">
           Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal E: Temporizador de Enfoque de Estudio (Focus Mode / Pomodoro) -->
+  <div id="modal-temporizador-enfoque" class="fixed inset-0 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+    <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-xl max-w-md w-full p-6 shadow-2xl space-y-5 text-center">
+      <div class="flex items-center justify-between border-b border-[var(--notion-border)] pb-3 text-left">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">⏱️</span>
+          <div>
+            <h3 class="text-sm font-semibold text-[var(--notion-text)]">Sesión de Enfoque de Estudio</h3>
+            <p id="timer-materia-label" class="text-xs text-[var(--notion-text-muted)] truncate max-w-[240px]">Matemáticas Pre-Ingeniería</p>
+          </div>
+        </div>
+        <button type="button" onclick="window.cerrarModalTemporizador()" class="text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] p-1 text-sm cursor-pointer">✕</button>
+      </div>
+
+      <div class="space-y-1">
+        <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--notion-text-muted)]">Tema Objetivo</span>
+        <h4 id="timer-tema-titulo" class="text-xs sm:text-sm font-semibold text-[var(--notion-text)] leading-snug px-3 py-2 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)]">
+          Polinomios, productos notables y factorización
+        </h4>
+      </div>
+
+      <!-- Display del Cronómetro -->
+      <div class="py-3 space-y-1.5">
+        <div id="timer-display" class="text-5xl font-mono font-bold tracking-tight text-[var(--notion-text)]">
+          25:00
+        </div>
+        <p id="timer-status-msg" class="text-xs text-[var(--notion-text-muted)]">
+          Cero distracciones. Concéntrate en resolver los ejercicios.
+        </p>
+      </div>
+
+      <!-- Selectores de Duración Rápida -->
+      <div class="flex items-center justify-center gap-2">
+        <button type="button" onclick="window.ajustarDuracionTimer(15)" class="px-2.5 py-1 rounded-md text-xs font-mono bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] cursor-pointer transition">15 min</button>
+        <button type="button" onclick="window.ajustarDuracionTimer(25)" class="px-2.5 py-1 rounded-md text-xs font-mono bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-[var(--notion-accent)] font-semibold cursor-pointer transition">25 min</button>
+        <button type="button" onclick="window.ajustarDuracionTimer(45)" class="px-2.5 py-1 rounded-md text-xs font-mono bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] cursor-pointer transition">45 min</button>
+      </div>
+
+      <!-- Controles Principales -->
+      <div class="flex items-center justify-center gap-3 pt-1">
+        <button id="btn-timer-toggle" type="button" onclick="window.toggleTimerEnfoque()" class="px-5 py-2 rounded-md bg-[var(--notion-accent)] hover:opacity-90 text-white font-medium text-xs transition cursor-pointer flex items-center gap-1.5 shadow-sm">
+          <span>▶</span>
+          <span id="btn-timer-label">Iniciar Sesión</span>
+        </button>
+        <button type="button" onclick="window.reiniciarTimerEnfoque()" class="px-3 py-2 rounded-md bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-xs text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] transition cursor-pointer">
+          ↺ Reiniciar
+        </button>
+      </div>
+
+      <!-- Concluir y Grabar Bitácora -->
+      <div class="pt-3 border-t border-[var(--notion-border)]">
+        <button type="button" onclick="window.concluirSesionTimerYGrabar()" class="w-full py-2 px-3 rounded-md bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 font-medium text-xs transition flex items-center justify-center gap-2 cursor-pointer">
+          <span>🎙️</span>
+          <span>Concluir y Registrar Bitácora de Voz</span>
         </button>
       </div>
     </div>

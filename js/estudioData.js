@@ -212,9 +212,9 @@ export const TEMARIOS_Y_HERRAMIENTAS = {
       { id: 'mat_t5', titulo: 'Álgebra lineal: Matrices y determinantes', descripcion: 'Suma y multiplicación de matrices, determinantes 2x2 y 3x3 y regla de Cramer.' }
     ],
     herramientas: [
-      { tipo: 'video', nombre: 'YouTube: JulioProfe / Profe Alex', desc: 'Explicaciones paso a paso en español de cada tema con ejercicios resueltos.' },
-      { tipo: 'web', nombre: 'Khan Academy (Álgebra I y Álgebra Lineal)', desc: 'Cursos 100% gratuitos con ejercicios interactivos y pistas si te trabas.' },
-      { tipo: 'libro', nombre: 'Libro: Álgebra de Baldor / Precálculo de Stewart', desc: 'Para buscar problemas tipo examen y resolver 5 ejercicios a mano por sesión.' }
+      { tipo: 'video', nombre: 'YouTube: JulioProfe / Profe Alex', desc: 'Explicaciones paso a paso en español de cada tema con ejercicios resueltos.', url: 'https://www.youtube.com/@julioprofe' },
+      { tipo: 'web', nombre: 'Khan Academy (Álgebra I y Álgebra Lineal)', desc: 'Cursos 100% gratuitos con ejercicios interactivos y pistas si te trabas.', url: 'https://es.khanacademy.org/math' },
+      { tipo: 'libro', nombre: 'Libro: Álgebra de Baldor / Precálculo de Stewart', desc: 'Para buscar problemas tipo examen y resolver 5 ejercicios a mano por sesión.', url: 'https://archive.org/details/AlgebraDeBaldor' }
     ]
   },
   'SIS-ARQ': {
@@ -227,9 +227,9 @@ export const TEMARIOS_Y_HERRAMIENTAS = {
       { id: 'sis_t4', titulo: 'Pitch técnico y comunicación clara', descripcion: 'Aprender a explicar tu sistema en 2 minutos a directores o clientes sin usar siglas raras.' }
     ],
     herramientas: [
-      { tipo: 'practica', nombre: 'Editor de código local (VS Code / Linux)', desc: 'Escribir pequeños scripts en Python o JavaScript Vanilla probando cada módulo.' },
-      { tipo: 'doc', nombre: 'Documentación Oficial de Python SQLite3 / MDN Web Docs', desc: 'La referencia más confiable y libre de distracciones.' },
-      { tipo: 'video', nombre: 'YouTube: Midudev / Fazt Code (Arquitectura Limpia)', desc: 'Buenas prácticas de desarrollo explicadas de forma práctica.' }
+      { tipo: 'practica', nombre: 'Editor de código local (VS Code / Linux)', desc: 'Escribir pequeños scripts en Python o JavaScript Vanilla probando cada módulo.', url: 'https://code.visualstudio.com' },
+      { tipo: 'doc', nombre: 'Documentación Oficial de Python SQLite3 / MDN Web Docs', desc: 'La referencia más confiable y libre de distracciones.', url: 'https://developer.mozilla.org/es/' },
+      { tipo: 'video', nombre: 'YouTube: Midudev / Fazt Code (Arquitectura Limpia)', desc: 'Buenas prácticas de desarrollo explicadas de forma práctica.', url: 'https://www.youtube.com/@midudev' }
     ]
   },
   'GEO-EST': {
@@ -242,8 +242,8 @@ export const TEMARIOS_Y_HERRAMIENTAS = {
       { id: 'geo_t4', titulo: 'Geopolítica de Venezuela y Monagas', descripcion: 'Cuenca petrolera oriental, gas de Anaco/Punta de Mata y salida fluvial hacia el Atlántico.' }
     ],
     herramientas: [
-      { tipo: 'video', nombre: 'YouTube: VisualPolitik / Memorias de Pez', desc: 'Análisis geopolíticos ilustrados de conflictos globales y rutas comerciales.' },
-      { tipo: 'lectura', nombre: 'Lectura: El Arte de la Guerra (Sun Tzu)', desc: 'Capítulos cortos sobre evaluación del terreno y toma de decisiones.' }
+      { tipo: 'video', nombre: 'YouTube: VisualPolitik / Memorias de Pez', desc: 'Análisis geopolíticos ilustrados de conflictos globales y rutas comerciales.', url: 'https://www.youtube.com/@VisualPolitik' },
+      { tipo: 'lectura', nombre: 'Lectura: El Arte de la Guerra (Sun Tzu)', desc: 'Capítulos cortos sobre evaluación del terreno y toma de decisiones.', url: 'https://es.wikisource.org/wiki/El_arte_de_la_guerra' }
     ]
   },
   'ORA-CAS': {
@@ -256,8 +256,8 @@ export const TEMARIOS_Y_HERRAMIENTAS = {
       { id: 'ora_t4', titulo: 'Práctica de firma profesional y caligrafía clara', descripcion: 'Memoria muscular para firmar con trazo seguro en documentos oficiales y actas.' }
     ],
     herramientas: [
-      { tipo: 'audio', nombre: 'Notas de Voz de 2 minutos en Telegram', desc: 'Grabar un monólogo diario respondiendo una pregunta y escuchar tu ritmo y claridad.' },
-      { tipo: 'practica', nombre: 'Libreta de caligrafía y bolígrafo de gel', desc: 'Practicar 20 firmas seguidas con inclinación y velocidad constante.' }
+      { tipo: 'audio', nombre: 'Notas de Voz de 2 minutos en Telegram', desc: 'Grabar un monólogo diario respondiendo una pregunta y escuchar tu ritmo y claridad.', url: 'https://t.me' },
+      { tipo: 'practica', nombre: 'Libreta de caligrafía y bolígrafo de gel', desc: 'Practicar 20 firmas seguidas con inclinación y velocidad constante.', url: 'https://es.wikipedia.org/wiki/Caligraf%C3%ADa' }
     ]
   },
   'ING-TEC': {
@@ -269,9 +269,9 @@ export const TEMARIOS_Y_HERRAMIENTAS = {
       { id: 'ing_t3', titulo: 'Verbos modales obligatorios', descripcion: 'Uso de MUST (obligatorio), SHOULD (recomendado), CAN (posible).' }
     ],
     herramientas: [
-      { tipo: 'app', nombre: 'App Móvil Duolingo (15 min diarios)', desc: 'Mantiene el hábito y la memoria léxica activa todos los días.' },
-      { tipo: 'voz', nombre: 'Gemini Voice en el Celular (5 a 10 min)', desc: 'Hablar con audífonos sobre tecnología con pronunciación nativa y corrección amable.' },
-      { tipo: 'video', nombre: 'Videos técnicos de YouTube con subtítulos en inglés', desc: 'Ver cómo los ingenieros nativos pronuncian los términos técnicos.' }
+      { tipo: 'app', nombre: 'App Móvil Duolingo (15 min diarios)', desc: 'Mantiene el hábito y la memoria léxica activa todos los días.', url: 'https://www.duolingo.com' },
+      { tipo: 'voz', nombre: 'Gemini Voice en el Celular (5 a 10 min)', desc: 'Hablar con audífonos sobre tecnología con pronunciación nativa y corrección amable.', url: 'https://gemini.google.com' },
+      { tipo: 'video', nombre: 'Videos técnicos de YouTube con subtítulos en inglés', desc: 'Ver cómo los ingenieros nativos pronuncian los términos técnicos.', url: 'https://www.youtube.com' }
     ]
   },
   'ECO-DIG': {
@@ -283,8 +283,8 @@ export const TEMARIOS_Y_HERRAMIENTAS = {
       { id: 'eco_t3', titulo: 'Cálculo de margen neto real', descripcion: 'Restar costos de producto, comisiones bancarias, delivery y empaque para ver ganancia real.' }
     ],
     herramientas: [
-      { tipo: 'app', nombre: 'WhatsApp Business', desc: 'Para estructurar catálogos y probar flujos de atención comercial.' },
-      { tipo: 'finanzas', nombre: 'Binance P2P / El Dorado', desc: 'Entender el spread cambiario y las transferencias de valor seguras.' }
+      { tipo: 'app', nombre: 'WhatsApp Business', desc: 'Para estructurar catálogos y probar flujos de atención comercial.', url: 'https://business.whatsapp.com' },
+      { tipo: 'finanzas', nombre: 'Binance P2P / El Dorado', desc: 'Entender el spread cambiario y las transferencias de valor seguras.', url: 'https://p2p.binance.com' }
     ]
   }
 };
