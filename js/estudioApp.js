@@ -163,10 +163,10 @@ class EstudioApp {
 
       if (btn && sec) {
         if (v === nuevaVista) {
-          btn.className = 'px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-black bg-[#23176d] text-white border border-sky-400/50 shadow-md transition flex items-center gap-1.5 cursor-pointer';
+          btn.className = 'notion-view-btn active';
           sec.classList.remove('hidden');
         } else {
-          btn.className = 'px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-400 hover:text-white bg-[#140e40] border border-[#2d1f85] transition flex items-center gap-1.5 cursor-pointer';
+          btn.className = 'notion-view-btn';
           sec.classList.add('hidden');
         }
       }
@@ -191,11 +191,23 @@ class EstudioApp {
     const elBarra = document.getElementById('barra-progreso-global');
     if (elBarra) elBarra.style.width = `${metricas.porcentajeGlobal}%`;
 
-    const elPerdidas = document.getElementById('kpi-horas-interrupcion');
-    if (elPerdidas) elPerdidas.textContent = `${metricas.totalPerdido}h`;
-
     const elCompletadas = document.getElementById('kpi-horas-completadas');
     if (elCompletadas) elCompletadas.textContent = `${metricas.totalCompletado}h`;
+  }
+
+  obtenerEstiloTagNotion(materiaCodigo) {
+    const mapa = {
+      'MAT-ING': { bg: 'var(--tag-blue-bg)', text: 'var(--tag-blue-text)', label: 'Matemáticas' },
+      'SIS-ARQ': { bg: 'var(--tag-green-bg)', text: 'var(--tag-green-text)', label: 'Programación' },
+      'GEO-EST': { bg: 'var(--tag-purple-bg)', text: 'var(--tag-purple-text)', label: 'Geopolítica' },
+      'ORA-CAS': { bg: 'var(--tag-amber-bg)', text: 'var(--tag-amber-text)', label: 'Oratoria' },
+      'ING-TEC': { bg: 'var(--tag-indigo-bg)', text: 'var(--tag-indigo-text)', label: 'Inglés' },
+      'ECO-DIG': { bg: 'var(--tag-orange-bg)', text: 'var(--tag-orange-text)', label: 'E-Commerce' },
+      'REU-COM': { bg: 'var(--tag-rose-bg)', text: 'var(--tag-rose-text)', label: 'Reunión' },
+      'GIM-FIT': { bg: 'var(--tag-orange-bg)', text: 'var(--tag-orange-text)', label: 'Gimnasio' },
+      'OCI-LIB': { bg: 'var(--tag-gray-bg)', text: 'var(--tag-gray-text)', label: 'Ocio' }
+    };
+    return mapa[materiaCodigo] || { bg: 'var(--tag-gray-bg)', text: 'var(--tag-gray-text)', label: materiaCodigo };
   }
 
   renderVista() {
@@ -219,33 +231,37 @@ class EstudioApp {
       });
 
       const totalHorasDia = calcularHorasDia(bloques);
-      const esDiaSaturado = totalHorasDia >= 6.5;
 
       return `
-        <div class="bg-[#100b33] border border-[#2d1f85] rounded-2xl flex flex-col overflow-hidden shadow-lg transition hover:border-[#3c2ba6]">
-          <!-- Encabezado del Día -->
-          <div class="p-3 bg-[#140e40] border-b border-[#2d1f85] flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full ${esDiaSaturado ? 'bg-amber-400 animate-pulse' : 'bg-emerald-400'}"></span>
-              <h3 class="text-sm font-black text-white uppercase tracking-wider">${dia.nombre}</h3>
-            </div>
+        <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-md flex flex-col min-h-[460px]">
+          <!-- Encabezado de Columna Board estilo Notion -->
+          <div class="p-2.5 border-b border-[var(--notion-border)] flex items-center justify-between">
             <div class="flex items-center gap-1.5">
-              <span class="text-xs font-mono font-bold px-2 py-0.5 rounded-lg ${esDiaSaturado ? 'bg-amber-950 text-amber-300 border border-amber-600/50' : 'bg-[#18114a] text-slate-300 border border-[#2d1f85]'}">
+              <span class="text-xs font-semibold text-[var(--notion-text)]">${dia.nombre}</span>
+              <span class="text-[11px] font-mono px-1.5 py-0.5 rounded bg-[var(--notion-card)] text-[var(--notion-text-muted)] border border-[var(--notion-border)]">
                 ${Math.round(totalHorasDia * 10) / 10}h
               </span>
-              <button onclick="window.abrirModalAgregarBloque('${dia.id}')" class="w-6 h-6 rounded-lg bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 hover:text-white flex items-center justify-center text-xs font-bold transition cursor-pointer" title="Agregar bloque manual a ${dia.nombre}">
-                +
-              </button>
             </div>
+            <button onclick="window.abrirModalAgregarBloque('${dia.id}')" class="w-5 h-5 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] flex items-center justify-center text-xs transition cursor-pointer" title="Añadir bloque">
+              +
+            </button>
           </div>
 
-          <!-- Lista de Bloques del Día -->
-          <div class="p-2.5 space-y-2 flex-1 overflow-y-auto max-h-[480px] scrollbar-thin">
+          <!-- Lista de Tarjetas del Día (Notion Cards) -->
+          <div class="p-2 space-y-2 flex-1 overflow-y-auto max-h-[520px] scrollbar-thin">
             ${bloques.length === 0 ? `
-              <div class="py-8 text-center text-xs text-slate-500 italic">
-                Sin bloques programados
+              <div class="py-12 text-center text-xs text-[var(--notion-text-muted)] italic">
+                Sin actividades
               </div>
             ` : bloques.map(b => this.renderTarjetaBloque(b, dia.id)).join('')}
+          </div>
+
+          <!-- Pie de Columna: Botón Añadir -->
+          <div class="p-1.5 border-t border-[var(--notion-border)]">
+            <button onclick="window.abrirModalAgregarBloque('${dia.id}')" type="button" class="w-full py-1 px-2 rounded text-xs text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] hover:bg-[var(--notion-hover)] transition flex items-center gap-1 cursor-pointer">
+              <span>+</span>
+              <span>Nuevo</span>
+            </button>
           </div>
         </div>
       `;
@@ -255,64 +271,58 @@ class EstudioApp {
   }
 
   renderTarjetaBloque(bloque, diaId) {
-    const mat = MATERIAS_CONFIG.find(m => m.codigo === bloque.materiaCodigo) || {
-      nombre: bloque.materiaCodigo,
-      colorHex: '#38bdf8',
-      colorBg: 'rgba(56, 189, 248, 0.12)',
-      colorBorder: 'rgba(56, 189, 248, 0.4)'
-    };
+    const tag = this.obtenerEstiloTagNotion(bloque.materiaCodigo);
+    const completado = Boolean(bloque.completado);
 
     if (bloque.cancelado) {
       return `
-        <div class="p-2.5 rounded-xl bg-red-950/20 border border-red-500/30 opacity-60 space-y-1.5 relative overflow-hidden">
-          <div class="flex items-center justify-between text-xs">
-            <span class="font-mono text-slate-400 line-through">${bloque.inicio} - ${bloque.fin}</span>
-            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-950 text-red-300 border border-red-500/50">
-              ⚡ ${bloque.motivoCancelacion || 'Cancelado'}
-            </span>
+        <div class="notion-item-card p-2.5 opacity-50 space-y-1">
+          <div class="flex items-center justify-between text-[11px] font-mono text-[var(--notion-text-muted)]">
+            <span class="line-through">${bloque.inicio} - ${bloque.fin}</span>
+            <span class="text-rose-400 font-sans">⚡ Corte</span>
           </div>
-          <p class="text-xs font-bold text-slate-400 line-through truncate">${bloque.tema || mat.nombre}</p>
+          <p class="text-xs text-[var(--notion-text-muted)] line-through truncate">${bloque.tema || tag.label}</p>
         </div>
       `;
     }
 
     return `
-      <div style="background-color: ${mat.colorBg}; border-color: ${mat.colorBorder};" class="p-3 rounded-xl border flex flex-col justify-between gap-2 transition hover:scale-[1.01] hover:shadow-md group relative">
-        <div>
-          <!-- Cabecera del Bloque: Horario + Badges -->
-          <div class="flex items-center justify-between gap-1 text-xs mb-1">
-            <span class="font-mono font-bold text-slate-200">
-              ⏰ ${bloque.inicio} - ${bloque.fin} <span class="text-slate-400">(${bloque.duracion}h)</span>
-            </span>
-            ${bloque.esRecuperacion ? `
-              <span class="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-950 text-amber-300 border border-amber-500/60 shadow-sm animate-pulse" title="Recuperado de ${bloque.recuperaDe}">
-                ⚡ Recuperado
-              </span>
-            ` : ''}
-          </div>
-
-          <!-- Materia y Tema -->
-          <div class="space-y-0.5">
-            <span class="text-[11px] font-black uppercase tracking-wider block" style="color: ${mat.colorHex};">
-              ${mat.codigo} • ${mat.nombre}
-            </span>
-            <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-amber-200 transition line-clamp-2">
-              ${bloque.tema || 'Estudio Profundo y Ejercitación'}
-            </h4>
-          </div>
+      <div class="notion-item-card p-2.5 space-y-2 group">
+        <!-- Fila Superior: Horario y Tag Pastel Notion -->
+        <div class="flex items-center justify-between gap-1">
+          <span class="text-[11px] font-mono text-[var(--notion-text-muted)]">
+            ${bloque.inicio} - ${bloque.fin}
+          </span>
+          <span class="text-[10px] font-medium px-1.5 py-0.5 rounded" style="background-color: ${tag.bg}; color: ${tag.text};">
+            ${tag.label}
+          </span>
         </div>
 
-        <!-- Acciones Rápidas del Bloque -->
-        <div class="pt-2 border-t border-white/10 flex items-center justify-between gap-1">
-          <button onclick="window.toggleCompletarBloque('${diaId}', '${bloque.id}')" class="px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition cursor-pointer ${bloque.completado ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/50' : 'bg-[#0e092e] text-slate-300 hover:text-white border border-[#2d1f85]'}">
-            <span>${bloque.completado ? '✓ Listo' : '⚪ Pendiente'}</span>
-          </button>
+        <!-- Título del Tema -->
+        <div class="space-y-0.5">
+          <h4 class="text-xs sm:text-[13px] font-medium text-[var(--notion-text)] leading-snug ${completado ? 'line-through opacity-60' : ''}">
+            ${bloque.tema || 'Sesión de Estudio'}
+          </h4>
+        </div>
 
-          <div class="flex items-center gap-1">
-            <button onclick="window.abrirGuiaDeMateria('${bloque.materiaCodigo}')" class="p-1 rounded-lg bg-[#0e092e] hover:bg-[#23176d] text-slate-300 hover:text-sky-300 text-xs transition cursor-pointer" title="Ver guía de estudio y axiomas de esta materia">
+        <!-- Fila Inferior: Checkbox Inline y Acciones -->
+        <div class="pt-1.5 border-t border-[var(--notion-border)] flex items-center justify-between text-xs">
+          <label class="flex items-center gap-1.5 cursor-pointer select-none">
+            <input 
+              type="checkbox" 
+              class="notion-checkbox" 
+              onchange="window.toggleCompletarBloque('${diaId}', '${bloque.id}')"
+              ${completado ? 'checked' : ''}>
+            <span class="text-[11px] ${completado ? 'text-emerald-400 font-medium' : 'text-[var(--notion-text-muted)]'}">
+              ${completado ? 'Hecho' : 'Pendiente'}
+            </span>
+          </label>
+
+          <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button onclick="window.abrirGuiaDeMateria('${bloque.materiaCodigo}')" class="p-1 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] text-xs transition cursor-pointer" title="Ver temas de esta materia">
               📖
             </button>
-            <button onclick="window.eliminarBloqueManual('${diaId}', '${bloque.id}')" class="p-1 rounded-lg bg-[#0e092e] hover:bg-red-950 text-slate-400 hover:text-red-300 text-xs transition cursor-pointer" title="Eliminar bloque">
+            <button onclick="window.eliminarBloqueManual('${diaId}', '${bloque.id}')" class="p-1 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-red-400 text-xs transition cursor-pointer" title="Eliminar bloque">
               ✕
             </button>
           </div>
@@ -329,79 +339,86 @@ class EstudioApp {
 
     contenedor.innerHTML = `
       <div class="space-y-6">
-        <!-- Tarjeta de Plan de Amortización Mensual -->
-        <div class="p-5 sm:p-6 bg-[#140e40] border border-[#2d1f85] rounded-2xl space-y-3">
-          <div class="flex items-center justify-between">
-            <div>
-              <span class="text-xs font-bold text-amber-400 uppercase tracking-wider block">Balance de Resiliencia</span>
-              <h3 class="text-lg font-black text-white">Promedios y Amortización Mensual</h3>
+        <!-- Callout Box Notion de Resumen -->
+        <div class="notion-callout flex items-start gap-3">
+          <span class="text-lg">📊</span>
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <h3 class="text-sm font-semibold text-[var(--notion-text)]">Balance y Proyección Mensual</h3>
+              <span class="text-xs px-2 py-0.5 rounded bg-[var(--notion-card)] border border-[var(--notion-border)] font-mono text-[var(--notion-text-muted)]">
+                Meta Mensual: ~${metricas.totalMeta * 4}h
+              </span>
             </div>
-            <span class="px-3 py-1 rounded-xl text-xs font-mono font-bold bg-[#1d1554] text-sky-300 border border-[#2d1f85]">
-              Meta Mensual: ~${metricas.totalMeta * 4}h
-            </span>
+            <p class="text-xs text-[var(--notion-text-muted)] leading-relaxed">
+              Distribución de horas programadas por asignatura y proyección acumulada a 4 semanas.
+            </p>
           </div>
-          <p class="text-sm text-slate-300 max-w-3xl leading-relaxed">
-            Cuando un corte eléctrico o imprevisto personal no puede recuperarse en la semana sin sobrepasar el límite de 6.5h diarias, el motor redistribuye el tiempo excedente equitativamente a lo largo de las siguientes semanas del mes.
-          </p>
         </div>
 
-        <!-- Tabla de Estado por Materia a Nivel Mensual -->
-        <div class="bg-[#100b33] border border-[#2d1f85] rounded-2xl overflow-hidden shadow-xl">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-[#140e40] text-xs uppercase text-slate-400 font-bold border-b border-[#2d1f85]">
+        <!-- Tabla estilo Notion Database Table View -->
+        <div class="bg-[var(--notion-card)] border border-[var(--notion-border)] rounded-md overflow-hidden">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-[var(--notion-bg-sidebar)] text-xs text-[var(--notion-text-muted)] font-medium border-b border-[var(--notion-border)]">
               <tr>
-                <th class="p-3.5">Asignatura / Proyecto</th>
-                <th class="p-3.5">Meta Semanal</th>
-                <th class="p-3.5">Proyección Mensual</th>
-                <th class="p-3.5">Horas Semanales Asignadas</th>
-                <th class="p-3.5">Horas Perdidas</th>
-                <th class="p-3.5">Cumplimiento</th>
+                <th class="p-3">Asignatura</th>
+                <th class="p-3">Meta Semanal</th>
+                <th class="p-3">Proyección Mensual</th>
+                <th class="p-3">Asignadas</th>
+                <th class="p-3">Afectadas</th>
+                <th class="p-3">Cumplimiento</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-[#2d1f85]/50">
-              ${metricas.materias.map(m => `
-                <tr class="hover:bg-[#140e40]/60 transition">
-                  <td class="p-3.5 font-bold text-white flex items-center gap-2">
-                    <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${m.colorHex}"></span>
-                    <span>${m.nombre}</span>
-                    <span class="text-xs font-mono text-slate-400">(${m.codigo})</span>
-                  </td>
-                  <td class="p-3.5 font-mono text-slate-300">${m.metaSemanal}h</td>
-                  <td class="p-3.5 font-mono text-sky-300">${m.metaSemanal * 4}h</td>
-                  <td class="p-3.5 font-mono font-bold text-white">${m.horasProgramadas}h</td>
-                  <td class="p-3.5 font-mono text-amber-300">${m.horasPerdidas}h</td>
-                  <td class="p-3.5">
-                    <div class="flex items-center gap-2">
-                      <div class="flex-1 w-24 bg-[#0e092e] h-2 rounded-full overflow-hidden border border-[#2d1f85]">
-                        <div class="h-full rounded-full transition-all" style="width: ${m.porcentajeCumplimiento}%; background-color: ${m.colorHex};"></div>
+            <tbody class="divide-y divide-[var(--notion-border)]">
+              ${metricas.materias.map(m => {
+                const tag = this.obtenerEstiloTagNotion(m.codigo);
+                return `
+                  <tr class="hover:bg-[var(--notion-hover)] transition">
+                    <td class="p-3">
+                      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium" style="background-color: ${tag.bg}; color: ${tag.text};">
+                        <span>${m.nombre}</span>
+                        <span class="text-[10px] opacity-75 font-mono">(${m.codigo})</span>
+                      </span>
+                    </td>
+                    <td class="p-3 font-mono text-[var(--notion-text-muted)]">${m.metaSemanal}h</td>
+                    <td class="p-3 font-mono text-[var(--notion-text)]">${m.metaSemanal * 4}h</td>
+                    <td class="p-3 font-mono font-medium text-[var(--notion-text)]">${m.horasProgramadas}h</td>
+                    <td class="p-3 font-mono text-amber-400">${m.horasPerdidas}h</td>
+                    <td class="p-3">
+                      <div class="flex items-center gap-2">
+                        <div class="w-20 bg-[var(--notion-border)] h-1.5 rounded-full overflow-hidden">
+                          <div class="h-full bg-emerald-500 rounded-full" style="width: ${m.porcentajeCumplimiento}%;"></div>
+                        </div>
+                        <span class="text-xs font-mono text-[var(--notion-text-muted)]">${m.porcentajeCumplimiento}%</span>
                       </div>
-                      <span class="text-xs font-mono font-bold text-slate-200">${m.porcentajeCumplimiento}%</span>
-                    </div>
-                  </td>
-                </tr>
-              `).join('')}
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
             </tbody>
           </table>
         </div>
 
-        <!-- Historial de Interrupciones Registradas -->
-        <div class="bg-[#100b33] border border-[#2d1f85] rounded-2xl p-5 space-y-3">
+        <!-- Historial de Contingencias (Notion List View) -->
+        <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-md p-4 space-y-3">
           <div class="flex items-center justify-between">
-            <h4 class="text-sm font-black text-white uppercase tracking-wider">Historial de Contingencias (Cortes Eléctricos e Imprevistos)</h4>
-            <span class="text-xs text-slate-400 font-mono">${this.historialEventos.length} eventos registrados</span>
+            <h4 class="text-xs font-semibold text-[var(--notion-text)] uppercase tracking-wider">
+              Registro de Contingencias
+            </h4>
+            <span class="text-xs text-[var(--notion-text-muted)] font-mono">${this.historialEventos.length} reportadas</span>
           </div>
 
           ${this.historialEventos.length === 0 ? `
-            <p class="text-xs text-slate-500 italic py-3 text-center">No hay interrupciones reportadas aún.</p>
+            <p class="text-xs text-[var(--notion-text-muted)] italic py-2 text-center">No hay interrupciones reportadas esta semana.</p>
           ` : `
-            <div class="space-y-2">
+            <div class="space-y-1.5">
               ${this.historialEventos.slice(-5).reverse().map(ev => `
-                <div class="p-3 rounded-xl bg-[#140e40] border border-[#2d1f85] flex items-center justify-between text-xs">
-                  <div>
-                    <span class="font-bold text-white">${ev.motivo}</span>
-                    <span class="text-slate-400 ml-2">• ${ev.dia.toUpperCase()} (${ev.horaInicio} - ${ev.horaFin})</span>
+                <div class="p-2 rounded bg-[var(--notion-card)] border border-[var(--notion-border)] flex items-center justify-between text-xs">
+                  <div class="flex items-center gap-2">
+                    <span>⚡</span>
+                    <span class="font-medium text-[var(--notion-text)]">${ev.motivo}</span>
+                    <span class="text-[var(--notion-text-muted)]">• ${ev.dia.toUpperCase()} (${ev.horaInicio} - ${ev.horaFin})</span>
                   </div>
-                  <span class="text-amber-300 font-bold font-mono">-${ev.horasPerdidasTotal}h afectadas</span>
+                  <span class="font-mono text-amber-400">-${ev.horasPerdidasTotal}h</span>
                 </div>
               `).join('')}
             </div>

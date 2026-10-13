@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es" class="dark" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AXIOM • Sistema Personal de Estudio Inteligente</title>
+  <title>Horario Semanal & Temas • Workspace</title>
 
-  <meta name="theme-color" content="#0e092e">
-  <link rel="icon" type="image/png" href="../assets/logo-migato.png">
+  <meta name="theme-color" content="#191919">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -26,12 +26,14 @@
       theme: {
         extend: {
           colors: {
-            migato: {
-              DEFAULT: "#23176d",
-              dark: "#0e092e",
-              deep: "#140e40",
-              surface: "#100b33",
-              hover: "#31228e"
+            notion: {
+              bg: "var(--notion-bg)",
+              sidebar: "var(--notion-bg-sidebar)",
+              card: "var(--notion-card)",
+              hover: "var(--notion-card-hover)",
+              border: "var(--notion-border)",
+              text: "var(--notion-text)",
+              muted: "var(--notion-text-muted)"
             }
           }
         }
@@ -47,73 +49,80 @@
     }
   </script>
 
-  <!-- Estilos Centrales -->
-  <link rel="stylesheet" href="css/styles.css?v=101">
+  <!-- Estilos Notion Workspace -->
+  <link rel="stylesheet" href="css/styles.css?v=200">
+
+  <script>
+    // Inicialización del tema Notion (Dark por defecto)
+    (function() {
+      const saved = localStorage.getItem('notion_theme');
+      if (saved === 'light') {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+
+    window.toggleNotionTheme = function() {
+      const isDark = document.documentElement.classList.contains('dark');
+      if (isDark) {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('notion_theme', 'light');
+      } else {
+        document.documentElement.classList.remove('light');
+        document.documentElement.classList.add('dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('notion_theme', 'dark');
+      }
+      if (window.estudioApp) window.estudioApp.renderVista();
+    };
+  </script>
 </head>
-<body class="bg-[#0e092e] text-slate-100 min-h-screen flex flex-col antialiased">
+<body class="bg-[var(--notion-bg)] text-[var(--notion-text)] min-h-screen flex flex-col antialiased">
 
   <!-- ============================================================== -->
-  <!-- 1. CABECERA PRINCIPAL MIGATO (Estilo Ejecutivo Notion / SIGAEE) -->
+  <!-- 1. BARRA SUPERIOR NOTION (Breadcrumbs & Acciones de Página)    -->
   <!-- ============================================================== -->
-  <header class="bg-[#140e40] border-b border-[#2d1f85] shadow-md shrink-0 w-full py-2.5 sm:py-3 sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-3">
+  <header class="bg-[var(--notion-bg)] border-b border-[var(--notion-border)] shrink-0 w-full py-2.5 sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
       
-      <!-- Lado Izquierdo: Identidad Personal de Estudio -->
-      <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
-        <div class="flex items-center gap-2.5">
-          <div class="w-10 h-10 rounded-xl bg-[#1d1554] p-2 border border-indigo-400/30 flex items-center justify-center shrink-0 shadow-sm text-indigo-300">
-            <i data-lucide="calendar" class="w-6 h-6 text-indigo-400"></i>
-          </div>
-          <div>
-            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 block leading-tight">
-              MI AGENDA PERSONAL
-            </span>
-            <h1 class="text-sm sm:text-base font-black text-white tracking-wide block leading-none uppercase">
-              HORARIO SEMANAL
-            </h1>
-            <span class="text-xs text-amber-300 font-bold uppercase tracking-wider block leading-tight">
-              ESTUDIO • GIMNASIO (5:00 PM) • OCIO
-            </span>
-          </div>
+      <!-- Lado Izquierdo: Breadcrumbs estilo Notion -->
+      <div class="flex items-center gap-2 text-sm text-[var(--notion-text-muted)] min-w-0">
+        <span class="hover:text-[var(--notion-text)] cursor-pointer transition">Workspace</span>
+        <span>/</span>
+        <div class="flex items-center gap-1.5 font-medium text-[var(--notion-text)] truncate">
+          <span>📅</span>
+          <span class="truncate">Horario Semanal & Temas</span>
         </div>
-
-        <!-- Botón de Contingencia Rápida (Móvil) -->
-        <button id="btn-abrir-modal-contingencia" type="button" class="md:hidden px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 text-white text-xs font-black flex items-center gap-1 shadow-md">
-          <span>⚡ Corte de Luz</span>
-        </button>
       </div>
 
-      <!-- Lado Derecho: Navegación de Vistas y Botones Prácticos -->
-      <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-between md:justify-end">
-        
-        <!-- Botones de Vista Dual -->
-        <div class="flex items-center p-1 bg-[#0e092e] rounded-xl border border-[#2d1f85] text-xs">
-          <button id="btn-vista-semanal" onclick="window.cambiarVista('semanal')" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg font-black bg-[#23176d] text-white border border-sky-400/50 shadow-sm transition cursor-pointer flex items-center gap-1.5">
-            <i data-lucide="calendar" class="w-3.5 h-3.5 text-sky-300"></i>
-            <span>Horario Semanal</span>
-          </button>
-          <button id="btn-vista-guias" onclick="window.cambiarVista('guias')" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition cursor-pointer flex items-center gap-1.5">
-            <i data-lucide="book-open" class="w-3.5 h-3.5 text-amber-300"></i>
-            <span>Temas de Estudio</span>
-          </button>
-          <button id="btn-vista-mensual" onclick="window.cambiarVista('mensual')" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition cursor-pointer flex items-center gap-1.5">
-            <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-emerald-300"></i>
-            <span>Resumen del Mes</span>
-          </button>
-        </div>
-
-        <!-- Botón de Contingencia Rápida (Escritorio) -->
-        <button onclick="window.abrirModalContingencia()" type="button" class="hidden md:flex px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs sm:text-sm font-black items-center gap-1.5 shadow-md active:scale-95 transition cursor-pointer" title="Reportar corte de luz o imprevisto para mover horas">
-          <i data-lucide="zap" class="w-4 h-4 text-slate-950"></i>
-          <span>Reportar Corte de Luz</span>
+      <!-- Lado Derecho: Acciones de Base de Datos -->
+      <div class="flex items-center gap-1.5 shrink-0 text-xs">
+        <!-- Botón de Contingencia / Corte de Luz (Estilo Notion Action) -->
+        <button onclick="window.abrirModalContingencia()" type="button" class="px-2.5 py-1.5 rounded-md bg-[var(--notion-hover)] hover:bg-[var(--notion-active)] border border-[var(--notion-border)] text-[var(--notion-text)] font-medium flex items-center gap-1.5 transition cursor-pointer" title="Reportar corte de luz o imprevisto">
+          <span class="text-amber-400">⚡</span>
+          <span class="hidden sm:inline">Corte de Luz</span>
         </button>
 
-        <!-- Opciones Rápidas: Exportar a Markdown y Restablecer -->
-        <button onclick="window.exportarItinerarioMarkdown()" type="button" class="p-2 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 hover:text-white text-xs transition cursor-pointer" title="Descargar Horario en Markdown">
-          <i data-lucide="share-2" class="w-4 h-4 text-emerald-400"></i>
+        <!-- Selector de Tema Claro / Oscuro -->
+        <button onclick="window.toggleNotionTheme()" type="button" class="p-1.5 rounded-md hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] transition cursor-pointer" title="Cambiar tema claro / oscuro">
+          <span class="dark:hidden">🌙</span>
+          <span class="hidden dark:inline">☀️</span>
         </button>
 
-        <button onclick="window.restablecerItinerarioBase()" type="button" class="p-2 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-slate-400 hover:text-white text-xs transition cursor-pointer" title="Restablecer al horario original">
+        <!-- Exportar a Markdown -->
+        <button onclick="window.exportarItinerarioMarkdown()" type="button" class="p-1.5 rounded-md hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] transition cursor-pointer" title="Exportar horario en Markdown para Notion/Obsidian">
+          <i data-lucide="share" class="w-4 h-4"></i>
+        </button>
+
+        <!-- Restablecer Horario -->
+        <button onclick="window.restablecerItinerarioBase()" type="button" class="p-1.5 rounded-md hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-red-400 transition cursor-pointer" title="Restablecer al horario base">
           <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
         </button>
       </div>
@@ -122,109 +131,113 @@
   </header>
 
   <!-- ============================================================== -->
-  <!-- 2. BARRA DE MÉTRICAS Y BALANCES EN TIEMPO REAL                 -->
+  <!-- 2. ENCABEZADO DE PÁGINA NOTION & VISTAS                        -->
   <!-- ============================================================== -->
-  <section class="bg-[#100b33] border-b border-[#2d1f85] py-3 px-3 sm:px-6">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-      
-      <!-- Indicadores Numéricos -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 w-full md:w-auto">
-        <div class="bg-[#140e40] px-3 py-2 rounded-xl border border-[#2d1f85]">
-          <span class="text-[11px] text-slate-400 uppercase font-semibold block">Horas Asignadas</span>
-          <span id="kpi-horas-programadas" class="text-base sm:text-lg font-black text-white font-mono">20.0h</span>
-        </div>
-        <div class="bg-[#140e40] px-3 py-2 rounded-xl border border-[#2d1f85]">
-          <span class="text-[11px] text-slate-400 uppercase font-semibold block">Meta Semanal</span>
-          <span id="kpi-horas-meta" class="text-base sm:text-lg font-black text-sky-300 font-mono">20.0h</span>
-        </div>
-        <div class="bg-[#140e40] px-3 py-2 rounded-xl border border-[#2d1f85]">
-          <span class="text-[11px] text-slate-400 uppercase font-semibold block">Horas Afectadas</span>
-          <span id="kpi-horas-interrupcion" class="text-base sm:text-lg font-black text-amber-300 font-mono">0.0h</span>
-        </div>
-        <div class="bg-[#140e40] px-3 py-2 rounded-xl border border-[#2d1f85]">
-          <span class="text-[11px] text-slate-400 uppercase font-semibold block">Completadas</span>
-          <span id="kpi-horas-completadas" class="text-base sm:text-lg font-black text-emerald-300 font-mono">0.0h</span>
-        </div>
-      </div>
-
-      <!-- Barra de Progreso Global Semanal -->
-      <div class="w-full md:w-80 bg-[#140e40] p-2.5 rounded-xl border border-[#2d1f85] space-y-1.5">
-        <div class="flex items-center justify-between text-xs">
-          <span class="font-bold text-slate-300">Cumplimiento Semanal</span>
-          <span id="kpi-porcentaje-cumplimiento" class="font-mono font-bold text-amber-300">100%</span>
-        </div>
-        <div class="w-full bg-[#0e092e] h-2.5 rounded-full overflow-hidden border border-[#2d1f85]">
-          <div id="barra-progreso-global" class="h-full bg-gradient-to-r from-sky-500 to-emerald-400 rounded-full transition-all duration-500" style="width: 100%;"></div>
-        </div>
-      </div>
-
+  <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 pt-6 pb-2 space-y-4">
+    
+    <!-- Título de Página con Icono Notion -->
+    <div class="space-y-1">
+      <div class="text-3xl select-none mb-1">📅</div>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--notion-text)]">
+        Horario Semanal & Temas de Estudio
+      </h1>
+      <p class="text-sm text-[var(--notion-text-muted)]">
+        Organización semanal, seguimiento de materias y balance mensual ante contingencias.
+      </p>
     </div>
-  </section>
 
-  <!-- ============================================================== -->
-  <!-- 3. CUERPO PRINCIPAL: VISTAS MODULARES                          -->
-  <!-- ============================================================== -->
-  <main class="flex-1 max-w-7xl mx-auto w-full p-3 sm:p-6 space-y-6">
+    <!-- Barra de Vistas de Base de Datos estilo Notion -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--notion-border)] pb-2 pt-2">
+      <!-- Tabs de Vistas -->
+      <div class="flex items-center gap-1 overflow-x-auto scrollbar-thin">
+        <button id="btn-vista-semanal" onclick="window.cambiarVista('semanal')" type="button" class="notion-view-btn active">
+          <i data-lucide="kanban" class="w-3.5 h-3.5"></i>
+          <span>Tablero Semanal</span>
+        </button>
+        <button id="btn-vista-guias" onclick="window.cambiarVista('guias')" type="button" class="notion-view-btn">
+          <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+          <span>Temas & Herramientas</span>
+        </button>
+        <button id="btn-vista-mensual" onclick="window.cambiarVista('mensual')" type="button" class="notion-view-btn">
+          <i data-lucide="table" class="w-3.5 h-3.5"></i>
+          <span>Resumen del Mes</span>
+        </button>
+      </div>
 
-    <!-- VISTA 1: LIENZO SEMANAL DE TIMEBOXING (LUNES A SÁBADO) -->
-    <section id="seccion-vista-semanal" class="space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <!-- Resumen Rápido de Horas (Propiedades Notion) -->
+      <div class="flex items-center gap-3 text-xs text-[var(--notion-text-muted)] shrink-0">
         <div>
-          <h2 class="text-lg font-black text-white tracking-wide">Tu Semana de un Vistazo</h2>
-          <p class="text-xs sm:text-sm text-slate-400">Distribución de Lunes a Sábado con tus horarios, tu reunión y tu gimnasio diario a las 5:00 PM.</p>
+          <span>Asignadas:</span>
+          <strong id="kpi-horas-programadas" class="font-mono text-[var(--notion-text)] font-semibold ml-1">20.0h</strong>
+        </div>
+        <span class="text-[var(--notion-border)]">•</span>
+        <div>
+          <span>Meta:</span>
+          <strong id="kpi-horas-meta" class="font-mono text-[var(--notion-text)] font-semibold ml-1">20.0h</strong>
+        </div>
+        <span class="text-[var(--notion-border)]">•</span>
+        <div>
+          <span>Completadas:</span>
+          <strong id="kpi-horas-completadas" class="font-mono text-emerald-400 font-semibold ml-1">0.0h</strong>
+        </div>
+        <span class="text-[var(--notion-border)]">•</span>
+        <div class="flex items-center gap-1.5">
+          <div class="w-16 bg-[var(--notion-border)] h-1.5 rounded-full overflow-hidden">
+            <div id="barra-progreso-global" class="h-full bg-emerald-500 rounded-full transition-all duration-300" style="width: 100%;"></div>
+          </div>
+          <span id="kpi-porcentaje-cumplimiento" class="font-mono font-semibold text-[var(--notion-text)]">100%</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- 3. CUERPO PRINCIPAL DE VISTAS NOTION                           -->
+  <!-- ============================================================== -->
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-4 space-y-6">
+
+    <!-- VISTA 1: TABLERO SEMANAL NOTION (BOARD VIEW) -->
+    <section id="seccion-vista-semanal" class="space-y-4">
+      <div class="flex items-center justify-between text-xs text-[var(--notion-text-muted)]">
+        <div class="flex items-center gap-2">
+          <span>Vista por Días (Lunes a Sábado)</span>
+          <span>•</span>
+          <span>Gimnasio diario a las 5:00 PM</span>
         </div>
 
         <div class="flex items-center gap-2">
-          <span class="text-xs text-slate-400 font-bold">Filtrar:</span>
-          <select id="select-filtro-materia" onchange="window.estudioApp.materiaFiltro = this.value; window.estudioApp.renderVista();" class="px-2.5 py-1 rounded-xl bg-[#140e40] border border-[#2d1f85] text-xs font-bold text-white cursor-pointer focus:outline-none">
+          <span>Filtrar por:</span>
+          <select id="select-filtro-materia" onchange="window.estudioApp.materiaFiltro = this.value; window.estudioApp.renderVista();" class="px-2 py-1 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-xs text-[var(--notion-text)] cursor-pointer focus:outline-none">
             <option value="todas">Todas las Materias</option>
-            <option value="MAT-ING">Matemáticas Pre-Ingeniería (MAT-ING)</option>
-            <option value="SIS-ARQ">Programación & Arquitectura (SIS-ARQ)</option>
-            <option value="GEO-EST">Geopolítica & Estrategia (GEO-EST)</option>
-            <option value="ORA-CAS">Castellano & Retórica (ORA-CAS)</option>
+            <option value="MAT-ING">Matemáticas (MAT-ING)</option>
+            <option value="SIS-ARQ">Programación (SIS-ARQ)</option>
+            <option value="GEO-EST">Geopolítica (GEO-EST)</option>
+            <option value="ORA-CAS">Oratoria (ORA-CAS)</option>
             <option value="ING-TEC">Inglés Técnico (ING-TEC)</option>
-            <option value="ECO-DIG">Economía Digital (ECO-DIG)</option>
-            <option value="REU-COM">Reuniones de Trabajo (REU-COM)</option>
-            <option value="GIM-FIT">Gimnasio & Físico (GIM-FIT)</option>
-            <option value="OCI-LIB">Ocio & Desconexión (OCI-LIB)</option>
+            <option value="ECO-DIG">E-Commerce (ECO-DIG)</option>
+            <option value="REU-COM">Reuniones de Trabajo</option>
+            <option value="GIM-FIT">Gimnasio</option>
+            <option value="OCI-LIB">Ocio y Descanso</option>
           </select>
         </div>
       </div>
 
-      <!-- Grid de 6 Días (Lunes a Sábado) -->
-      <div id="grid-semana-canvases" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3.5">
-        <!-- Inyectado por JS -->
+      <!-- Tablero Kanban de Días -->
+      <div id="grid-semana-canvases" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 items-start">
+        <!-- Renderizado por estudioApp.js -->
       </div>
     </section>
 
-    <!-- VISTA 2: TEMARIOS Y HERRAMIENTAS DE ESTUDIO -->
+    <!-- VISTA 2: BASE DE TEMAS Y RECURSOS NOTION (GALLERY / LIST VIEW) -->
     <section id="seccion-vista-guias" class="hidden space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#140e40] p-4 rounded-2xl border border-[#2d1f85]">
-        <div>
-          <h2 class="text-lg font-black text-white">Temas de Estudio & Herramientas Recomendadas</h2>
-          <p class="text-xs sm:text-sm text-slate-400">Lista clara de temas a investigar y herramientas directas donde buscar (videos, libros y ejercicios).</p>
-        </div>
-
-        <div class="flex items-center gap-2 shrink-0">
-          <label class="text-xs font-bold text-slate-300">Asignatura:</label>
-          <select id="select-materia-guia" class="px-3 py-1.5 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs font-bold text-white cursor-pointer focus:ring-1 focus:ring-sky-400">
-            <option value="MAT-ING">Matemáticas Pre-Ingeniería (MAT-ING)</option>
-            <option value="SIS-ARQ">Programación & Arquitectura (SIS-ARQ)</option>
-            <option value="GEO-EST">Geopolítica & Estrategia (GEO-EST)</option>
-            <option value="ORA-CAS">Castellano & Retórica (ORA-CAS)</option>
-            <option value="ING-TEC">Inglés Técnico (ING-TEC)</option>
-            <option value="ECO-DIG">Economía Digital (ECO-DIG)</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Contenedor del Árbol de Conocimiento -->
-      <div id="contenedor-arbol-conocimiento" class="bg-[#100b33] border border-[#2d1f85] rounded-2xl overflow-hidden shadow-2xl">
+      <!-- Contenedor de Temas y Herramientas -->
+      <div id="contenedor-arbol-conocimiento">
         <!-- Renderizado por arbolConocimiento.js -->
       </div>
     </section>
 
-    <!-- VISTA 3: PLAN MENSUAL Y AMORTIZACIÓN -->
+    <!-- VISTA 3: RESUMEN MENSUAL NOTION (TABLE VIEW) -->
     <section id="seccion-vista-mensual" class="hidden space-y-4">
       <div id="contenedor-vista-mensual">
         <!-- Renderizado por estudioApp.js -->
@@ -234,25 +247,24 @@
   </main>
 
   <!-- ============================================================== -->
-  <!-- 4. MODALES: CONTINGENCIA, RESULTADO, TUTOR Y QUIZZES           -->
+  <!-- 4. DIÁLOGOS Y MODALES NOTION                                   -->
   <!-- ============================================================== -->
 
   <!-- Modal 1: Reportar Interrupción / Corte de Luz -->
-  <div id="modal-contingencia" class="fixed inset-0 bg-[#0e092e]/85 backdrop-blur-md hidden items-center justify-center p-3 z-50 transition-all">
-    <div class="bg-[#140e40] border-2 border-amber-500/60 rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-[#2d1f85] pb-3">
+  <div id="modal-contingencia" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4 z-50 transition-all">
+    <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-lg max-w-md w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-[var(--notion-border)] pb-3">
         <div class="flex items-center gap-2">
-          <span class="w-3 h-3 rounded-full bg-amber-400 animate-ping"></span>
-          <h3 class="text-base sm:text-lg font-black text-white">Reportar Interrupción o Contingencia</h3>
+          <span>⚡</span>
+          <h3 class="text-sm font-semibold text-[var(--notion-text)]">Reportar Corte de Luz o Imprevisto</h3>
         </div>
-        <button type="button" onclick="window.cerrarModalContingencia()" class="text-slate-400 hover:text-white p-1 rounded-lg">✕</button>
+        <button type="button" onclick="window.cerrarModalContingencia()" class="text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] text-sm p-1">✕</button>
       </div>
 
-      <form id="form-contingencia" class="space-y-4">
-        <!-- Selector de Día -->
+      <form id="form-contingencia" class="space-y-3.5">
         <div>
-          <label class="text-xs font-bold text-slate-300 block mb-1">Día de la Interrupción:</label>
-          <select id="input-contingencia-dia" onchange="window.actualizarPreviewContingencia()" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-sm text-white focus:outline-none">
+          <label class="text-xs text-[var(--notion-text-muted)] block mb-1">Día del Evento:</label>
+          <select id="input-contingencia-dia" onchange="window.actualizarPreviewContingencia()" class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] focus:outline-none">
             <option value="lunes">Lunes</option>
             <option value="martes">Martes</option>
             <option value="miercoles">Miércoles</option>
@@ -262,154 +274,137 @@
           </select>
         </div>
 
-        <!-- Ventana Horaria -->
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
-            <label class="text-xs font-bold text-slate-300 block mb-1">Hora Inicio (se fue la luz):</label>
-            <input type="time" id="input-contingencia-ini" value="12:00" onchange="window.actualizarPreviewContingencia()" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-sm text-white focus:outline-none">
+            <label class="text-xs text-[var(--notion-text-muted)] block mb-1">Hora Inicio (se fue la luz):</label>
+            <input type="time" id="input-contingencia-ini" value="12:00" onchange="window.actualizarPreviewContingencia()" class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] font-mono focus:outline-none">
           </div>
           <div>
-            <label class="text-xs font-bold text-slate-300 block mb-1">Hora Fin (regresó / terminó):</label>
-            <input type="time" id="input-contingencia-fin" value="18:00" onchange="window.actualizarPreviewContingencia()" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-sm text-white focus:outline-none">
+            <label class="text-xs text-[var(--notion-text-muted)] block mb-1">Hora Fin (regresó):</label>
+            <input type="time" id="input-contingencia-fin" value="18:00" onchange="window.actualizarPreviewContingencia()" class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] font-mono focus:outline-none">
           </div>
         </div>
 
-        <!-- Motivo del Corte -->
         <div>
-          <label class="text-xs font-bold text-slate-300 block mb-1">Causa del Imprevisto:</label>
-          <select id="input-contingencia-motivo" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-sm text-white focus:outline-none">
-            <option value="Corte Eléctrico (SEN)">⚡ Corte Eléctrico (SEN / Falla en Maturín)</option>
-            <option value="Convocatoria Partido MIGATO">🏛️ Convocatoria Urgente de Partido / Sala Situacional</option>
-            <option value="Falla de Agua / Gas / Combustible">🛢️ Emergencia Doméstica (Gasolina / Agua)</option>
+          <label class="text-xs text-[var(--notion-text-muted)] block mb-1">Causa:</label>
+          <select id="input-contingencia-motivo" class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] focus:outline-none">
+            <option value="Corte Eléctrico (SEN)">⚡ Corte Eléctrico (SEN)</option>
+            <option value="Emergencia Doméstica">🛢️ Emergencia Doméstica / Agua / Combustible</option>
+            <option value="Compromiso Laboral Inesperado">💼 Compromiso Laboral Inesperado</option>
             <option value="Trámite / Emergencia Personal">🚨 Imprevisto Familiar o de Salud</option>
           </select>
         </div>
 
-        <!-- Previsualización de Bloques que se verán Afectados -->
         <div>
-          <label class="text-xs font-bold text-slate-300 block mb-1">Impacto Calculado:</label>
-          <div id="preview-bloques-afectados">
-            <!-- Inyectado por JS -->
-          </div>
+          <label class="text-xs text-[var(--notion-text-muted)] block mb-1">Impacto Calculado:</label>
+          <div id="preview-bloques-afectados" class="text-xs"></div>
         </div>
 
-        <!-- Botones de Acción -->
-        <div class="pt-2 flex items-center justify-end gap-2 border-t border-[#2d1f85]">
-          <button type="button" onclick="window.cerrarModalContingencia()" class="px-4 py-2 rounded-xl bg-[#140e40] hover:bg-[#18114a] border border-[#2d1f85] text-xs font-bold text-slate-300">
+        <div class="pt-2 flex items-center justify-end gap-2 border-t border-[var(--notion-border)]">
+          <button type="button" onclick="window.cerrarModalContingencia()" class="px-3 py-1.5 rounded-md hover:bg-[var(--notion-hover)] text-xs text-[var(--notion-text-muted)] transition">
             Cancelar
           </button>
-          <button type="submit" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs sm:text-sm font-black shadow-lg shadow-amber-500/20 active:scale-95 transition cursor-pointer">
-            ⚡ Rebalancear Automáticamente
+          <button type="submit" class="px-3.5 py-1.5 rounded-md bg-[var(--notion-accent)] hover:opacity-90 text-white text-xs font-medium transition cursor-pointer">
+            Rebalancear Horario
           </button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal 2: Dictamen y Resultado del Rebalanceo Antifrágil -->
-  <div id="modal-resultado-rebalanceo" class="fixed inset-0 bg-[#0e092e]/85 backdrop-blur-md hidden items-center justify-center p-3 z-50">
-    <div class="bg-[#140e40] border-2 border-sky-500/60 rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-[#2d1f85] pb-3">
-        <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+  <!-- Modal 2: Resultado del Rebalanceo -->
+  <div id="modal-resultado-rebalanceo" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+    <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-lg max-w-md w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-[var(--notion-border)] pb-3">
+        <h3 class="text-sm font-semibold text-[var(--notion-text)] flex items-center gap-2">
           <span>🧠 Plan de Reestructuración Aplicado</span>
         </h3>
-        <button type="button" onclick="window.cerrarModalResultadoRebalanceo()" class="text-slate-400 hover:text-white p-1">✕</button>
+        <button type="button" onclick="window.cerrarModalResultadoRebalanceo()" class="text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] p-1 text-sm">✕</button>
       </div>
 
-      <div id="contenido-resultado-rebalanceo">
-        <!-- Inyectado por JS -->
-      </div>
+      <div id="contenido-resultado-rebalanceo"></div>
 
-      <div class="pt-3 border-t border-[#2d1f85] text-right">
-        <button type="button" onclick="window.cerrarModalResultadoRebalanceo()" class="px-5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition">
-          Entendido, Continuar
+      <div class="pt-3 border-t border-[var(--notion-border)] text-right">
+        <button type="button" onclick="window.cerrarModalResultadoRebalanceo()" class="px-3 py-1.5 rounded-md bg-[var(--notion-accent)] text-white text-xs font-medium">
+          Entendido
         </button>
       </div>
     </div>
   </div>
 
-
-  <!-- ============================================================== -->
-  <!-- 7. MODALES DE INTERACCIÓN PERSONAL                            -->
-  <!-- ============================================================== -->
-
-  <!-- Modal A: Agregar Bloque Manual a un Día -->
-  <div id="modal-agregar-bloque" class="fixed inset-0 bg-[#0e092e]/85 backdrop-blur-md hidden items-center justify-center p-3 z-50">
-    <div class="bg-[#140e40] border-2 border-indigo-500/60 rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-[#2d1f85] pb-3">
-        <div>
-          <span class="text-xs font-mono text-sky-400 font-bold">PROGRAMAR SESIÓN</span>
-          <h3 class="text-base font-black text-white">Agregar Bloque a <span id="lbl-agregar-bloque-dia" class="text-amber-300">LUNES</span></h3>
-        </div>
-        <button type="button" onclick="window.cerrarModalAgregarBloque()" class="text-slate-400 hover:text-white p-1">✕</button>
+  <!-- Modal A: Agregar Bloque a un Día -->
+  <div id="modal-agregar-bloque" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+    <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-lg max-w-md w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-[var(--notion-border)] pb-3">
+        <h3 class="text-sm font-semibold text-[var(--notion-text)]">
+          Nuevo Bloque para <span id="lbl-agregar-bloque-dia" class="uppercase font-bold">LUNES</span>
+        </h3>
+        <button type="button" onclick="window.cerrarModalAgregarBloque()" class="text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] p-1 text-sm">✕</button>
       </div>
 
       <div class="space-y-3">
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Materia / Disciplina:</label>
-          <select id="form-bloque-materia" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs sm:text-sm text-white focus:outline-none focus:ring-1 focus:ring-sky-400">
+          <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Materia / Disciplina:</label>
+          <select id="form-bloque-materia" class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] focus:outline-none">
             <!-- Inyectado por JS -->
           </select>
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">Hora Inicio:</label>
-            <input type="time" id="form-bloque-inicio" value="08:30" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs sm:text-sm text-white font-mono">
+            <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Hora Inicio:</label>
+            <input type="time" id="form-bloque-inicio" value="08:30" class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] font-mono">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">Hora Fin:</label>
-            <input type="time" id="form-bloque-fin" value="10:30" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs sm:text-sm text-white font-mono">
+            <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Hora Fin:</label>
+            <input type="time" id="form-bloque-fin" value="10:30" class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] font-mono">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Tema / Objetivo de la Sesión:</label>
-          <input type="text" id="form-bloque-tema" placeholder="Ej: Práctica de exordio retórico de 5 minutos" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs sm:text-sm text-white focus:outline-none focus:ring-1 focus:ring-sky-400">
+          <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Tema / Actividad:</label>
+          <input type="text" id="form-bloque-tema" placeholder="Ej: Ejercicios de funciones lineales" class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] focus:outline-none">
         </div>
       </div>
 
-      <div class="pt-3 border-t border-[#2d1f85] flex items-center justify-end gap-2">
-        <button type="button" onclick="window.cerrarModalAgregarBloque()" class="px-3.5 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-xs font-bold text-slate-300">
+      <div class="pt-3 border-t border-[var(--notion-border)] flex items-center justify-end gap-2">
+        <button type="button" onclick="window.cerrarModalAgregarBloque()" class="px-3 py-1.5 rounded-md hover:bg-[var(--notion-hover)] text-xs text-[var(--notion-text-muted)]">
           Cancelar
         </button>
-        <button type="button" onclick="window.guardarBloqueManualForm()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-black text-xs shadow-md">
-          Guardar Bloque
+        <button type="button" onclick="window.guardarBloqueManualForm()" class="px-3 py-1.5 rounded-md bg-[var(--notion-accent)] text-white font-medium text-xs">
+          Guardar
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Modal B: Añadir Nuevo Tema a la Materia -->
-  <div id="modal-nuevo-nodo" class="fixed inset-0 bg-[#0e092e]/85 backdrop-blur-md hidden items-center justify-center p-3 z-50">
-    <div class="bg-[#140e40] border-2 border-sky-500/60 rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-[#2d1f85] pb-3">
-        <div>
-          <span class="text-xs font-mono text-sky-400 font-bold uppercase">TEMARIO PERSONAL</span>
-          <h3 class="text-base font-black text-white">Añadir Tema a <span id="lbl-nuevo-nodo-materia" class="text-amber-300">MAT-ING</span></h3>
-        </div>
-        <button type="button" onclick="window.cerrarModalNuevoNodo()" class="text-slate-400 hover:text-white p-1">✕</button>
+  <!-- Modal B: Añadir Tema Personal a la Materia -->
+  <div id="modal-nuevo-nodo" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+    <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-lg max-w-md w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-[var(--notion-border)] pb-3">
+        <h3 class="text-sm font-semibold text-[var(--notion-text)]">
+          Añadir Tema a <span id="lbl-nuevo-nodo-materia" class="font-bold">MAT-ING</span>
+        </h3>
+        <button type="button" onclick="window.cerrarModalNuevoNodo()" class="text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] p-1 text-sm">✕</button>
       </div>
 
       <div class="space-y-3">
-        <input type="hidden" id="form-nodo-tipo" value="tema">
-
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Título del Tema a Investigar:</label>
-          <input type="text" id="form-nodo-titulo" placeholder="Ej: Factorización por agrupación y trinomios" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs sm:text-sm text-white focus:outline-none focus:ring-1 focus:ring-sky-400">
+          <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Título del Tema:</label>
+          <input type="text" id="form-nodo-titulo" placeholder="Ej: Factorización de trinomios" class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] focus:outline-none">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Descripción o Notas (¿Qué buscas entender?):</label>
-          <textarea id="form-nodo-fundamento" rows="3" placeholder="Ej: Ver videos de Profe Alex y resolver 5 ejercicios a mano en la libreta..." class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs sm:text-sm text-white focus:outline-none focus:ring-1 focus:ring-sky-400"></textarea>
+          <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Descripción o Notas:</label>
+          <textarea id="form-nodo-fundamento" rows="3" placeholder="Ej: Ver videos de Profe Alex y resolver 5 ejercicios a mano..." class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] focus:outline-none"></textarea>
         </div>
       </div>
 
-      <div class="pt-3 border-t border-[#2d1f85] flex items-center justify-end gap-2">
-        <button type="button" onclick="window.cerrarModalNuevoNodo()" class="px-3.5 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-xs font-bold text-slate-300">
+      <div class="pt-3 border-t border-[var(--notion-border)] flex items-center justify-end gap-2">
+        <button type="button" onclick="window.cerrarModalNuevoNodo()" class="px-3 py-1.5 rounded-md hover:bg-[var(--notion-hover)] text-xs text-[var(--notion-text-muted)]">
           Cancelar
         </button>
-        <button type="button" onclick="window.guardarNuevoNodoForm()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-black text-xs shadow-md">
+        <button type="button" onclick="window.guardarNuevoNodoForm()" class="px-3 py-1.5 rounded-md bg-[var(--notion-accent)] text-white font-medium text-xs">
           Añadir Tema
         </button>
       </div>
@@ -417,6 +412,6 @@
   </div>
 
   <!-- Scripts ES Modules -->
-  <script type="module" src="js/estudioApp.js?v=102"></script>
+  <script type="module" src="js/estudioApp.js?v=200"></script>
 </body>
 </html>

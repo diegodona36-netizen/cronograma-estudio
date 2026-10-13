@@ -1,7 +1,6 @@
 /**
  * MIGATO • Módulo de Temarios de Estudio & Herramientas Prácticas
- * Interfaz directa para investigar temas y acceder a herramientas de estudio
- * Conducción: José Gregorio 'El Gato' Briceño | Comisión Técnica MIGATO
+ * Sistema de Diseño Notion: Base de Datos de Temas, Recursos y Checklists
  */
 
 import {
@@ -87,11 +86,22 @@ export class ArbolConocimientoManager {
   }
 
   agregarNodoManual(materiaCodigo, datos) {
-    // Compatibilidad con el modal anterior
     this.agregarTemaManual(materiaCodigo, {
       titulo: datos.titulo || datos.enunciado,
       descripcion: datos.fundamento || datos.enunciado || ''
     });
+  }
+
+  obtenerIconoMateria(codigo) {
+    const iconos = {
+      'MAT-ING': '📐',
+      'SIS-ARQ': '💻',
+      'GEO-EST': '🌐',
+      'ORA-CAS': '🗣️',
+      'ING-TEC': '🇬🇧',
+      'ECO-DIG': '📈'
+    };
+    return iconos[codigo] || '📚';
   }
 
   render() {
@@ -107,116 +117,131 @@ export class ArbolConocimientoManager {
       herramientas: []
     };
 
-    const matConfig = materias.find(m => m.codigo === this.materiaActivaCodigo) || {
-      nombre: temario.nombre,
-      colorHex: '#38bdf8'
-    };
-
     const temas = temario.temas || [];
     const herramientas = temario.herramientas || [];
 
     const completados = temas.filter(t => Boolean(this.progresoTemas[t.id])).length;
     const total = temas.length;
     const porcentaje = total > 0 ? Math.round((completados / total) * 100) : 0;
+    const emojiMateria = this.obtenerIconoMateria(this.materiaActivaCodigo);
+
+    // Lista de materias para los tabs de filtro tipo Notion
+    const listaMaterias = [
+      { cod: 'MAT-ING', nom: 'Matemáticas' },
+      { cod: 'SIS-ARQ', nom: 'Programación' },
+      { cod: 'GEO-EST', nom: 'Geopolítica' },
+      { cod: 'ORA-CAS', nom: 'Oratoria' },
+      { cod: 'ING-TEC', nom: 'Inglés' },
+      { cod: 'ECO-DIG', nom: 'E-Commerce' }
+    ];
 
     this.container.innerHTML = `
-      <!-- Cabecera de la Materia -->
-      <div class="p-4 sm:p-6 bg-[#140e40] border-b border-[#2d1f85] flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div class="flex items-center gap-2 mb-1.5">
-            <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-black border" style="background-color: ${matConfig.colorHex}22; border-color: ${matConfig.colorHex}66; color: ${matConfig.colorHex}">
-              ${this.materiaActivaCodigo}
-            </span>
-            <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">
-              Temario y Herramientas Prácticas
-            </span>
-          </div>
-          <h2 class="text-lg sm:text-2xl font-black text-white tracking-wide">
-            ${temario.nombre}
-          </h2>
-          <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-            🎯 <strong>Objetivo:</strong> ${temario.objetivo}
-          </p>
-        </div>
-
-        <!-- Barra de Progreso de Temas Estudiados -->
-        <div class="bg-[#0e092e] p-3.5 rounded-2xl border border-[#2d1f85] flex items-center gap-4 shrink-0 shadow-inner">
-          <div class="text-right">
-            <span class="text-xs text-slate-400 font-semibold block">Temas Estudiados</span>
-            <span class="text-base sm:text-lg font-black text-white font-mono">${completados} de ${total}</span>
-          </div>
-          <div class="w-12 h-12 rounded-2xl bg-[#140e40] border border-sky-500/40 flex items-center justify-center text-sky-400 font-mono font-black text-sm shadow-sm">
-            ${porcentaje}%
-          </div>
-        </div>
-      </div>
-
-      <!-- Barra de Acciones y Filtros -->
-      <div class="px-4 sm:px-6 py-2.5 bg-[#100b33] border-b border-[#2d1f85] flex flex-wrap items-center justify-between gap-2 text-xs">
-        <div class="text-slate-400 font-medium">
-          Marca los temas a medida que los investigues o resuelvas ejercicios.
-        </div>
-        <button onclick="window.abrirModalNuevoNodo('${this.materiaActivaCodigo}')" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-bold flex items-center gap-1.5 transition shadow-sm cursor-pointer">
-          <span>➕ Añadir Tema a esta Materia</span>
-        </button>
-      </div>
-
-      <!-- Contenido Principal: 2 Secciones Claras -->
-      <div class="p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-y-auto max-h-[calc(100vh-280px)] scrollbar-thin">
+      <div class="space-y-5">
         
-        <!-- Columna 1: Temas a Buscar y Estudiar (7 cols) -->
-        <div class="lg:col-span-7 space-y-4">
-          <div class="flex items-center justify-between border-b border-[#2d1f85]/60 pb-2">
-            <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
-              <span>📋</span>
-              <span>Temas a Buscar y Estudiar</span>
-              <span class="text-xs text-sky-400 font-mono font-bold">(${temas.length})</span>
-            </h3>
-            <span class="text-[11px] text-slate-400">Haz clic en el cuadro al terminar</span>
-          </div>
-
-          ${temas.length === 0 ? `
-            <div class="p-6 text-center text-slate-400 bg-[#0e092e] rounded-2xl border border-[#2d1f85]">
-              No hay temas cargados aún. Usa el botón «Añadir Tema» para comenzar.
-            </div>
-          ` : `
-            <div class="space-y-3">
-              ${temas.map(t => this.renderTarjetaTema(t, temario.nombre)).join('')}
-            </div>
-          `}
+        <!-- Selector de Materias (Filtros estilo Notion Database Pills) -->
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
+          ${listaMaterias.map(m => `
+            <button 
+              type="button" 
+              onclick="window.arbolManager.setMateria('${m.cod}')"
+              class="px-2.5 py-1 rounded-md text-xs font-medium transition cursor-pointer shrink-0 border ${
+                this.materiaActivaCodigo === m.cod
+                  ? 'bg-[var(--notion-card)] text-[var(--notion-text)] border-[var(--notion-border)] shadow-xs'
+                  : 'bg-transparent text-[var(--notion-text-muted)] border-transparent hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)]'
+              }">
+              <span>${this.obtenerIconoMateria(m.cod)}</span>
+              <span class="ml-1">${m.nom}</span>
+            </button>
+          `).join('')}
         </div>
 
-        <!-- Columna 2: Herramientas Recomendadas (Dónde Buscar) (5 cols) -->
-        <div class="lg:col-span-5 space-y-4">
-          <div class="flex items-center justify-between border-b border-[#2d1f85]/60 pb-2">
-            <h3 class="text-sm font-black text-amber-300 uppercase tracking-wider flex items-center gap-2">
-              <span>🛠️</span>
-              <span>Herramientas Recomendadas</span>
-              <span class="text-xs text-amber-400 font-mono font-bold">(${herramientas.length})</span>
-            </h3>
-            <span class="text-[11px] text-slate-400">Dónde buscar</span>
-          </div>
-
-          ${herramientas.length === 0 ? `
-            <div class="p-6 text-center text-slate-400 bg-[#0e092e] rounded-2xl border border-[#2d1f85]">
-              No hay herramientas registradas para esta materia.
+        <!-- Encabezado de la Materia (Notion Page View) -->
+        <div class="notion-callout flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-xl select-none">${emojiMateria}</span>
+              <h2 class="text-base sm:text-lg font-semibold text-[var(--notion-text)]">
+                ${temario.nombre}
+              </h2>
+              <span class="text-xs font-mono text-[var(--notion-text-muted)]">(${this.materiaActivaCodigo})</span>
             </div>
-          ` : `
-            <div class="space-y-3">
-              ${herramientas.map(h => this.renderTarjetaHerramienta(h)).join('')}
-            </div>
-          `}
-
-          <!-- Caja de Consejo Práctico de Estudio -->
-          <div class="p-4 bg-[#140e40] rounded-2xl border border-sky-500/30 space-y-2 mt-4">
-            <div class="flex items-center gap-2 text-xs font-black text-sky-300 uppercase tracking-wider">
-              <span>💡</span>
-              <span>Consejo de Estudio Rápido</span>
-            </div>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              No intentes abarcar todo el tema en un solo día. Busca elige <strong>1 solo concepto</strong>, mira un video de 10 minutos en YouTube y resuelve <strong>3 ejercicios a mano</strong> en tu libreta. La constancia diaria supera los maratones de última hora.
+            <p class="text-xs text-[var(--notion-text-muted)] leading-relaxed pl-7">
+              🎯 <strong>Objetivo:</strong> ${temario.objetivo}
             </p>
           </div>
+
+          <!-- Píldora de Progreso de Temas -->
+          <div class="flex items-center gap-3 shrink-0 pl-7 md:pl-0">
+            <div class="text-right">
+              <span class="text-[11px] text-[var(--notion-text-muted)] block">Progreso de estudio</span>
+              <span class="text-xs font-mono font-medium text-[var(--notion-text)]">${completados} de ${total} temas</span>
+            </div>
+            <div class="w-12 bg-[var(--notion-border)] h-1.5 rounded-full overflow-hidden">
+              <div class="h-full bg-emerald-500 rounded-full transition-all" style="width: ${porcentaje}%;"></div>
+            </div>
+            <span class="text-xs font-mono text-[var(--notion-text-muted)]">${porcentaje}%</span>
+          </div>
+        </div>
+
+        <!-- Barra de Acción: Añadir Tema -->
+        <div class="flex items-center justify-between text-xs text-[var(--notion-text-muted)] border-b border-[var(--notion-border)] pb-2">
+          <span>Temas a investigar y herramientas recomendadas</span>
+          <button 
+            type="button" 
+            onclick="window.abrirModalNuevoNodo('${this.materiaActivaCodigo}')"
+            class="px-2.5 py-1 rounded-md bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-[var(--notion-text)] transition flex items-center gap-1 cursor-pointer">
+            <span>+</span>
+            <span>Añadir Tema</span>
+          </button>
+        </div>
+
+        <!-- Grid Principal estilo Notion: Temas (7 cols) y Herramientas (5 cols) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          
+          <!-- Columna 1: Temas a Investigar (Lista Notion) -->
+          <div class="lg:col-span-7 space-y-2.5">
+            <div class="flex items-center justify-between text-xs text-[var(--notion-text-muted)] px-1">
+              <span class="font-medium">📋 Temas (${temas.length})</span>
+              <span>Marcar al completar</span>
+            </div>
+
+            ${temas.length === 0 ? `
+              <div class="p-8 text-center text-xs text-[var(--notion-text-muted)] border border-dashed border-[var(--notion-border)] rounded-md">
+                No hay temas registrados aún. Usa el botón «Añadir Tema».
+              </div>
+            ` : `
+              <div class="space-y-2">
+                ${temas.map(t => this.renderTarjetaTema(t, temario.nombre)).join('')}
+              </div>
+            `}
+          </div>
+
+          <!-- Columna 2: Herramientas Recomendadas (Notion Bookmarks) -->
+          <div class="lg:col-span-5 space-y-3">
+            <div class="text-xs font-medium text-[var(--notion-text-muted)] px-1">
+              🛠️ Herramientas Recomendadas (${herramientas.length})
+            </div>
+
+            ${herramientas.length === 0 ? `
+              <div class="p-6 text-center text-xs text-[var(--notion-text-muted)] border border-dashed border-[var(--notion-border)] rounded-md">
+                Sin herramientas registradas.
+              </div>
+            ` : `
+              <div class="space-y-2">
+                ${herramientas.map(h => this.renderTarjetaHerramienta(h)).join('')}
+              </div>
+            `}
+
+            <!-- Callout de Consejo Práctico de Estudio -->
+            <div class="notion-callout flex items-start gap-2.5 mt-3">
+              <span class="text-sm">💡</span>
+              <div class="space-y-0.5 text-xs text-[var(--notion-text-muted)] leading-relaxed">
+                <strong class="text-[var(--notion-text)] font-medium">Método de Estudio:</strong>
+                <p>Elige un solo concepto, mira un video corto de 10-15 minutos y resuelve 3 ejercicios a mano en tu libreta. La constancia diaria supera los maratones de última hora.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -229,67 +254,53 @@ export class ArbolConocimientoManager {
     const checked = Boolean(this.progresoTemas[tema.id]);
 
     return `
-      <div class="p-4 rounded-2xl border transition shadow-sm space-y-3 ${
-        checked
-          ? 'bg-[#0e092e]/60 border-emerald-500/40 opacity-80'
-          : 'bg-[#140e40] border-[#2d1f85] hover:border-sky-500/50'
-      }">
-        <!-- Fila Superior: Checkbox y Título -->
-        <div class="flex items-start gap-3">
-          <button 
-            type="button" 
-            onclick="window.arbolManager.toggleTema('${tema.id}')"
-            class="w-6 h-6 rounded-lg border flex items-center justify-center shrink-0 mt-0.5 transition cursor-pointer ${
-              checked 
-                ? 'bg-emerald-600 border-emerald-400 text-white shadow-sm' 
-                : 'bg-[#0e092e] border-slate-600 hover:border-sky-400 text-transparent'
-            }"
+      <div class="notion-item-card p-3 space-y-2 group transition">
+        <!-- Encabezado de Tema con Checkbox Notion -->
+        <div class="flex items-start gap-2.5">
+          <input 
+            type="checkbox" 
+            class="notion-checkbox mt-0.5" 
+            onchange="window.arbolManager.toggleTema('${tema.id}')"
+            ${checked ? 'checked' : ''}
             title="Marcar como estudiado">
-            ✓
-          </button>
 
           <div class="flex-1 min-w-0">
-            <h4 class="text-sm sm:text-base font-bold text-white leading-snug ${checked ? 'line-through text-slate-400' : ''}">
+            <h4 class="text-xs sm:text-sm font-medium text-[var(--notion-text)] leading-snug ${checked ? 'line-through opacity-50' : ''}">
               ${tema.titulo}
             </h4>
-            <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed ${checked ? 'text-slate-500' : ''}">
+            <p class="text-xs text-[var(--notion-text-muted)] mt-0.5 leading-relaxed ${checked ? 'line-through opacity-40' : ''}">
               ${tema.descripcion}
             </p>
           </div>
         </div>
 
-        <!-- Fila Inferior: Botones Directos de Búsqueda -->
-        <div class="pt-2 border-t border-[#2d1f85]/50 flex flex-wrap items-center justify-between gap-2">
-          <span class="text-[11px] font-mono font-semibold ${checked ? 'text-emerald-400' : 'text-slate-400'}">
-            ${checked ? '✅ Estudiado y practicado' : '⏳ Pendiente por revisar'}
-          </span>
+        <!-- Barra Inferior de Enlaces Discretos -->
+        <div class="pt-1.5 border-t border-[var(--notion-border)] flex items-center justify-between text-[11px] text-[var(--notion-text-muted)] pl-6">
+          <span>${checked ? '✅ Estudiado' : '⏳ Pendiente'}</span>
 
-          <div class="flex items-center gap-1.5">
+          <div class="flex items-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
             <button 
               type="button" 
               onclick="window.arbolManager.buscarGoogle('${tema.titulo.replace(/'/g, "\\'")}', '${materiaNombre.replace(/'/g, "\\'")}')"
-              class="px-2.5 py-1 rounded-xl bg-[#0e092e] hover:bg-[#18114a] border border-[#2d1f85] text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
-              title="Buscar explicaciones y guías en Google">
-              <span>🔍</span>
-              <span>Google</span>
+              class="px-2 py-0.5 rounded hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)] transition cursor-pointer"
+              title="Buscar en Google">
+              🔍 Google
             </button>
 
             <button 
               type="button" 
               onclick="window.arbolManager.buscarYouTube('${tema.titulo.replace(/'/g, "\\'")}', '${materiaNombre.replace(/'/g, "\\'")}')"
-              class="px-2.5 py-1 rounded-xl bg-[#0e092e] hover:bg-[#18114a] border border-[#2d1f85] text-red-300 hover:text-white text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
-              title="Buscar clases y videos en YouTube">
-              <span>🎥</span>
-              <span>YouTube</span>
+              class="px-2 py-0.5 rounded hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)] transition cursor-pointer"
+              title="Buscar en YouTube">
+              🎥 YouTube
             </button>
 
             <button 
               type="button" 
               onclick="window.arbolManager.copiarPromptTema('${tema.titulo.replace(/'/g, "\\'")}', '${materiaNombre.replace(/'/g, "\\'")}')"
-              class="px-2.5 py-1 rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white text-xs font-bold flex items-center gap-1 transition shadow-xs cursor-pointer"
-              title="Copiar consulta para pedirle explicación a Gemini o ChatGPT">
-              <span>📋</span>
-              <span>Copiar Tema</span>
+              class="px-2 py-0.5 rounded hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)] transition cursor-pointer"
+              title="Copiar consulta para pedir explicación">
+              📋 Copiar
             </button>
           </div>
         </div>
@@ -314,16 +325,16 @@ export class ArbolConocimientoManager {
     const icono = iconosPorTipo[herramienta.tipo] || '🔧';
 
     return `
-      <div class="p-3.5 rounded-2xl bg-[#0e092e] border border-[#2d1f85] hover:border-amber-500/40 transition space-y-1.5 shadow-sm">
-        <div class="flex items-center gap-2">
-          <span class="text-base">${icono}</span>
-          <h4 class="text-xs sm:text-sm font-black text-amber-200 leading-tight">
+      <div class="notion-item-card p-2.5 flex items-start gap-2.5 hover:bg-[var(--notion-card-hover)] transition">
+        <span class="text-base select-none shrink-0 mt-0.5">${icono}</span>
+        <div class="space-y-0.5 min-w-0">
+          <h4 class="text-xs sm:text-[13px] font-medium text-[var(--notion-text)] leading-snug">
             ${herramienta.nombre}
           </h4>
+          <p class="text-xs text-[var(--notion-text-muted)] leading-relaxed">
+            ${herramienta.desc}
+          </p>
         </div>
-        <p class="text-xs text-slate-300 leading-relaxed pl-6">
-          ${herramienta.desc}
-        </p>
       </div>
     `;
   }
