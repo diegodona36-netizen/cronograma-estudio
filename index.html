@@ -110,6 +110,12 @@
           <span class="hidden sm:inline">Corte de Luz</span>
         </button>
 
+        <!-- Botón de Bitácoras de Conclusión y Voz -->
+        <button onclick="window.abrirModalListaBitacoras()" type="button" class="px-2.5 py-1.5 rounded-md bg-[var(--notion-hover)] hover:bg-[var(--notion-active)] border border-[var(--notion-border)] text-[var(--notion-text)] font-medium flex items-center gap-1.5 transition cursor-pointer" title="Ver bitácoras y reflexiones de estudio">
+          <span class="text-amber-400">🎙️</span>
+          <span class="hidden sm:inline">Bitácoras</span>
+        </button>
+
         <!-- Selector de Tema Claro / Oscuro -->
         <button onclick="window.toggleNotionTheme()" type="button" class="p-1.5 rounded-md hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] transition cursor-pointer" title="Cambiar tema claro / oscuro">
           <span class="dark:hidden">🌙</span>
@@ -411,7 +417,166 @@
     </div>
   </div>
 
+  <!-- Modal C: Bitácora de Conclusión de Bloque y Grabadora de Voz -->
+  <div id="modal-bitacora-voz" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+    <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-lg max-w-lg w-full p-5 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto scrollbar-thin">
+      
+      <!-- Encabezado del Modal -->
+      <div class="flex items-center justify-between border-b border-[var(--notion-border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🎙️</span>
+          <div>
+            <h3 class="text-sm font-semibold text-[var(--notion-text)]">
+              Bitácora de Conclusión de Sesión
+            </h3>
+            <p id="lbl-bitacora-subtitulo" class="text-xs text-[var(--notion-text-muted)]">
+              Reflexión al finalizar el bloque de estudio
+            </p>
+          </div>
+        </div>
+        <button type="button" onclick="window.cerrarModalBitacora()" class="text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] p-1 text-sm cursor-pointer">✕</button>
+      </div>
+
+      <!-- Barra de Estado de Grabación de Voz -->
+      <div id="barra-estado-grabacion" class="hidden p-2.5 rounded-md bg-amber-500/10 border border-amber-500/30 items-center justify-between text-xs text-amber-300">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
+          <span id="texto-estado-grabacion">Escuchando voz en tiempo real...</span>
+        </div>
+        <button type="button" onclick="window.detenerGrabacionVozActiva()" class="px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 font-medium cursor-pointer">
+          ⏹️ Detener
+        </button>
+      </div>
+
+      <!-- Reproductor de Audio si existe audio grabado -->
+      <div id="contenedor-audio-grabado" class="hidden p-2.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] space-y-1.5">
+        <div class="flex items-center justify-between text-xs text-[var(--notion-text-muted)]">
+          <span>Audio grabado de la sesión:</span>
+          <button type="button" onclick="window.eliminarAudioBitacora()" class="text-red-400 hover:underline text-[11px] cursor-pointer">Eliminar audio</button>
+        </div>
+        <audio id="reproductor-audio-bitacora" controls class="w-full h-8"></audio>
+      </div>
+
+      <!-- Formulario de 3 Campos Estructurados -->
+      <div class="space-y-3.5">
+        
+        <!-- Campo 1: ¿Qué aprendí hoy? -->
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-medium text-[var(--notion-text)] flex items-center gap-1.5">
+              <span>🧠</span>
+              <span>1. ¿Qué aprendí hoy?</span>
+            </label>
+            <button type="button" onclick="window.iniciarDictadoCampo('form-bitacora-aprendido')" class="text-xs text-[var(--notion-text-muted)] hover:text-amber-400 flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-[var(--notion-hover)] transition cursor-pointer" title="Dictar con voz a este campo">
+              <span>🎙️</span>
+              <span>Dictar</span>
+            </button>
+          </div>
+          <textarea id="form-bitacora-aprendido" rows="2" placeholder="Ej: Aprendí a identificar el vértice de una parábola y resolver ecuaciones cuadráticas..." class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] focus:outline-none focus:border-[var(--notion-accent)]"></textarea>
+        </div>
+
+        <!-- Campo 2: ¿Qué me gustó o se me hizo fácil? -->
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-medium text-[var(--notion-text)] flex items-center gap-1.5">
+              <span>👍</span>
+              <span>2. ¿Qué me gustó o se me hizo fácil?</span>
+            </label>
+            <button type="button" onclick="window.iniciarDictadoCampo('form-bitacora-gusto')" class="text-xs text-[var(--notion-text-muted)] hover:text-amber-400 flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-[var(--notion-hover)] transition cursor-pointer" title="Dictar con voz a este campo">
+              <span>🎙️</span>
+              <span>Dictar</span>
+            </button>
+          </div>
+          <textarea id="form-bitacora-gusto" rows="2" placeholder="Ej: La explicación geométrica en el gráfico de ejes cartesianos..." class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] focus:outline-none focus:border-[var(--notion-accent)]"></textarea>
+        </div>
+
+        <!-- Campo 3: ¿Qué podemos mejorar o en qué me trabé? -->
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-medium text-[var(--notion-text)] flex items-center gap-1.5">
+              <span>🎯</span>
+              <span>3. ¿Qué podemos mejorar o en qué me trabé?</span>
+            </label>
+            <button type="button" onclick="window.iniciarDictadoCampo('form-bitacora-mejorar')" class="text-xs text-[var(--notion-text-muted)] hover:text-amber-400 flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-[var(--notion-hover)] transition cursor-pointer" title="Dictar con voz a este campo">
+              <span>🎙️</span>
+              <span>Dictar</span>
+            </button>
+          </div>
+          <textarea id="form-bitacora-mejorar" rows="2" placeholder="Ej: Tuve dudas con los signos al despejar matrices inversas, requiero más ejercicios..." class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] focus:outline-none focus:border-[var(--notion-accent)]"></textarea>
+        </div>
+
+      </div>
+
+      <!-- Barra de Grabación de Audio con Micrófono -->
+      <div class="p-3 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] flex items-center justify-between gap-2">
+        <div class="text-xs text-[var(--notion-text-muted)]">
+          <span class="font-medium text-[var(--notion-text)] block">Grabador de Audio Completo</span>
+          <span>Guarda una nota de voz directa del cierre</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button id="btn-toggle-grabacion-general" type="button" onclick="window.toggleGrabacionAudioBitacora()" class="px-2.5 py-1.5 rounded-md bg-[var(--notion-hover)] hover:bg-[var(--notion-active)] border border-[var(--notion-border)] text-xs text-[var(--notion-text)] font-medium flex items-center gap-1.5 transition cursor-pointer">
+            <span>🎙️</span>
+            <span id="lbl-btn-grabacion-general">Grabar Audio</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Pie del Modal: Acciones -->
+      <div class="pt-3 border-t border-[var(--notion-border)] flex items-center justify-between gap-2">
+        <button id="btn-eliminar-bitacora-modal" type="button" onclick="window.eliminarBitacoraModalActual()" class="hidden px-2.5 py-1.5 rounded-md hover:bg-[var(--notion-hover)] text-xs text-red-400 transition cursor-pointer">
+          Eliminar
+        </button>
+        <div class="flex items-center gap-2 ml-auto">
+          <button type="button" onclick="window.copiarBitacoraModalMarkdown()" class="px-2.5 py-1.5 rounded-md hover:bg-[var(--notion-hover)] text-xs text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] transition cursor-pointer" title="Copiar al portapapeles para consultar al Asistente">
+            📋 Copiar Resumen
+          </button>
+          <button type="button" onclick="window.cerrarModalBitacora()" class="px-3 py-1.5 rounded-md hover:bg-[var(--notion-hover)] text-xs text-[var(--notion-text-muted)] transition cursor-pointer">
+            Cancelar
+          </button>
+          <button type="button" onclick="window.guardarBitacoraModalActual()" class="px-3.5 py-1.5 rounded-md bg-[var(--notion-accent)] hover:opacity-90 text-white font-medium text-xs transition cursor-pointer">
+            Guardar Bitácora
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal D: Vista General de Todas las Bitácoras -->
+  <div id="modal-lista-bitacoras" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+    <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-lg max-w-2xl w-full p-5 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-[var(--notion-border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🎙️</span>
+          <div>
+            <h3 class="text-sm font-semibold text-[var(--notion-text)]">
+              Registro General de Bitácoras de Estudio
+            </h3>
+            <p class="text-xs text-[var(--notion-text-muted)]">
+              Conclusiones y puntos por mejorar guardados tras cada clase
+            </p>
+          </div>
+        </div>
+        <button type="button" onclick="window.cerrarModalListaBitacoras()" class="text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] p-1 text-sm cursor-pointer">✕</button>
+      </div>
+
+      <div id="contenido-lista-bitacoras" class="flex-1 overflow-y-auto space-y-3 pr-1 scrollbar-thin">
+        <!-- Inyectado dinámicamente -->
+      </div>
+
+      <div class="pt-3 border-t border-[var(--notion-border)] flex items-center justify-between text-xs">
+        <button type="button" onclick="window.copiarTodasBitacorasMarkdown()" class="px-3 py-1.5 rounded-md bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-[var(--notion-text)] flex items-center gap-1.5 cursor-pointer">
+          <span>📋</span>
+          <span>Copiar Todo para el Asistente</span>
+        </button>
+        <button type="button" onclick="window.cerrarModalListaBitacoras()" class="px-3.5 py-1.5 rounded-md bg-[var(--notion-accent)] text-white font-medium">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts ES Modules -->
-  <script type="module" src="js/estudioApp.js?v=200"></script>
+  <script type="module" src="js/estudioApp.js?v=201"></script>
 </body>
 </html>

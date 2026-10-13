@@ -14,6 +14,7 @@ import {
   obtenerTodasLasGuias,
   guardarGuiaPersonalizada
 } from './estudioData.js';
+import { bitacoraVoz } from './bitacoraVozService.js';
 
 export class AsistenteIAController {
   constructor(appRef) {
@@ -165,6 +166,14 @@ export class AsistenteIAController {
           type: 'object',
           properties: {}
         }
+      },
+      {
+        name: 'consultar_bitacoras_estudio',
+        description: 'Consulta las reflexiones y notas de voz grabadas por el usuario al terminar sus clases (lo que aprendió, lo que le gustó y las dudas/puntos por mejorar).',
+        parameters: {
+          type: 'object',
+          properties: {}
+        }
       }
     ];
   }
@@ -172,6 +181,10 @@ export class AsistenteIAController {
   getSystemPrompt() {
     const materias = obtenerTodasLasMaterias();
     const listaMaterias = materias.map(m => `- ${m.codigo}: ${m.nombre} (Meta: ${m.metaSemanalHoras}h/sem)`).join('\n');
+    const resumenBitacoras = bitacoraVoz.generarResumenParaAsistente();
+    const textoBitacoras = resumenBitacoras.total > 0
+      ? `\nBITÁCORAS DE SESIÓN Y DUDAS REPORTADAS POR EL COMPAÑERO:\n${resumenBitacoras.textoMarkdown}\n(Utiliza estos datos cuando el compañero te pregunte qué cosas podemos mejorar o cómo resolver sus dudas).\n`
+      : '';
 
     return `Eres Sócrates & Chronos, el copiloto de IA agéntico y tutor socrático del Sistema Personal de Estudio AXIOM.
 Tu rol es ayudar al compañero a mantener una disciplina de estudio inquebrantable, antifrágil ante cortes de energía eléctrica en Venezuela y emergencias.
@@ -182,10 +195,11 @@ PRINCIPIOS DE OPERACIÓN:
 3. Agéntico y Proactivo: Si el usuario te indica un corte de luz o imprevisto, invoca inmediatamente la herramienta 'reestructurar_horario'.
 4. Si el usuario te pide estudiar una disciplina nueva (ej. Oratoria), usa la herramienta 'investigar_y_crear_materia' para armar su árbol epistémico e integrarla.
 5. Si el usuario pide recordatorios al teléfono, invoca 'enviar_alerta_telefono'.
+6. Si el usuario pregunta qué cosas podemos mejorar según lo que ha estudiado o sobre sus notas, consulta 'consultar_bitacoras_estudio' y proporciónale recomendaciones personalizadas.
 
 CATÁLOGO ACTUAL DE MATERIAS:
 ${listaMaterias}
-
+${textoBitacoras}
 Sé conciso, directo, preciso y riguroso.`;
   }
 
@@ -409,6 +423,14 @@ Sé conciso, directo, preciso y riguroso.`;
     if (nombre === 'consultar_estado_estudio') {
       const metricas = calcularMetricasSemanales(this.app.itinerario, MATERIAS_CONFIG);
       return `📊 **Balance Actual:** ${metricas.totalProgramado}h programadas de ${metricas.totalMeta}h meta semanal (${metricas.porcentajeGlobal}%). Horas interrumpidas: ${metricas.totalPerdido}h.`;
+    }
+
+    if (nombre === 'consultar_bitacoras_estudio') {
+      const resumen = bitacoraVoz.generarResumenParaAsistente();
+      if (resumen.total === 0) {
+        return `🎙️ **Bitácoras de Estudio:** Aún no has registrado notas de conclusión. Al finalizar cualquier sesión semanal, presiona el botón 🎙️ para grabar lo que aprendiste y tus dudas.`;
+      }
+      return `${resumen.textoMarkdown}\n💡 **Recomendación Adaptativa:** He tomado nota de tus puntos a mejorar. Podemos reforzar estos temas puntuales en tus próximas sesiones de estudio.`;
     }
 
     return `Comando ${nombre} completado.`;

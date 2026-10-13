@@ -331,11 +331,24 @@ export class LLMProviderService {
       }
     }
 
+    // Detección heurística de consulta de bitácoras, notas de voz o qué cosas mejorar
+    if (texto.includes('mejorar') || texto.includes('bitacora') || texto.includes('bitácora') || texto.includes('duda') || texto.includes('conclusiones') || texto.includes('notas de voz')) {
+      llamadas.push({
+        nombre: 'consultar_bitacoras_estudio',
+        argumentos: {}
+      });
+      return {
+        texto: 'He revisado tus bitácoras de conclusión y reflexiones registradas para darte recomendaciones personalizadas:',
+        llamadasHerramientas: llamadas,
+        proveedor: 'offline_local'
+      };
+    }
+
     return {
       texto: `Hola, Compañero. Estoy listo para ayudarte con tu estudio. Puedes pedirme:
 1. «Se me fue la luz de 2 a 6 pm hoy lunes, reorganízame la semana»
 2. «Quiero estudiar Oratoria, investígamela y crea la guía»
-3. «Agrégate un bloque de estudio mañana a las 10 am»
+3. «¿Qué cosas podemos mejorar según lo que he estudiado?»
 4. «Mándame un recordatorio al teléfono»
 
 *(Para respuestas ilimitadas con IA generativa, puedes ingresar tu API Key gratuita de Gemini o de OpenRouter en los ajustes).*`,

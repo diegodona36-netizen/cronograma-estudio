@@ -25,6 +25,7 @@ import { geminiTutor } from './geminiTutorService.js';
 import { llmProvider } from './llmProviderService.js';
 import { notificacionesService } from './notificacionesService.js';
 import { AsistenteIAController } from './asistenteIAController.js';
+import { bitacoraVoz } from './bitacoraVozService.js';
 
 class EstudioApp {
   constructor() {
@@ -36,6 +37,9 @@ class EstudioApp {
     this.materiaFiltro = 'todas';
     this.diaSeleccionadoParaBloque = 'lunes';
     this.materiaSeleccionadaParaNodo = 'MAT-ING';
+    this.bitacoraBloqueActivo = null;
+    this.campoDictadoActivo = null;
+    this.audioDataTemporal = null;
   }
 
   cargarItinerario() {
@@ -89,6 +93,7 @@ class EstudioApp {
     window.geminiTutor = geminiTutor;
     window.llmProvider = llmProvider;
     window.notificacionesService = notificacionesService;
+    window.bitacoraVoz = bitacoraVoz;
 
     this.asistente = new AsistenteIAController(this);
     window.asistenteIA = this.asistente;
@@ -96,6 +101,26 @@ class EstudioApp {
     notificacionesService.iniciarMonitor(() => this.itinerario);
 
     const params = new URLSearchParams(window.location.search);
+
+    if (params.get('demo_bitacoras') === '1') {
+      bitacoraVoz.guardarBitacora('lunes', 'b_lun_1', {
+        materiaCodigo: 'MAT-ING',
+        tema: 'Álgebra: Leyes de Exponentes y Polinomios',
+        horario: '08:30 - 10:00',
+        aprendido: 'Dominé el binomio de Newton y la simplificación de exponentes negativos y fraccionarios.',
+        gusto: 'Los ejercicios resueltos paso a paso en el cuaderno me dieron mucha confianza.',
+        mejorar: 'Tengo que repasar la factorización de trinomios que no son cuadrados perfectos.'
+      });
+      bitacoraVoz.guardarBitacora('martes', 'b_mar_1', {
+        materiaCodigo: 'MAT-ING',
+        tema: 'Matemáticas: Concepto de Funciones y Dominio',
+        horario: '08:30 - 10:00',
+        aprendido: 'Comprendí el dominio y rango de funciones racionales y con raíces.',
+        gusto: 'La prueba de la línea vertical para saber si una curva es función fue muy rápida.',
+        mejorar: 'Dudas con las asíntotas oblicuas en funciones racionales cuando el grado es mayor.'
+      });
+    }
+
     const vistaParam = params.get('vista') || window.location.hash.replace('#', '');
     if (['semanal', 'guias', 'mensual'].includes(vistaParam) && vistaParam !== 'semanal') {
       this.cambiarVista(vistaParam);
@@ -105,6 +130,16 @@ class EstudioApp {
 
     if (params.get('copiloto') === '1') {
       setTimeout(() => this.abrirPanelAsistente(), 100);
+    }
+
+    if (params.get('bitacora') === '1') {
+      const dia = params.get('dia') || 'lunes';
+      const bloque = params.get('bloque') || 'b_lun_1';
+      setTimeout(() => this.abrirModalBitacora(dia, bloque), 150);
+    }
+
+    if (params.get('lista_bitacoras') === '1') {
+      setTimeout(() => this.abrirModalListaBitacoras(), 150);
     }
 
     if (window.lucide) window.lucide.createIcons();
@@ -273,6 +308,8 @@ class EstudioApp {
   renderTarjetaBloque(bloque, diaId) {
     const tag = this.obtenerEstiloTagNotion(bloque.materiaCodigo);
     const completado = Boolean(bloque.completado);
+    const bitacora = bitacoraVoz.obtenerPorBloque(diaId, bloque.id);
+    const tieneBitacora = Boolean(bitacora && (bitacora.aprendido || bitacora.mejorar || bitacora.audioData));
 
     if (bloque.cancelado) {
       return `
@@ -305,6 +342,16 @@ class EstudioApp {
           </h4>
         </div>
 
+        <!-- Etiqueta de Bitácora Registrada si existe -->
+        ${tieneBitacora ? `
+          <div class="pt-0.5">
+            <button onclick="window.abrirModalBitacora('${diaId}', '${bloque.id}')" type="button" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] font-medium bg-amber-500/10 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20 transition cursor-pointer max-w-full" title="Ver o editar reflexión grabada">
+              <span>🎙️</span>
+              <span class="truncate">${bitacora.mejorar ? 'Duda: ' + bitacora.mejorar : 'Bitácora guardada'}</span>
+            </button>
+          </div>
+        ` : ''}
+
         <!-- Fila Inferior: Checkbox Inline y Acciones -->
         <div class="pt-1.5 border-t border-[var(--notion-border)] flex items-center justify-between text-xs">
           <label class="flex items-center gap-1.5 cursor-pointer select-none">
@@ -318,7 +365,10 @@ class EstudioApp {
             </span>
           </label>
 
-          <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div class="flex items-center gap-1 ${tieneBitacora ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity">
+            <button onclick="window.abrirModalBitacora('${diaId}', '${bloque.id}')" class="p-1 rounded hover:bg-[var(--notion-hover)] ${tieneBitacora ? 'text-amber-400' : 'text-[var(--notion-text-muted)]'} hover:text-amber-400 text-xs transition cursor-pointer" title="Grabar o ver bitácora de conclusión (voz)">
+              🎙️
+            </button>
             <button onclick="window.abrirGuiaDeMateria('${bloque.materiaCodigo}')" class="p-1 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] text-xs transition cursor-pointer" title="Ver temas de esta materia">
               📖
             </button>
@@ -355,6 +405,27 @@ class EstudioApp {
           </div>
         </div>
 
+        <!-- Callout Box Notion de Resumen de Bitácoras de Voz -->
+        <div class="notion-callout flex items-start justify-between gap-3">
+          <div class="flex items-start gap-3">
+            <span class="text-lg">🎙️</span>
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <h3 class="text-sm font-semibold text-[var(--notion-text)]">Bitácoras y Registro de Dudas</h3>
+                <span class="text-xs px-2 py-0.5 rounded bg-[var(--notion-card)] border border-[var(--notion-border)] font-mono text-amber-400">
+                  ${bitacoraVoz.contarBitacoras()} reflexiones
+                </span>
+              </div>
+              <p class="text-xs text-[var(--notion-text-muted)] leading-relaxed">
+                Conclusiones grabadas tras cada bloque de estudio para que el Asistente adapte tus repasos y resuelva tus dudas.
+              </p>
+            </div>
+          </div>
+          <button onclick="window.abrirModalListaBitacoras()" type="button" class="px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-xs text-[var(--notion-text)] shrink-0 flex items-center gap-1.5 cursor-pointer">
+            <span>Ver Todas</span>
+          </button>
+        </div>
+
         <!-- Tabla estilo Notion Database Table View -->
         <div class="bg-[var(--notion-card)] border border-[var(--notion-border)] rounded-md overflow-hidden">
           <table class="w-full text-left text-xs sm:text-sm">
@@ -365,12 +436,14 @@ class EstudioApp {
                 <th class="p-3">Proyección Mensual</th>
                 <th class="p-3">Asignadas</th>
                 <th class="p-3">Afectadas</th>
+                <th class="p-3">Bitácoras</th>
                 <th class="p-3">Cumplimiento</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-[var(--notion-border)]">
               ${metricas.materias.map(m => {
                 const tag = this.obtenerEstiloTagNotion(m.codigo);
+                const numBits = bitacoraVoz.obtenerPorMateria(m.codigo).length;
                 return `
                   <tr class="hover:bg-[var(--notion-hover)] transition">
                     <td class="p-3">
@@ -383,6 +456,11 @@ class EstudioApp {
                     <td class="p-3 font-mono text-[var(--notion-text)]">${m.metaSemanal * 4}h</td>
                     <td class="p-3 font-mono font-medium text-[var(--notion-text)]">${m.horasProgramadas}h</td>
                     <td class="p-3 font-mono text-amber-400">${m.horasPerdidas}h</td>
+                    <td class="p-3">
+                      <span class="font-mono text-xs ${numBits > 0 ? 'text-amber-400 font-semibold' : 'text-[var(--notion-text-muted)]'}">
+                        ${numBits > 0 ? `🎙️ ${numBits}` : '—'}
+                      </span>
+                    </td>
                     <td class="p-3">
                       <div class="flex items-center gap-2">
                         <div class="w-20 bg-[var(--notion-border)] h-1.5 rounded-full overflow-hidden">
@@ -564,15 +642,25 @@ class EstudioApp {
 
   toggleCompletarBloque(diaId, bloqueId) {
     if (!this.itinerario[diaId]) return;
+    let acabaDeCompletar = false;
     this.itinerario[diaId] = this.itinerario[diaId].map(b => {
       if (b.id === bloqueId) {
-        return { ...b, completado: !b.completado };
+        const nuevoEstado = !b.completado;
+        if (nuevoEstado) acabaDeCompletar = true;
+        return { ...b, completado: nuevoEstado };
       }
       return b;
     });
     this.guardarItinerario();
     this.renderKPIs();
     this.renderVista();
+
+    if (acabaDeCompletar) {
+      const bit = bitacoraVoz.obtenerPorBloque(diaId, bloqueId);
+      if (!bit) {
+        setTimeout(() => this.abrirModalBitacora(diaId, bloqueId), 150);
+      }
+    }
   }
 
   eliminarBloqueManual(diaId, bloqueId) {
@@ -813,6 +901,305 @@ class EstudioApp {
       a.click();
     });
   }
+
+  // ==============================================================
+  // MÉTODOS DE BITÁCORA DE CONCLÚSIONES Y VOZ
+  // ==============================================================
+
+  abrirModalBitacora(diaId, bloqueId) {
+    this.bitacoraBloqueActivo = { diaId, bloqueId };
+    const bloque = (this.itinerario[diaId] || []).find(b => b.id === bloqueId);
+    if (!bloque) return;
+
+    const modal = document.getElementById('modal-bitacora-voz');
+    const lblSub = document.getElementById('lbl-bitacora-subtitulo');
+    const txtAprendido = document.getElementById('form-bitacora-aprendido');
+    const txtGusto = document.getElementById('form-bitacora-gusto');
+    const txtMejorar = document.getElementById('form-bitacora-mejorar');
+    const btnEliminar = document.getElementById('btn-eliminar-bitacora-modal');
+    const audioContenedor = document.getElementById('contenedor-audio-grabado');
+    const reproductor = document.getElementById('reproductor-audio-bitacora');
+
+    const bitacora = bitacoraVoz.obtenerPorBloque(diaId, bloqueId) || {};
+
+    if (lblSub) {
+      lblSub.textContent = `${bloque.materiaCodigo} • ${bloque.tema || 'Sesión'} (${diaId.toUpperCase()} ${bloque.inicio} - ${bloque.fin})`;
+    }
+
+    if (txtAprendido) txtAprendido.value = bitacora.aprendido || '';
+    if (txtGusto) txtGusto.value = bitacora.gusto || '';
+    if (txtMejorar) txtMejorar.value = bitacora.mejorar || '';
+
+    this.audioDataTemporal = bitacora.audioData || null;
+    if (audioContenedor && reproductor) {
+      if (this.audioDataTemporal) {
+        reproductor.src = this.audioDataTemporal;
+        audioContenedor.classList.remove('hidden');
+      } else {
+        reproductor.src = '';
+        audioContenedor.classList.add('hidden');
+      }
+    }
+
+    if (btnEliminar) {
+      if (bitacora.id) {
+        btnEliminar.classList.remove('hidden');
+      } else {
+        btnEliminar.classList.add('hidden');
+      }
+    }
+
+    this.detenerGrabacionVozActiva();
+
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+  }
+
+  cerrarModalBitacora() {
+    this.detenerGrabacionVozActiva();
+    const modal = document.getElementById('modal-bitacora-voz');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+  }
+
+  guardarBitacoraModalActual() {
+    if (!this.bitacoraBloqueActivo) return;
+    const { diaId, bloqueId } = this.bitacoraBloqueActivo;
+    const bloque = (this.itinerario[diaId] || []).find(b => b.id === bloqueId);
+    if (!bloque) return;
+
+    const aprendido = document.getElementById('form-bitacora-aprendido')?.value || '';
+    const gusto = document.getElementById('form-bitacora-gusto')?.value || '';
+    const mejorar = document.getElementById('form-bitacora-mejorar')?.value || '';
+
+    bitacoraVoz.guardarBitacora(diaId, bloqueId, {
+      materiaCodigo: bloque.materiaCodigo,
+      tema: bloque.tema,
+      horario: `${bloque.inicio} - ${bloque.fin}`,
+      aprendido,
+      gusto,
+      mejorar,
+      audioData: this.audioDataTemporal
+    });
+
+    this.cerrarModalBitacora();
+    this.renderVista();
+  }
+
+  eliminarBitacoraModalActual() {
+    if (!this.bitacoraBloqueActivo) return;
+    if (confirm('¿Eliminar esta bitácora de conclusión?')) {
+      const { diaId, bloqueId } = this.bitacoraBloqueActivo;
+      bitacoraVoz.eliminarBitacora(diaId, bloqueId);
+      this.cerrarModalBitacora();
+      this.renderVista();
+    }
+  }
+
+  copiarBitacoraModalMarkdown() {
+    if (!this.bitacoraBloqueActivo) return;
+    const { diaId, bloqueId } = this.bitacoraBloqueActivo;
+    const bloque = (this.itinerario[diaId] || []).find(b => b.id === bloqueId);
+    const aprendido = document.getElementById('form-bitacora-aprendido')?.value || '';
+    const gusto = document.getElementById('form-bitacora-gusto')?.value || '';
+    const mejorar = document.getElementById('form-bitacora-mejorar')?.value || '';
+
+    const md = `### Bitácora de Conclusión • [${bloque?.materiaCodigo}] ${bloque?.tema || 'Sesión'}\n` +
+      `- **Horario:** ${diaId.toUpperCase()} (${bloque?.inicio} - ${bloque?.fin})\n` +
+      `- **¿Qué aprendí hoy?:** ${aprendido || '*(Sin especificar)*'}\n` +
+      `- **¿Qué me gustó?:** ${gusto || '*(Sin especificar)*'}\n` +
+      `- **¿Qué debemos mejorar / dudas?:** ${mejorar || '*(Sin observaciones)*'}\n`;
+
+    navigator.clipboard.writeText(md).then(() => {
+      alert('¡Bitácora copiada al portapapeles! Puedes enviarla al Asistente.');
+    }).catch(() => {
+      alert(md);
+    });
+  }
+
+  iniciarDictadoCampo(campoId) {
+    const el = document.getElementById(campoId);
+    if (!el) return;
+
+    const barra = document.getElementById('barra-estado-grabacion');
+    const textoBarra = document.getElementById('texto-estado-grabacion');
+
+    if (bitacoraVoz.grabandoVoz && this.campoDictadoActivo === campoId) {
+      this.detenerGrabacionVozActiva();
+      return;
+    }
+
+    this.campoDictadoActivo = campoId;
+    const textoInicial = el.value ? el.value.trim() + ' ' : '';
+
+    if (!bitacoraVoz.esSoportadoSpeechRecognition()) {
+      alert('Tu navegador no tiene activado el reconocimiento de voz nativo (Web Speech API). Puedes escribir tus conclusiones directamente en el recuadro.');
+      return;
+    }
+
+    if (barra) {
+      barra.classList.remove('hidden');
+      barra.classList.add('flex');
+    }
+    if (textoBarra) {
+      const mapa = {
+        'form-bitacora-aprendido': '¿Qué aprendí hoy?',
+        'form-bitacora-gusto': '¿Qué me gustó?',
+        'form-bitacora-mejorar': '¿Qué podemos mejorar / dudas?'
+      };
+      textoBarra.textContent = `Escuchando voz para "${mapa[campoId] || campoId}"... Habla con tranquilidad.`;
+    }
+
+    bitacoraVoz.iniciarReconocimiento({
+      onResultado: ({ completo }) => {
+        el.value = textoInicial + completo;
+      },
+      onFinalizado: () => {
+        if (barra) {
+          barra.classList.add('hidden');
+          barra.classList.remove('flex');
+        }
+        this.campoDictadoActivo = null;
+      },
+      onError: (err) => {
+        console.warn('Error en dictado de voz:', err);
+        if (barra) {
+          barra.classList.add('hidden');
+          barra.classList.remove('flex');
+        }
+        this.campoDictadoActivo = null;
+      }
+    });
+  }
+
+  detenerGrabacionVozActiva() {
+    bitacoraVoz.detenerReconocimiento();
+    const barra = document.getElementById('barra-estado-grabacion');
+    if (barra) {
+      barra.classList.add('hidden');
+      barra.classList.remove('flex');
+    }
+    this.campoDictadoActivo = null;
+  }
+
+  async toggleGrabacionAudioBitacora() {
+    const btn = document.getElementById('btn-toggle-grabacion-general');
+    const lbl = document.getElementById('lbl-btn-grabacion-general');
+    const reproductor = document.getElementById('reproductor-audio-bitacora');
+    const audioContenedor = document.getElementById('contenedor-audio-grabado');
+
+    if (bitacoraVoz.grabandoAudio) {
+      if (lbl) lbl.textContent = 'Guardando...';
+      const res = await bitacoraVoz.detenerGrabacionAudio();
+      if (res && res.dataUrl) {
+        this.audioDataTemporal = res.dataUrl;
+        if (reproductor) reproductor.src = res.dataUrl;
+        if (audioContenedor) audioContenedor.classList.remove('hidden');
+      }
+      if (lbl) lbl.textContent = 'Grabar Audio';
+      if (btn) btn.classList.remove('bg-red-500/20', 'text-red-300');
+    } else {
+      const ok = await bitacoraVoz.iniciarGrabacionAudio({
+        onInicio: () => {
+          if (lbl) lbl.textContent = '⏹️ Detener Grabación';
+          if (btn) btn.classList.add('bg-red-500/20', 'text-red-300');
+        },
+        onError: (err) => {
+          alert('No se pudo acceder al micrófono para grabar audio. Verifica los permisos de tu navegador.');
+          if (lbl) lbl.textContent = 'Grabar Audio';
+        }
+      });
+    }
+  }
+
+  eliminarAudioBitacora() {
+    this.audioDataTemporal = null;
+    const reproductor = document.getElementById('reproductor-audio-bitacora');
+    const audioContenedor = document.getElementById('contenedor-audio-grabado');
+    if (reproductor) reproductor.src = '';
+    if (audioContenedor) audioContenedor.classList.add('hidden');
+  }
+
+  abrirModalListaBitacoras() {
+    const modal = document.getElementById('modal-lista-bitacoras');
+    const cont = document.getElementById('contenido-lista-bitacoras');
+    if (!modal || !cont) return;
+
+    const todas = Object.values(bitacoraVoz.obtenerTodas());
+    todas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+    if (todas.length === 0) {
+      cont.innerHTML = `
+        <div class="py-12 text-center text-xs text-[var(--notion-text-muted)] space-y-2">
+          <span class="text-3xl block">🎙️</span>
+          <p class="font-medium text-[var(--notion-text)]">No tienes bitácoras de conclusión grabadas aún.</p>
+          <p class="text-[11px] opacity-75">Al finalizar cualquier bloque de tu horario semanal, presiona el botón 🎙️ para registrar lo que aprendiste, lo que te gustó y tus dudas.</p>
+        </div>
+      `;
+    } else {
+      cont.innerHTML = todas.map(b => {
+        const tag = this.obtenerEstiloTagNotion(b.materiaCodigo);
+        return `
+          <div class="p-3.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-medium px-2 py-0.5 rounded" style="background-color: ${tag.bg}; color: ${tag.text};">
+                ${b.materiaCodigo} • ${tag.label}
+              </span>
+              <span class="text-[11px] font-mono text-[var(--notion-text-muted)]">
+                ${b.diaId.toUpperCase()} • ${b.horario}
+              </span>
+            </div>
+
+            <h4 class="text-xs sm:text-sm font-semibold text-[var(--notion-text)]">
+              ${b.tema}
+            </h4>
+
+            <div class="space-y-1 text-xs pt-1 border-t border-[var(--notion-border)]">
+              ${b.aprendido ? `<div><span class="font-medium text-[var(--notion-text)]">🧠 Aprendí:</span> <span class="text-[var(--notion-text-muted)]">${b.aprendido}</span></div>` : ''}
+              ${b.gusto ? `<div><span class="font-medium text-[var(--notion-text)]">👍 Me gustó:</span> <span class="text-[var(--notion-text-muted)]">${b.gusto}</span></div>` : ''}
+              ${b.mejorar ? `<div class="text-amber-400 font-medium"><span>🎯 Por mejorar / Dudas:</span> <span class="text-[var(--notion-text)]">${b.mejorar}</span></div>` : ''}
+            </div>
+
+            ${b.audioData ? `
+              <div class="pt-2">
+                <audio controls src="${b.audioData}" class="w-full h-7"></audio>
+              </div>
+            ` : ''}
+
+            <div class="pt-1.5 flex items-center justify-end gap-2 text-xs">
+              <button onclick="window.abrirModalBitacora('${b.diaId}', '${b.bloqueId}')" class="px-2 py-1 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] transition cursor-pointer">
+                Editar Bitácora
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  cerrarModalListaBitacoras() {
+    const modal = document.getElementById('modal-lista-bitacoras');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+  }
+
+  copiarTodasBitacorasMarkdown() {
+    const res = bitacoraVoz.generarResumenParaAsistente();
+    navigator.clipboard.writeText(res.textoMarkdown).then(() => {
+      alert('¡Todas las bitácoras copiadas al portapapeles en formato Markdown! Puedes pegarlas aquí para que el Asistente las analice.');
+    }).catch(() => {
+      alert(res.textoMarkdown);
+    });
+  }
 }
 
 // Inicialización global
@@ -827,6 +1214,20 @@ window.cerrarModalContingencia = () => app.cerrarModalContingencia();
 window.cerrarModalResultadoRebalanceo = () => app.cerrarModalResultadoRebalanceo();
 window.actualizarPreviewContingencia = () => app.actualizarPreviewContingencia();
 window.restablecerItinerarioBase = () => app.restablecerItinerarioBase();
+
+// Métodos de Bitácora y Voz en Window
+window.abrirModalBitacora = (dia, id) => app.abrirModalBitacora(dia, id);
+window.cerrarModalBitacora = () => app.cerrarModalBitacora();
+window.guardarBitacoraModalActual = () => app.guardarBitacoraModalActual();
+window.eliminarBitacoraModalActual = () => app.eliminarBitacoraModalActual();
+window.copiarBitacoraModalMarkdown = () => app.copiarBitacoraModalMarkdown();
+window.iniciarDictadoCampo = (campo) => app.iniciarDictadoCampo(campo);
+window.detenerGrabacionVozActiva = () => app.detenerGrabacionVozActiva();
+window.toggleGrabacionAudioBitacora = () => app.toggleGrabacionAudioBitacora();
+window.eliminarAudioBitacora = () => app.eliminarAudioBitacora();
+window.abrirModalListaBitacoras = () => app.abrirModalListaBitacoras();
+window.cerrarModalListaBitacoras = () => app.cerrarModalListaBitacoras();
+window.copiarTodasBitacorasMarkdown = () => app.copiarTodasBitacorasMarkdown();
 
 window.abrirModalAgregarBloque = (dia) => app.abrirModalAgregarBloque(dia);
 window.cerrarModalAgregarBloque = () => app.cerrarModalAgregarBloque();
