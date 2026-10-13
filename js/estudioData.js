@@ -194,15 +194,103 @@ export const ITINERARIO_BASE_SEMANAL = {
   sabado: [
     { id: 'b_sab_1', materiaCodigo: 'ECO-DIG', inicio: '09:30', fin: '10:30', duracion: 1.0, tema: 'Logística de Pagos Multimoneda y Envíos en Venezuela', completado: false },
     { id: 'b_sab_2', materiaCodigo: 'ING-TEC', inicio: '10:30', fin: '11:30', duracion: 1.0, tema: 'Inmersión en Video de Ingeniería y Tecnología en Inglés', completado: false }
-    // Tarde: Colchón Antifrágil (Buffer libre para absorber cortes de luz o descanso puro)
   ]
 };
 
 /**
- * Árboles Epistémicos de Conocimiento en 3 Niveles:
- * Nivel 1: Axiomas (Fundamentos Basales)
- * Nivel 2: Grupos de Conceptos (Estructura y Relaciones)
- * Nivel 3: Detalles (Fórmulas, Sintaxis, Casos Prácticos de Monagas/Venezuela)
+ * Temarios Simplificados y Herramientas Prácticas para el Estudiante
+ */
+export const TEMARIOS_Y_HERRAMIENTAS = {
+  'MAT-ING': {
+    nombre: 'Matemáticas Pre-Ingeniería',
+    objetivo: 'Dominar álgebra universitaria, funciones y matrices para no pasar trabajo en ingeniería.',
+    temas: [
+      { id: 'mat_t1', titulo: 'Polinomios, productos notables y factorización', descripcion: 'Leyes de exponentes, simplificación de expresiones algebraicas y binomios al cuadrado.' },
+      { id: 'mat_t2', titulo: 'Ecuaciones lineales y cuadráticas', descripcion: 'Despeje de incógnitas, fórmula general de segundo grado y problemas aplicados.' },
+      { id: 'mat_t3', titulo: 'Sistemas de ecuaciones (2x2 y 3x3)', descripcion: 'Método de sustitución, reducción y método de Gauss para resolver sistemas.' },
+      { id: 'mat_t4', titulo: 'Concepto de funciones y gráficas', descripcion: 'Dominio, rango, funciones lineales, cuadráticas, exponenciales y racionales.' },
+      { id: 'mat_t5', titulo: 'Álgebra lineal: Matrices y determinantes', descripcion: 'Suma y multiplicación de matrices, determinantes 2x2 y 3x3 y regla de Cramer.' }
+    ],
+    herramientas: [
+      { tipo: 'video', nombre: 'YouTube: JulioProfe / Profe Alex', desc: 'Explicaciones paso a paso en español de cada tema con ejercicios resueltos.' },
+      { tipo: 'web', nombre: 'Khan Academy (Álgebra I y Álgebra Lineal)', desc: 'Cursos 100% gratuitos con ejercicios interactivos y pistas si te trabas.' },
+      { tipo: 'libro', nombre: 'Libro: Álgebra de Baldor / Precálculo de Stewart', desc: 'Para buscar problemas tipo examen y resolver 5 ejercicios a mano por sesión.' }
+    ]
+  },
+  'SIS-ARQ': {
+    nombre: 'Programación & Arquitectura de Software',
+    objetivo: 'Construir software modular que funcione sin internet y saber explicarlo a cualquier persona.',
+    temas: [
+      { id: 'sis_t1', titulo: 'Arquitectura modular (Separación de capas)', descripcion: 'Separar la lógica de cálculo de la interfaz gráfica y del almacenamiento.' },
+      { id: 'sis_t2', titulo: 'Bases de datos locales con SQLite', descripcion: 'Crear tablas, claves primarias, consultas SELECT, INSERT y filtros en SQLite.' },
+      { id: 'sis_t3', titulo: 'Arquitecturas Local-First (Offline)', descripcion: 'Hacer que las aplicaciones guarden en el disco local y no dependan de internet.' },
+      { id: 'sis_t4', titulo: 'Pitch técnico y comunicación clara', descripcion: 'Aprender a explicar tu sistema en 2 minutos a directores o clientes sin usar siglas raras.' }
+    ],
+    herramientas: [
+      { tipo: 'practica', nombre: 'Editor de código local (VS Code / Linux)', desc: 'Escribir pequeños scripts en Python o JavaScript Vanilla probando cada módulo.' },
+      { tipo: 'doc', nombre: 'Documentación Oficial de Python SQLite3 / MDN Web Docs', desc: 'La referencia más confiable y libre de distracciones.' },
+      { tipo: 'video', nombre: 'YouTube: Midudev / Fazt Code (Arquitectura Limpia)', desc: 'Buenas prácticas de desarrollo explicadas de forma práctica.' }
+    ]
+  },
+  'GEO-EST': {
+    nombre: 'Geopolítica, Guerra y Estrategia',
+    objetivo: 'Comprender cómo se mueve el poder territorial en el mundo y la posición estratégica de Venezuela.',
+    temas: [
+      { id: 'geo_t1', titulo: 'Conceptos fundamentales de geopolítica', descripcion: 'Poder terrestre (Heartland) vs Poder marítimo (Rimland) y chokepoints energéticos.' },
+      { id: 'geo_t2', titulo: 'El Dilema de Seguridad y Realismo Político', descripcion: 'Por qué en el sistema internacional cada país vela por su propia disuasión y fuerza.' },
+      { id: 'geo_t3', titulo: 'Principios de estrategia (Sun Tzu y Clausewitz)', descripcion: 'La guerra como extensión de la política, economía de fuerzas y asimetría.' },
+      { id: 'geo_t4', titulo: 'Geopolítica de Venezuela y Monagas', descripcion: 'Cuenca petrolera oriental, gas de Anaco/Punta de Mata y salida fluvial hacia el Atlántico.' }
+    ],
+    herramientas: [
+      { tipo: 'video', nombre: 'YouTube: VisualPolitik / Memorias de Pez', desc: 'Análisis geopolíticos ilustrados de conflictos globales y rutas comerciales.' },
+      { tipo: 'lectura', nombre: 'Lectura: El Arte de la Guerra (Sun Tzu)', desc: 'Capítulos cortos sobre evaluación del terreno y toma de decisiones.' }
+    ]
+  },
+  'ORA-CAS': {
+    nombre: 'Castellano, Retórica y Oratoria de Pie',
+    objetivo: 'Aprender a hablar con seguridad frente a líderes y adultos sin quedarse callado ni agobiado.',
+    temas: [
+      { id: 'ora_t1', titulo: 'Estructura PREP para hablar de pie', descripcion: 'Punto principal (directo) -> Razón -> Ejemplo concreto -> Conclusión firme.' },
+      { id: 'ora_t2', titulo: 'Modulación de voz y respiración diafragmática', descripcion: 'Bajar la velocidad al hablar, proyectar la voz desde el pecho y evitar tonos agudos.' },
+      { id: 'ora_t3', titulo: 'Eliminación de muletillas con pausas de silencio', descripcion: 'Reemplazar los «este...» y «o sea...» por 2 segundos de silencio con la boca cerrada.' },
+      { id: 'ora_t4', titulo: 'Práctica de firma profesional y caligrafía clara', descripcion: 'Memoria muscular para firmar con trazo seguro en documentos oficiales y actas.' }
+    ],
+    herramientas: [
+      { tipo: 'audio', nombre: 'Notas de Voz de 2 minutos en Telegram', desc: 'Grabar un monólogo diario respondiendo una pregunta y escuchar tu ritmo y claridad.' },
+      { tipo: 'practica', nombre: 'Libreta de caligrafía y bolígrafo de gel', desc: 'Practicar 20 firmas seguidas con inclinación y velocidad constante.' }
+    ]
+  },
+  'ING-TEC': {
+    nombre: 'Inglés Técnico & Inmersión',
+    objetivo: 'Poder leer documentación técnica de ingeniería y hablar frases directas sin miedo.',
+    temas: [
+      { id: 'ing_t1', titulo: 'Vocabulario nuclear de ingeniería', descripcion: 'Palabras de sistemas: file, path, build, deploy, database, request, response, error.' },
+      { id: 'ing_t2', titulo: 'Estructura SVO (Sujeto + Verbo + Objeto)', descripcion: 'Construir oraciones directas sin traducir mentalmente: «The server runs on Linux».' },
+      { id: 'ing_t3', titulo: 'Verbos modales obligatorios', descripcion: 'Uso de MUST (obligatorio), SHOULD (recomendado), CAN (posible).' }
+    ],
+    herramientas: [
+      { tipo: 'app', nombre: 'App Móvil Duolingo (15 min diarios)', desc: 'Mantiene el hábito y la memoria léxica activa todos los días.' },
+      { tipo: 'voz', nombre: 'Gemini Voice en el Celular (5 a 10 min)', desc: 'Hablar con audífonos sobre tecnología con pronunciación nativa y corrección amable.' },
+      { tipo: 'video', nombre: 'Videos técnicos de YouTube con subtítulos en inglés', desc: 'Ver cómo los ingenieros nativos pronuncian los términos técnicos.' }
+    ]
+  },
+  'ECO-DIG': {
+    nombre: 'E-Commerce Realista & Negocios en Venezuela',
+    objetivo: 'Entender cómo funciona el comercio digital y las pasarelas de pago reales en el país.',
+    temas: [
+      { id: 'eco_t1', titulo: 'Ventas por WhatsApp Business y CRM', descripcion: 'Configuración de catálogo, respuestas rápidas y embudo de atención al cliente.' },
+      { id: 'eco_t2', titulo: 'Pasarelas de cobro multimoneda', descripcion: 'Pago Móvil, transferencias en bolívares, Zelle y liquidación en USDT (Binance P2P).' },
+      { id: 'eco_t3', titulo: 'Cálculo de margen neto real', descripcion: 'Restar costos de producto, comisiones bancarias, delivery y empaque para ver ganancia real.' }
+    ],
+    herramientas: [
+      { tipo: 'app', nombre: 'WhatsApp Business', desc: 'Para estructurar catálogos y probar flujos de atención comercial.' },
+      { tipo: 'finanzas', nombre: 'Binance P2P / El Dorado', desc: 'Entender el spread cambiario y las transferencias de valor seguras.' }
+    ]
+  }
+};
+
+/**
+ * Árboles Epistémicos de Conocimiento en 3 Niveles (Compatibilidad):
  */
 export const GUIAS_CONOCIMIENTO_3_NIVELES = {
   'MAT-ING': {
@@ -1217,6 +1305,29 @@ export function guardarGuiaPersonalizada(materiaCodigo, guia) {
     return true;
   } catch (e) {
     console.error('Error guardando guía personalizada:', e);
+    return false;
+  }
+}
+
+export function obtenerTemariosYHerramientas() {
+  let custom = {};
+  try {
+    const data = localStorage.getItem('axiom_custom_temarios');
+    if (data) custom = JSON.parse(data);
+  } catch {}
+  return { ...TEMARIOS_Y_HERRAMIENTAS, ...custom };
+}
+
+export function guardarTemarioPersonalizado(materiaCodigo, temario) {
+  try {
+    let custom = {};
+    const data = localStorage.getItem('axiom_custom_temarios');
+    if (data) custom = JSON.parse(data);
+    custom[materiaCodigo] = temario;
+    localStorage.setItem('axiom_custom_temarios', JSON.stringify(custom));
+    return true;
+  } catch (e) {
+    console.error('Error guardando temario personalizado:', e);
     return false;
   }
 }

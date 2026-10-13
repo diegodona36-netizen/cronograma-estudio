@@ -197,12 +197,12 @@
       </div>
     </section>
 
-    <!-- VISTA 2: GUÍAS DE ESTUDIO RAMIFICADAS EN 3 NIVELES -->
+    <!-- VISTA 2: TEMARIOS Y HERRAMIENTAS DE ESTUDIO -->
     <section id="seccion-vista-guias" class="hidden space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#140e40] p-4 rounded-2xl border border-[#2d1f85]">
         <div>
-          <h2 class="text-lg font-black text-white">Guías de Estudio en 3 Niveles (Primeros Principios)</h2>
-          <p class="text-xs sm:text-sm text-slate-400">Axiomas Basales ➔ Grupos de Conceptos ➔ Detalles de Aplicación.</p>
+          <h2 class="text-lg font-black text-white">Temas de Estudio & Herramientas Recomendadas</h2>
+          <p class="text-xs sm:text-sm text-slate-400">Lista clara de temas a investigar y herramientas directas donde buscar (videos, libros y ejercicios).</p>
         </div>
 
         <div class="flex items-center gap-2 shrink-0">
@@ -328,118 +328,6 @@
     </div>
   </div>
 
-  <!-- Modal 3: Tutor Socrático (Diálogo Guiado con Gemini) -->
-  <div id="modal-tutor-socratico" class="fixed inset-0 bg-[#0e092e]/85 backdrop-blur-md hidden items-center justify-center p-3 z-50">
-    <div class="bg-[#140e40] border-2 border-indigo-500/60 rounded-3xl max-w-xl w-full p-5 sm:p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-[#2d1f85] pb-3">
-        <div>
-          <span class="text-xs font-bold text-sky-400 uppercase tracking-wider block">Tutor Socrático de Primeros Principios</span>
-          <h3 id="lbl-tutor-axioma-titulo" class="text-base font-black text-white">Diálogo sobre Axioma</h3>
-        </div>
-        <button type="button" onclick="window.cerrarModalTutorSocratico()" class="text-slate-400 hover:text-white p-1">✕</button>
-      </div>
-
-      <div id="chat-tutor-socratico" class="space-y-3 min-h-[140px] max-h-80 overflow-y-auto scrollbar-thin">
-        <!-- Inyectado por JS -->
-      </div>
-
-      <div class="pt-2 border-t border-[#2d1f85] flex items-center justify-between">
-        <span class="text-xs text-slate-400">Modo pedagógico activo.</span>
-        <button type="button" onclick="window.cerrarModalTutorSocratico()" class="px-4 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-[#2d1f85] text-xs font-bold text-slate-200">
-          Cerrar
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 4: Quiz Relámpago (Active Recall) -->
-  <div id="modal-quiz-relampago" class="fixed inset-0 bg-[#0e092e]/85 backdrop-blur-md hidden items-center justify-center p-3 z-50">
-    <div class="bg-[#140e40] border-2 border-amber-500/60 rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-[#2d1f85] pb-3">
-        <h3 class="text-base font-black text-white flex items-center gap-1.5">
-          <span>❓ Quiz de Validación Axiomática</span>
-        </h3>
-        <button type="button" onclick="window.cerrarModalQuiz()" class="text-slate-400 hover:text-white p-1">✕</button>
-      </div>
-
-      <div id="contenido-quiz-relampago">
-        <!-- Inyectado por JS -->
-      </div>
-
-      <div class="pt-2 border-t border-[#2d1f85] text-right">
-        <button type="button" onclick="window.cerrarModalQuiz()" class="px-4 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-xs font-bold text-slate-200">
-          Cerrar
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============================================================== -->
-  <!-- 5. BOTÓN FLOTANTE DEL COPILOTO IA                             -->
-  <!-- ============================================================== -->
-  <button onclick="window.abrirPanelAsistente()" type="button" class="fixed bottom-6 right-6 z-40 px-4 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 via-sky-600 to-indigo-700 hover:from-indigo-500 hover:to-sky-500 text-white font-black text-sm shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2 border border-sky-400/50 cursor-pointer" title="Abrir Copiloto IA Agéntico (Sócrates & Chronos)">
-    <span class="text-lg">🤖</span>
-    <span>Copiloto IA</span>
-    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-  </button>
-
-  <!-- ============================================================== -->
-  <!-- 6. PANEL LATERAL DESPLEGABLE DEL COPILOTO IA (DRAWER)          -->
-  <!-- ============================================================== -->
-  <aside id="panel-copiloto-asistente" class="fixed inset-y-0 right-0 z-50 w-full sm:w-[440px] bg-[#100b33] border-l-2 border-[#2d1f85] shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out">
-    <!-- Cabecera del Asistente -->
-    <div class="p-4 bg-[#140e40] border-b border-[#2d1f85] flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-500 flex items-center justify-center text-white text-base shadow-md">
-          🏛️
-        </div>
-        <div>
-          <h3 class="text-sm font-black text-white leading-tight">Sócrates & Chronos</h3>
-          <span class="text-[11px] text-sky-400 font-mono font-bold block">Copiloto Agéntico AXIOM</span>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-1.5">
-        <button onclick="window.abrirModalConfiguracionIA()" type="button" class="p-1.5 rounded-lg bg-[#18114a] hover:bg-[#23176d] text-slate-300 hover:text-white text-xs border border-[#2d1f85]" title="Configuración de IA y Telegram">
-          ⚙️
-        </button>
-        <button onclick="window.asistenteIA.limpiarHistorialChat()" type="button" class="p-1.5 rounded-lg bg-[#18114a] hover:bg-[#23176d] text-slate-300 hover:text-white text-xs border border-[#2d1f85]" title="Reiniciar conversación">
-          🗑️
-        </button>
-        <button onclick="window.cerrarPanelAsistente()" type="button" class="p-1.5 rounded-lg bg-[#18114a] hover:bg-red-950 text-slate-400 hover:text-red-300 text-xs border border-[#2d1f85]" title="Cerrar panel">
-          ✕
-        </button>
-      </div>
-    </div>
-
-    <!-- Mensajes del Chat -->
-    <div id="contenedor-mensajes-asistente" class="flex-1 p-4 space-y-3 overflow-y-auto scrollbar-thin">
-      <!-- Inyectado por asistenteIAController.js -->
-    </div>
-
-    <!-- Indicador Pensando -->
-    <div id="indicador-pensando-asistente" class="hidden px-4 py-2 bg-[#140e40]/80 border-t border-[#2d1f85] text-xs text-sky-300 flex items-center gap-2 italic">
-      <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
-      <span>Sócrates & Chronos ejecutando razonamiento...</span>
-    </div>
-
-    <!-- Entrada de Texto y Voz -->
-    <div class="p-3 bg-[#140e40] border-t border-[#2d1f85]">
-      <div class="flex items-center gap-2">
-        <button id="btn-mic-asistente" onclick="window.asistenteIA.toggleEscuchaVoz()" type="button" class="p-2.5 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 hover:text-white transition cursor-pointer" title="Dictar por voz (Speech-to-Text)">
-          🎤
-        </button>
-        <input type="text" id="input-chat-asistente" onkeydown="if(event.key === 'Enter') window.enviarMensajeAsistenteInput()" placeholder="Ej: «Se fue la luz de 2 a 6 pm» o «Investiga Oratoria»..." class="flex-1 px-3.5 py-2.5 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-sky-400">
-        <button onclick="window.enviarMensajeAsistenteInput()" type="button" class="p-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-bold text-xs transition cursor-pointer">
-          ➤
-        </button>
-      </div>
-      <div class="mt-1.5 flex items-center justify-between text-[11px] text-slate-400 px-1">
-        <span>Prueba: «Quiero estudiar Oratoria»</span>
-        <button onclick="window.abrirModalConfiguracionIA()" class="text-sky-400 hover:underline">Configurar API / Telegram</button>
-      </div>
-    </div>
-  </aside>
 
   <!-- ============================================================== -->
   <!-- 7. MODALES DE INTERACCIÓN PERSONAL                            -->
@@ -492,40 +380,28 @@
     </div>
   </div>
 
-  <!-- Modal B: Añadir Nuevo Nodo / Apunte en Guías -->
+  <!-- Modal B: Añadir Nuevo Tema a la Materia -->
   <div id="modal-nuevo-nodo" class="fixed inset-0 bg-[#0e092e]/85 backdrop-blur-md hidden items-center justify-center p-3 z-50">
     <div class="bg-[#140e40] border-2 border-sky-500/60 rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-[#2d1f85] pb-3">
         <div>
-          <span class="text-xs font-mono text-sky-400 font-bold">METODOLOGÍA DE PRIMEROS PRINCIPIOS</span>
-          <h3 class="text-base font-black text-white">Añadir Nodo a <span id="lbl-nuevo-nodo-materia" class="text-amber-300">SIS-OPSEC</span></h3>
+          <span class="text-xs font-mono text-sky-400 font-bold uppercase">TEMARIO PERSONAL</span>
+          <h3 class="text-base font-black text-white">Añadir Tema a <span id="lbl-nuevo-nodo-materia" class="text-amber-300">MAT-ING</span></h3>
         </div>
         <button type="button" onclick="window.cerrarModalNuevoNodo()" class="text-slate-400 hover:text-white p-1">✕</button>
       </div>
 
       <div class="space-y-3">
+        <input type="hidden" id="form-nodo-tipo" value="tema">
+
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Capa Epistémica:</label>
-          <select id="form-nodo-tipo" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs sm:text-sm text-white">
-            <option value="axioma">🔷 Nivel 1: Axioma Basal (Verdad Inamovible)</option>
-            <option value="concepto">🔶 Nivel 2: Grupo / Modelo Conceptual</option>
-            <option value="detalle">🔸 Nivel 3: Detalle Táctico / Fórmula / Procedimiento</option>
-          </select>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Título del Tema a Investigar:</label>
+          <input type="text" id="form-nodo-titulo" placeholder="Ej: Factorización por agrupación y trinomios" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs sm:text-sm text-white focus:outline-none focus:ring-1 focus:ring-sky-400">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Título o Enunciado Breve:</label>
-          <input type="text" id="form-nodo-titulo" placeholder="Ej: La claridad estructural precede a la pasión" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs sm:text-sm text-white">
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Por Qué es Fundamental (Causa Raíz):</label>
-          <textarea id="form-nodo-fundamento" rows="2" placeholder="Explica por qué este concepto es irreducible y no una convención arbitraria..." class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs sm:text-sm text-white"></textarea>
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Criterios de Verificación Feynman (1 por línea):</label>
-          <textarea id="form-nodo-criterios" rows="2" placeholder="Sé explicar esto a un niño de 10 años sin usar palabras técnicas..." class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs sm:text-sm text-white"></textarea>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Descripción o Notas (¿Qué buscas entender?):</label>
+          <textarea id="form-nodo-fundamento" rows="3" placeholder="Ej: Ver videos de Profe Alex y resolver 5 ejercicios a mano en la libreta..." class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs sm:text-sm text-white focus:outline-none focus:ring-1 focus:ring-sky-400"></textarea>
         </div>
       </div>
 
@@ -534,84 +410,13 @@
           Cancelar
         </button>
         <button type="button" onclick="window.guardarNuevoNodoForm()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-black text-xs shadow-md">
-          Crear Nodo
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal C: Configuración de Inteligencia Artificial y Telegram -->
-  <div id="modal-configuracion-ia" class="fixed inset-0 bg-[#0e092e]/85 backdrop-blur-md hidden items-center justify-center p-3 z-50">
-    <div class="bg-[#140e40] border-2 border-[#2d1f85] rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-[#2d1f85] pb-3">
-        <div>
-          <span class="text-xs font-mono text-sky-400 font-bold">CONFIGURACIÓN INTEGRAL</span>
-          <h3 class="text-base font-black text-white">Modelos de IA & Alertas al Celular</h3>
-        </div>
-        <button type="button" onclick="window.cerrarModalConfiguracionIA()" class="text-slate-400 hover:text-white p-1">✕</button>
-      </div>
-
-      <div class="space-y-4 max-h-[70vh] overflow-y-auto pr-1 scrollbar-thin">
-        <!-- 1. Proveedor de IA -->
-        <div class="p-3.5 bg-[#100b33] rounded-2xl border border-[#2d1f85] space-y-3">
-          <label class="block text-xs font-black text-amber-300 uppercase">1. Proveedor de Inteligencia Artificial</label>
-          <select id="cfg-llm-provider" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs sm:text-sm text-white font-bold">
-            <option value="gemini">Google Gemini API (Recomendado • Capa 100% Gratuita)</option>
-            <option value="openrouter">OpenRouter (LLaMA 3.3 / DeepSeek • Pago por uso)</option>
-          </select>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Google Gemini API Key:</label>
-            <input type="password" id="cfg-gemini-key" placeholder="AIzaSy..." class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs text-white font-mono">
-            <span class="text-[11px] text-slate-400">Gratis en Google AI Studio (aistudio.google.com).</span>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">OpenRouter API Key:</label>
-            <input type="password" id="cfg-openrouter-key" placeholder="sk-or-v1-..." class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs text-white font-mono">
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Modelo de OpenRouter:</label>
-            <input type="text" id="cfg-openrouter-model" value="meta-llama/llama-3.3-70b-instruct" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs text-white font-mono">
-          </div>
-        </div>
-
-        <!-- 2. Alertas a Telegram -->
-        <div class="p-3.5 bg-[#100b33] rounded-2xl border border-sky-500/30 space-y-3">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-black text-sky-300 uppercase">2. Alertas Directas al Teléfono (Telegram)</label>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-950 text-sky-200 border border-sky-500/40">100% Gratis</span>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Telegram Bot Token (de @BotFather):</label>
-            <input type="password" id="cfg-telegram-token" placeholder="123456789:ABCdefGHIjklMNOpqrs..." class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs text-white font-mono">
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Tu Chat ID Personal (de @userinfobot):</label>
-            <input type="text" id="cfg-telegram-chatid" placeholder="123456789" class="w-full px-3 py-2 rounded-xl bg-[#0e092e] border border-[#2d1f85] text-xs text-white font-mono">
-          </div>
-
-          <button id="btn-test-telegram" onclick="window.probarTelegramTest()" type="button" class="w-full py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] border border-sky-500/50 text-sky-300 text-xs font-bold transition">
-            📲 Probar Conexión con Celular
-          </button>
-        </div>
-      </div>
-
-      <div class="pt-3 border-t border-[#2d1f85] flex items-center justify-end gap-2">
-        <button type="button" onclick="window.cerrarModalConfiguracionIA()" class="px-3.5 py-2 rounded-xl bg-[#18114a] hover:bg-[#23176d] text-xs font-bold text-slate-300">
-          Cancelar
-        </button>
-        <button type="button" onclick="window.guardarConfiguracionIAForm()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-black text-xs shadow-md">
-          Guardar Ajustes
+          Añadir Tema
         </button>
       </div>
     </div>
   </div>
 
   <!-- Scripts ES Modules -->
-  <script type="module" src="js/estudioApp.js?v=101"></script>
+  <script type="module" src="js/estudioApp.js?v=102"></script>
 </body>
 </html>

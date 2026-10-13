@@ -341,7 +341,7 @@ class EstudioApp {
             </span>
           </div>
           <p class="text-sm text-slate-300 max-w-3xl leading-relaxed">
-            Cuando un corte eléctrico o imprevisto de partido no puede recuperarse en la semana sin sobrepasar el límite de 6.5h diarias, el motor desborda el tiempo excedente equitativamente a lo largo de las siguientes 3 semanas del mes.
+            Cuando un corte eléctrico o imprevisto personal no puede recuperarse en la semana sin sobrepasar el límite de 6.5h diarias, el motor redistribuye el tiempo excedente equitativamente a lo largo de las siguientes semanas del mes.
           </p>
         </div>
 
@@ -387,7 +387,7 @@ class EstudioApp {
         <!-- Historial de Interrupciones Registradas -->
         <div class="bg-[#100b33] border border-[#2d1f85] rounded-2xl p-5 space-y-3">
           <div class="flex items-center justify-between">
-            <h4 class="text-sm font-black text-white uppercase tracking-wider">Historial de Contingencias Eléctricas y Partidistas</h4>
+            <h4 class="text-sm font-black text-white uppercase tracking-wider">Historial de Contingencias (Cortes Eléctricos e Imprevistos)</h4>
             <span class="text-xs text-slate-400 font-mono">${this.historialEventos.length} eventos registrados</span>
           </div>
 
@@ -729,24 +729,23 @@ class EstudioApp {
 
   guardarNuevoNodoForm() {
     const matCod = this.materiaSeleccionadaParaNodo;
-    const tipo = document.getElementById('form-nodo-tipo')?.value || 'axioma';
     const titulo = document.getElementById('form-nodo-titulo')?.value || '';
-    const enunciado = document.getElementById('form-nodo-enunciado')?.value || '';
-    const fundamento = document.getElementById('form-nodo-fundamento')?.value || '';
-    const criterios = document.getElementById('form-nodo-criterios')?.value || '';
+    const descripcion = document.getElementById('form-nodo-fundamento')?.value || '';
 
     if (!titulo.trim()) {
-      alert('Por favor escribe un título para el nodo.');
+      alert('Por favor escribe un título para el tema a investigar.');
       return;
     }
 
-    this.arbolManager.agregarNodoManual(matCod, {
-      tipo,
+    this.arbolManager.agregarTemaManual(matCod, {
       titulo,
-      enunciado,
-      fundamento,
-      criterios
+      descripcion
     });
+
+    const inputTit = document.getElementById('form-nodo-titulo');
+    const inputDesc = document.getElementById('form-nodo-fundamento');
+    if (inputTit) inputTit.value = '';
+    if (inputDesc) inputDesc.value = '';
 
     this.cerrarModalNuevoNodo();
   }
