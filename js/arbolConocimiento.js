@@ -35,7 +35,7 @@ export class ArbolConocimientoManager {
   }
 
   setMateria(materiaCodigo) {
-    const validas = ['MAT-ING', 'SIS-ARQ', 'GEO-EST', 'ORA-CAS', 'ING-TEC', 'ECO-DIG'];
+    const validas = ['MAT-ING', 'SIS-ARQ', 'GEO-EST', 'ORA-CAS', 'ING-TEC', 'ECO-DIG', 'OCI-LIB'];
     this.materiaActivaCodigo = validas.includes(materiaCodigo) ? materiaCodigo : 'MAT-ING';
     this.filtroTextoTemas = '';
     this.render();
@@ -121,7 +121,8 @@ export class ArbolConocimientoManager {
       'GEO-EST': '🌐',
       'ORA-CAS': '🗣️',
       'ING-TEC': '🇬🇧',
-      'ECO-DIG': '📈'
+      'ECO-DIG': '📈',
+      'OCI-LIB': '🎬'
     };
     return iconos[codigo] || '📚';
   }
@@ -175,7 +176,8 @@ export class ArbolConocimientoManager {
       { cod: 'GEO-EST', nom: 'Geopolítica' },
       { cod: 'ORA-CAS', nom: 'Léxico & Retórica' },
       { cod: 'ING-TEC', nom: 'Inglés' },
-      { cod: 'ECO-DIG', nom: 'Negocios' }
+      { cod: 'ECO-DIG', nom: 'Negocios' },
+      { cod: 'OCI-LIB', nom: 'Ocio & Cine' }
     ].map(m => {
       const tData = temarios[m.cod] || { temas: [] };
       const tList = tData.temas || [];
@@ -428,10 +430,32 @@ export class ArbolConocimientoManager {
       audio: '🎙️',
       app: '📱',
       voz: '🗣️',
-      finanzas: '💳'
+      finanzas: '💳',
+      cine: '🎬'
     };
 
     const icono = iconosPorTipo[herramienta.tipo] || '🔧';
+    const esModalInterno = herramienta.url && herramienta.url.startsWith('#');
+    let botonAccionHtml = '';
+
+    if (esModalInterno) {
+      const accionJs = herramienta.url === '#modal-watchlist' 
+        ? 'window.abrirModalWatchlist()' 
+        : `window.location.hash='${herramienta.url}'`;
+      botonAccionHtml = `
+        <button type="button" onclick="${accionJs}" class="px-2.5 py-1 rounded bg-pink-500/15 hover:bg-pink-500/25 border border-pink-500/30 text-pink-300 text-xs flex items-center gap-1 font-medium transition shrink-0 cursor-pointer shadow-2xs" title="Abrir módulo interactivo">
+          <span>Abrir</span>
+          <span class="text-[10px]">🎬</span>
+        </button>
+      `;
+    } else if (herramienta.url) {
+      botonAccionHtml = `
+        <a href="${herramienta.url}" target="_blank" rel="noopener noreferrer" class="px-2 py-1 rounded bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-[var(--notion-text)] text-xs flex items-center gap-1 font-medium transition shrink-0 cursor-pointer shadow-2xs group-hover:border-[var(--notion-text-muted)]" title="Abrir recurso en pestaña nueva">
+          <span>Abrir</span>
+          <span class="text-[10px]">↗</span>
+        </a>
+      `;
+    }
 
     return `
       <div class="notion-item-card p-3 flex items-start justify-between gap-3 hover:bg-[var(--notion-card-hover)] transition group">
@@ -447,12 +471,7 @@ export class ArbolConocimientoManager {
           </div>
         </div>
 
-        ${herramienta.url ? `
-          <a href="${herramienta.url}" target="_blank" rel="noopener noreferrer" class="px-2 py-1 rounded bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-[var(--notion-text)] text-xs flex items-center gap-1 font-medium transition shrink-0 cursor-pointer shadow-2xs group-hover:border-[var(--notion-text-muted)]" title="Abrir recurso en pestaña nueva">
-            <span>Abrir</span>
-            <span class="text-[10px]">↗</span>
-          </a>
-        ` : ''}
+        ${botonAccionHtml}
       </div>
     `;
   }

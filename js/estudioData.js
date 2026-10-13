@@ -51,7 +51,7 @@ export const MATERIAS_CONFIG = [
     colorBorder: 'rgba(245, 158, 11, 0.4)',
     icono: 'mic',
     demandaCognitiva: 'medium',
-    descripcion: 'Lectura diaria de 25 min para incorporar vocabulario culto (técnica de las 3 palabras), eliminación de muletillas y pitch comercial para clientes.'
+    descripcion: 'Lectura diaria de 25 min para incorporar vocabulario culto (técnica de las 3 palabras), síntesis escrita a mano de 5 líneas y diseño/práctica de firma ejecutiva.'
   },
   {
     codigo: 'ING-TEC',
@@ -91,15 +91,15 @@ export const MATERIAS_CONFIG = [
   },
   {
     codigo: 'OCI-LIB',
-    nombre: 'Ocio, Videojuegos & Tiempo Libre',
+    nombre: 'Ocio, Series, Películas & Videojuegos',
     categoria: 'ocio',
     metaSemanalHoras: 6.0,
     colorHex: '#ec4899', // Rosa
     colorBg: 'rgba(236, 72, 153, 0.12)',
     colorBorder: 'rgba(236, 72, 153, 0.4)',
-    icono: 'smile',
+    icono: 'tv',
     demandaCognitiva: 'ocio',
-    descripcion: 'Espacio diario garantizado para videojuegos (Play, emuladores), desconexión mental y esparcimiento sin culpa.'
+    descripcion: 'Espacio diario garantizado para ver series y películas (con inmersión en inglés), videojuegos y desconexión mental sin culpa.'
   },
   {
     codigo: 'REU-COM',
@@ -438,17 +438,20 @@ export const TEMARIOS_Y_HERRAMIENTAS = {
   },
   'ORA-CAS': {
     nombre: 'Castellano, Léxico Culto & Retórica de Negocios',
-    objetivo: 'Incorporar vocabulario de alto nivel mediante lectura de 25 min diarios, dominar pausas de silencio y defender propuestas comerciales con solvencia.',
+    objetivo: 'Incorporar vocabulario de alto nivel mediante lectura de 25 min diarios, dominar pausas de silencio, diseñar firma ejecutiva y redactar síntesis escritas de 5 líneas con solvencia.',
     temas: [
       { id: 'ora_t1', titulo: 'Lectura Diaria de Prosa Rica (25 minutos diarios)', descripcion: 'Lectura de autores de alta precisión léxica (Carlos Ruiz Zafón, Borges, García Márquez) para absorber giros y adjetivación natural.' },
       { id: 'ora_t2', titulo: 'La Técnica de las 3 Palabras al Día', descripcion: 'Identificar 3 términos cultos por sesión de lectura y verbalizarlos conscientemente en notas de voz y conversaciones del día.' },
       { id: 'ora_t3', titulo: 'Estructura PREP y Pitch Comercial para Clientes', descripcion: 'Punto directo -> Razón técnica -> Ejemplo de presupuesto -> Conclusión firme para cotizar instalaciones de cámaras e inversores.' },
-      { id: 'ora_t4', titulo: 'Modulación de voz, respiración diafragmática y pausas', descripcion: 'Eliminar muletillas («este...», «o sea») sustituyéndolas por pausas de silencio de 2 segundos con postura erguida.' }
+      { id: 'ora_t4', titulo: 'Modulación de voz, respiración diafragmática y pausas', descripcion: 'Eliminar muletillas («este...», «o sea») sustituyéndolas por pausas de silencio de 2 segundos con postura erguida.' },
+      { id: 'ora_t5', titulo: 'Diseño y Práctica de Firma Ejecutiva (Memoria Muscular)', descripcion: 'Diseñar una firma sólida, legible y difícil de falsificar (inicial/nombre con estructura geométrica clara y rúbrica ascendente en un solo trazo veloz). Practicar 20 repeticiones diarias en libreta para automatizar el trazo sin titubeos.' },
+      { id: 'ora_t6', titulo: 'Síntesis Escrita de 5 Líneas en Libreta (Pensar, Condensar y Redactar)', descripcion: 'Al terminar los 25 min de lectura diaria, escribir a mano un párrafo de exactamente 5 líneas resumiendo la idea central e integrando las 3 palabras cultas aprendidas. El paso de la mente al papel fija el léxico en la memoria activa y agiliza el pensamiento.' }
     ],
     herramientas: [
       { tipo: 'lectura', nombre: 'Lectura Recomendada: La Sombra del Viento / Borges', desc: 'Prosa rica, adictiva y con el más alto nivel de vocabulario narrativo en español.', url: 'https://es.wikipedia.org/wiki/La_sombra_del_viento' },
       { tipo: 'doc', nombre: 'Diccionario de la Real Academia Española (DLE)', desc: 'Consulta inmediata del significado exacto y sinónimos de palabras nuevas.', url: 'https://dle.rae.es/' },
-      { tipo: 'audio', nombre: 'Notas de Voz de 2 minutos en Telegram', desc: 'Grabar un monólogo diario poniendo a prueba las 3 palabras nuevas de la sesión de lectura.', url: 'https://t.me' }
+      { tipo: 'audio', nombre: 'Notas de Voz de 2 minutos en Telegram', desc: 'Grabar un monólogo diario poniendo a prueba las 3 palabras nuevas de la sesión de lectura.', url: 'https://t.me' },
+      { tipo: 'practica', nombre: 'Libreta Física de Apuntes & Bolígrafo de Trazo Firme', desc: 'Soporte analógico obligatorio para redactar la síntesis diaria de 5 líneas y repetir la firma ejecutiva 20 veces.', url: 'https://es.wikipedia.org/wiki/Caligraf%C3%ADa' }
     ]
   },
   'ING-TEC': {
@@ -478,6 +481,21 @@ export const TEMARIOS_Y_HERRAMIENTAS = {
     herramientas: [
       { tipo: 'app', nombre: 'Hoja de Cálculo de Costos y Cotizaciones (Sheets/Excel)', desc: 'Plantilla para calcular materiales, mano de obra y margen de ganancia neto en minutos.', url: 'https://sheets.google.com' },
       { tipo: 'finanzas', nombre: 'Binance P2P / El Dorado (Liquidación en USDT/Bs)', desc: 'Manejo de tesorería multimoneda y protección contra inflación cambiaria.', url: 'https://p2p.binance.com' }
+    ]
+  },
+  'OCI-LIB': {
+    nombre: 'Ocio, Series, Películas & Videojuegos (Inmersión en Inglés)',
+    objetivo: 'Descanso mental sin culpa, control de series/películas pendientes en la Watchlist y aprovechamiento del entretenimiento para afinar el oído en inglés (audio original en inglés con subtítulos).',
+    temas: [
+      { id: 'oci_t1', titulo: 'Inmersión Auditiva: Series en Audio Original en Inglés', descripcion: 'Entrenar la comprensión auditiva viendo producciones de alta calidad en versión original en inglés con subtítulos (en inglés o español). El oído se acostumbra al ritmo real de conversación sin esfuerzo.' },
+      { id: 'oci_t2', titulo: 'Series Clave Recomendadas (Tecnología, Negocios y Sistemas)', descripcion: 'Silicon Valley (servidores, compresión, rondas de inversión), Mr. Robot (ciberseguridad, terminal Linux, redes), Chernobyl (gestión de crisis, protocolos e ingeniería de fallas) y Better Call Saul (negociación, contratos y retórica).' },
+      { id: 'oci_t3', titulo: 'Gestión de Watchlist Personal sin Olvidos', descripcion: 'Registrar series y películas pendientes, controlar la temporada y episodio actual con el botón rápido +1 Cap para retomar exactamente donde te quedaste sin perder el hilo.' },
+      { id: 'oci_t4', titulo: 'Desconexión Cognitiva y Videojuegos', descripcion: 'Espacio diario de juego (PlayStation, emuladores, estrategia) como recompensa tras bloques de alta demanda intelectual, garantizando recuperación cerebral para el día siguiente.' }
+    ],
+    herramientas: [
+      { tipo: 'cine', nombre: 'Mi Watchlist de Series & Cine (Módulo Integrado)', desc: 'Rastreador directo en la plataforma para llevar el control de episodios, temporadas y vocabulario nuevo.', url: '#modal-watchlist' },
+      { tipo: 'video', nombre: 'Plataformas de Streaming (Netflix / Max / Prime / Stremio)', desc: 'Configurar siempre audio original en inglés y subtítulos para inmersión pasiva.', url: 'https://www.netflix.com' },
+      { tipo: 'doc', nombre: 'IMDb / FilmAffinity (Fichas Técnicas & Sinopsis)', desc: 'Consulta de calificaciones, guiones y recomendaciones de cine de culto y ciencia ficción.', url: 'https://www.imdb.com' }
     ]
   }
 };

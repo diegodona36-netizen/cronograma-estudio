@@ -55,6 +55,289 @@ class EstudioApp {
     this.timerCorriendo = false;
     this.timerMateriaCodigo = 'MAT-ING';
     this.timerTemaTitulo = '';
+
+    // Estado de Watchlist (Series & Películas para Ocio e Inmersión en Inglés)
+    this.watchlist = this.cargarWatchlist();
+    this.filtroWatchlist = 'todas';
+  }
+
+  cargarWatchlist() {
+    const key = 'axiom_watchlist_series';
+    try {
+      const guardado = localStorage.getItem(key);
+      if (guardado) return JSON.parse(guardado);
+    } catch (e) {
+      console.warn('Error leyendo watchlist:', e);
+    }
+    const WATCHLIST_DEFAULT = [
+      {
+        id: 'wl_silicon_valley',
+        titulo: 'Silicon Valley',
+        tipo: 'serie',
+        plataforma: 'Max',
+        temporada: 1,
+        capitulo: 1,
+        estado: 'viendo',
+        inglesAudio: true,
+        notas: 'Servidores, compresión de datos, ingeniería de startups y rondas de inversión.',
+        fechaAgregado: '2026-10-12'
+      },
+      {
+        id: 'wl_mr_robot',
+        titulo: 'Mr. Robot',
+        tipo: 'serie',
+        plataforma: 'Prime Video',
+        temporada: 1,
+        capitulo: 1,
+        estado: 'pendiente',
+        inglesAudio: true,
+        notas: 'Ciberseguridad realista, terminal Linux, ingeniería social y cifrado.',
+        fechaAgregado: '2026-10-12'
+      },
+      {
+        id: 'wl_chernobyl',
+        titulo: 'Chernobyl',
+        tipo: 'miniserie',
+        plataforma: 'Max',
+        temporada: 1,
+        capitulo: 1,
+        estado: 'pendiente',
+        inglesAudio: true,
+        notas: 'Gestión de crisis, protocolos de ingeniería y análisis de fallas en cadena.',
+        fechaAgregado: '2026-10-12'
+      },
+      {
+        id: 'wl_better_call_saul',
+        titulo: 'Better Call Saul',
+        tipo: 'serie',
+        plataforma: 'Netflix',
+        temporada: 1,
+        capitulo: 1,
+        estado: 'pendiente',
+        inglesAudio: true,
+        notas: 'Retórica, oratoria, redacción de contratos y negociación comercial.',
+        fechaAgregado: '2026-10-12'
+      }
+    ];
+    try {
+      localStorage.setItem(key, JSON.stringify(WATCHLIST_DEFAULT));
+    } catch {}
+    return WATCHLIST_DEFAULT;
+  }
+
+  guardarWatchlist() {
+    try {
+      localStorage.setItem('axiom_watchlist_series', JSON.stringify(this.watchlist));
+    } catch (e) {
+      console.warn('Error guardando watchlist:', e);
+    }
+  }
+
+  abrirModalWatchlist() {
+    const modal = document.getElementById('modal-watchlist');
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+    this.renderWatchlist();
+  }
+
+  cerrarModalWatchlist() {
+    const modal = document.getElementById('modal-watchlist');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+    const form = document.getElementById('form-nueva-serie');
+    if (form) form.classList.add('hidden');
+  }
+
+  filtrarWatchlist(filtro) {
+    this.filtroWatchlist = filtro || 'todas';
+    this.renderWatchlist();
+  }
+
+  toggleFormNuevaSerie() {
+    const form = document.getElementById('form-nueva-serie');
+    if (form) {
+      form.classList.toggle('hidden');
+      if (!form.classList.contains('hidden')) {
+        const inp = document.getElementById('wl-input-titulo');
+        if (inp) inp.focus();
+      }
+    }
+  }
+
+  guardarNuevoTituloWatchlist() {
+    const inputTit = document.getElementById('wl-input-titulo');
+    const selectPlat = document.getElementById('wl-select-plataforma');
+    const selectTipo = document.getElementById('wl-select-tipo');
+    const selectEst = document.getElementById('wl-select-estado');
+    const inputTemp = document.getElementById('wl-input-temporada');
+    const inputCap = document.getElementById('wl-input-capitulo');
+    const checkIngles = document.getElementById('wl-check-ingles');
+    const inputNotas = document.getElementById('wl-input-notas');
+
+    const titulo = inputTit ? inputTit.value.trim() : '';
+    if (!titulo) {
+      alert('Por favor ingresa el título de la serie o película.');
+      if (inputTit) inputTit.focus();
+      return;
+    }
+
+    const nuevaObra = {
+      id: `wl_${Date.now()}`,
+      titulo,
+      plataforma: selectPlat ? selectPlat.value : 'Otra',
+      tipo: selectTipo ? selectTipo.value : 'serie',
+      estado: selectEst ? selectEst.value : 'viendo',
+      temporada: inputTemp ? parseInt(inputTemp.value, 10) || 1 : 1,
+      capitulo: inputCap ? parseInt(inputCap.value, 10) || 1 : 1,
+      inglesAudio: checkIngles ? checkIngles.checked : true,
+      notas: inputNotas ? inputNotas.value.trim() : '',
+      fechaAgregado: new Date().toISOString().split('T')[0]
+    };
+
+    this.watchlist.unshift(nuevaObra);
+    this.guardarWatchlist();
+
+    if (inputTit) inputTit.value = '';
+    if (inputNotas) inputNotas.value = '';
+    const form = document.getElementById('form-nueva-serie');
+    if (form) form.classList.add('hidden');
+
+    this.renderWatchlist();
+  }
+
+  avanzarCapitulo(id) {
+    const item = this.watchlist.find(i => i.id === id);
+    if (!item) return;
+    item.capitulo = (parseInt(item.capitulo, 10) || 0) + 1;
+    if (item.estado === 'pendiente') item.estado = 'viendo';
+    this.guardarWatchlist();
+    this.renderWatchlist();
+  }
+
+  cambiarEstadoObra(id, nuevoEstado) {
+    const item = this.watchlist.find(i => i.id === id);
+    if (!item) return;
+    item.estado = nuevoEstado;
+    this.guardarWatchlist();
+    this.renderWatchlist();
+  }
+
+  eliminarObraWatchlist(id) {
+    const item = this.watchlist.find(i => i.id === id);
+    const nombre = item ? item.titulo : 'este título';
+    if (!confirm(`¿Deseas eliminar "${nombre}" de tu lista de ocio?`)) return;
+    this.watchlist = this.watchlist.filter(i => i.id !== id);
+    this.guardarWatchlist();
+    this.renderWatchlist();
+  }
+
+  renderWatchlist() {
+    const contenedor = document.getElementById('contenedor-items-watchlist');
+    const statsTexto = document.getElementById('stats-watchlist-texto');
+    if (!contenedor) return;
+
+    let items = this.watchlist || [];
+    if (this.filtroWatchlist !== 'todas') {
+      items = items.filter(it => it.estado === this.filtroWatchlist);
+    }
+
+    // Actualizar tabs de filtro
+    const tabs = ['todas', 'viendo', 'pendiente', 'completada'];
+    tabs.forEach(t => {
+      const btn = document.getElementById(`tab-wl-${t}`);
+      if (!btn) return;
+      if (this.filtroWatchlist === t) {
+        btn.className = 'px-2.5 py-1 rounded text-xs font-semibold bg-[var(--notion-card)] text-[var(--notion-text)] border border-[var(--notion-border)] cursor-pointer transition';
+      } else {
+        btn.className = 'px-2.5 py-1 rounded text-xs font-medium text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] cursor-pointer transition';
+      }
+    });
+
+    // Actualizar estadísticas
+    const total = this.watchlist.length;
+    const viendo = this.watchlist.filter(i => i.estado === 'viendo').length;
+    const pendientes = this.watchlist.filter(i => i.estado === 'pendiente').length;
+    const completadas = this.watchlist.filter(i => i.estado === 'completada').length;
+    if (statsTexto) {
+      statsTexto.textContent = `${total} títulos • ${viendo} viendo actualmente • ${pendientes} por ver • ${completadas} completadas`;
+    }
+
+    if (items.length === 0) {
+      contenedor.innerHTML = `
+        <div class="p-8 text-center border border-dashed border-[var(--notion-border)] rounded-lg text-xs text-[var(--notion-text-muted)] space-y-2">
+          <p class="text-2xl">🍿</p>
+          <p class="font-medium text-[var(--notion-text)]">No hay títulos en esta sección.</p>
+          <p>Pulsa en <strong>+ Añadir Título</strong> para agregar tus series o películas favoritas.</p>
+        </div>
+      `;
+      return;
+    }
+
+    contenedor.innerHTML = items.map(item => {
+      const esSerie = (item.tipo === 'serie' || item.tipo === 'miniserie');
+      const badgeIngles = item.inglesAudio 
+        ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-sky-500/15 text-sky-400 border border-sky-500/30 flex items-center gap-1" title="Inmersión en inglés recomendada: audio en inglés + subtítulos">🎧 Audio EN</span>` 
+        : '';
+      
+      const badgePlataforma = `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-[var(--notion-hover)] text-[var(--notion-text-muted)] border border-[var(--notion-border)]">${item.plataforma || 'Streaming'}</span>`;
+      
+      const badgeTipo = `<span class="px-1.5 py-0.5 rounded text-[10px] uppercase font-mono tracking-wider ${esSerie ? 'bg-purple-500/15 text-purple-400 border border-purple-500/30' : 'bg-amber-500/15 text-amber-400 border border-amber-500/30'}">${item.tipo}</span>`;
+
+      let progresoTexto = '';
+      if (esSerie) {
+        progresoTexto = `Temp. ${item.temporada || 1} • Cap. ${item.capitulo || 1}`;
+      } else {
+        progresoTexto = item.estado === 'completada' ? 'Película Vista' : 'Película Pendiente';
+      }
+
+      return `
+        <div class="p-3.5 rounded-lg bg-[var(--notion-card)] border border-[var(--notion-border)] hover:border-[var(--notion-accent)]/50 transition space-y-2.5">
+          <div class="flex items-start justify-between gap-2">
+            <div class="space-y-1 min-w-0">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                ${badgeTipo}
+                ${badgePlataforma}
+                ${badgeIngles}
+              </div>
+              <h4 class="font-semibold text-sm text-[var(--notion-text)] truncate">${item.titulo}</h4>
+            </div>
+
+            <!-- Selector de Estado & Eliminar -->
+            <div class="flex items-center gap-1.5 shrink-0">
+              <select onchange="window.cambiarEstadoObra('${item.id}', this.value)" class="text-xs px-2 py-1 rounded bg-[var(--notion-bg)] border border-[var(--notion-border)] text-[var(--notion-text)] cursor-pointer">
+                <option value="viendo" ${item.estado === 'viendo' ? 'selected' : ''}>▶ Viendo</option>
+                <option value="pendiente" ${item.estado === 'pendiente' ? 'selected' : ''}>⏳ Por Ver</option>
+                <option value="completada" ${item.estado === 'completada' ? 'selected' : ''}>✓ Completada</option>
+              </select>
+              <button onclick="window.eliminarObraWatchlist('${item.id}')" class="p-1 rounded hover:bg-red-500/20 text-[var(--notion-text-muted)] hover:text-red-400 transition cursor-pointer text-xs" title="Eliminar de la lista">
+                🗑️
+              </button>
+            </div>
+          </div>
+
+          <!-- Progreso y Botón +1 Cap -->
+          <div class="flex items-center justify-between gap-2 pt-1 border-t border-[var(--notion-border)] text-xs">
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-[var(--notion-text)] font-medium">${progresoTexto}</span>
+              ${esSerie ? `
+                <button onclick="window.avanzarCapitulo('${item.id}')" class="px-2 py-0.5 rounded bg-pink-500/15 hover:bg-pink-500/25 border border-pink-500/30 text-pink-300 font-mono font-bold text-[11px] transition cursor-pointer flex items-center gap-1" title="Sumar 1 capítulo visto">
+                  <span>+1 Cap</span>
+                  <span>▶</span>
+                </button>
+              ` : ''}
+            </div>
+
+            <span class="text-[11px] text-[var(--notion-text-muted)] truncate max-w-[200px] sm:max-w-[280px]">
+              ${item.notas ? item.notas : ''}
+            </span>
+          </div>
+        </div>
+      `;
+    }).join('');
   }
 
   cargarItinerario(semanaNum = this.semanaActiva || 1) {
@@ -1419,6 +1702,16 @@ window.toggleTimerEnfoque = () => app.toggleTimerEnfoque();
 window.reiniciarTimerEnfoque = () => app.reiniciarTimerEnfoque();
 window.concluirSesionTimerYGrabar = () => app.concluirSesionTimerYGrabar();
 
+// Métodos de Watchlist (Series & Cine) en Window
+window.abrirModalWatchlist = () => app.abrirModalWatchlist();
+window.cerrarModalWatchlist = () => app.cerrarModalWatchlist();
+window.filtrarWatchlist = (f) => app.filtrarWatchlist(f);
+window.toggleFormNuevaSerie = () => app.toggleFormNuevaSerie();
+window.guardarNuevoTituloWatchlist = () => app.guardarNuevoTituloWatchlist();
+window.avanzarCapitulo = (id) => app.avanzarCapitulo(id);
+window.cambiarEstadoObra = (id, st) => app.cambiarEstadoObra(id, st);
+window.eliminarObraWatchlist = (id) => app.eliminarObraWatchlist(id);
+
 window.abrirModalAgregarBloque = (dia) => app.abrirModalAgregarBloque(dia);
 window.cerrarModalAgregarBloque = () => app.cerrarModalAgregarBloque();
 window.guardarBloqueManualForm = () => app.guardarBloqueManualForm();
@@ -1439,7 +1732,7 @@ window.exportarItinerarioMarkdown = () => app.exportarItinerarioMarkdown();
 window.cambiarVista = (vista) => app.cambiarVista(vista);
 
 window.abrirGuiaDeMateria = (materiaCod) => {
-  const materiasValidas = ['MAT-ING', 'SIS-ARQ', 'GEO-EST', 'ORA-CAS', 'ING-TEC', 'ECO-DIG'];
+  const materiasValidas = ['MAT-ING', 'SIS-ARQ', 'GEO-EST', 'ORA-CAS', 'ING-TEC', 'ECO-DIG', 'OCI-LIB'];
   const codDestino = materiasValidas.includes(materiaCod) ? materiaCod : 'MAT-ING';
   app.cambiarVista('guias');
   app.arbolManager.setMateria(codDestino);
