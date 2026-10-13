@@ -34,7 +34,8 @@ export class ArbolConocimientoManager {
   }
 
   setMateria(materiaCodigo) {
-    this.materiaActivaCodigo = materiaCodigo;
+    const validas = ['MAT-ING', 'SIS-ARQ', 'GEO-EST', 'ORA-CAS', 'ING-TEC', 'ECO-DIG'];
+    this.materiaActivaCodigo = validas.includes(materiaCodigo) ? materiaCodigo : 'MAT-ING';
     this.render();
   }
 
@@ -45,12 +46,16 @@ export class ArbolConocimientoManager {
   }
 
   copiarPromptTema(titulo, materiaNombre) {
-    const prompt = `Actúa como mi tutor de ${materiaNombre}. Explícame de forma clara, directa y práctica el siguiente tema: "${titulo}". Dame 1 ejemplo de la vida real y 3 ejercicios sencillos para resolver.`;
-    navigator.clipboard.writeText(prompt).then(() => {
-      alert(`¡Copiado al portapapeles!\n\nPuedes pegarlo en Gemini o ChatGPT para que te lo explique de inmediato.`);
-    }).catch(() => {
-      prompt('Copia esta consulta para tu tutor IA:', prompt);
-    });
+    const textoPrompt = `Actúa como mi tutor de ${materiaNombre}. Explícame de forma clara, directa y práctica el siguiente tema: "${titulo}". Dame 1 ejemplo de la vida real y 3 ejercicios sencillos para resolver.`;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(textoPrompt).then(() => {
+        alert(`¡Copiado al portapapeles!\n\nPuedes pegarlo en tu IA favorita para que te lo explique de inmediato.`);
+      }).catch(() => {
+        window.prompt('Copia esta consulta para tu tutor IA:', textoPrompt);
+      });
+    } else {
+      window.prompt('Copia esta consulta para tu tutor IA:', textoPrompt);
+    }
   }
 
   buscarGoogle(titulo, materiaNombre) {

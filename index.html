@@ -14,14 +14,15 @@
   <meta http-equiv="Expires" content="0" />
 
   <!-- Tailwind CSS -->
-  <script src="../vendor/tailwindcss.js"></script>
+  <script src="vendor/tailwindcss.js"></script>
   <script>
     if (!window.tailwind) {
       document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
     }
   </script>
   <script>
-    tailwind.config = {
+    window.tailwind = window.tailwind || {};
+    window.tailwind.config = {
       darkMode: "class",
       theme: {
         extend: {
@@ -38,11 +39,11 @@
           }
         }
       }
-    }
+    };
   </script>
 
   <!-- Lucide Icons -->
-  <script src="../vendor/lucide.min.js"></script>
+  <script src="vendor/lucide.min.js"></script>
   <script>
     if (!window.lucide) {
       document.write('<script src="https://unpkg.com/lucide@latest"><\/script>');
@@ -94,7 +95,7 @@
       
       <!-- Lado Izquierdo: Breadcrumbs estilo Notion -->
       <div class="flex items-center gap-2 text-sm text-[var(--notion-text-muted)] min-w-0">
-        <span class="hover:text-[var(--notion-text)] cursor-pointer transition">Workspace</span>
+        <span onclick="window.cambiarVista('semanal')" class="hover:text-[var(--notion-text)] cursor-pointer transition" title="Ir al Tablero Semanal">Workspace</span>
         <span>/</span>
         <div class="flex items-center gap-1.5 font-medium text-[var(--notion-text)] truncate">
           <span>📅</span>

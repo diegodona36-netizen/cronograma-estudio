@@ -121,6 +121,8 @@ class EstudioApp {
       });
     }
 
+    this.renderKPIs();
+
     const vistaParam = params.get('vista') || window.location.hash.replace('#', '');
     if (['semanal', 'guias', 'mensual'].includes(vistaParam) && vistaParam !== 'semanal') {
       this.cambiarVista(vistaParam);
@@ -142,50 +144,31 @@ class EstudioApp {
       setTimeout(() => this.abrirModalListaBitacoras(), 150);
     }
 
+    if (params.get('contingencia') === '1') {
+      setTimeout(() => this.abrirModalContingencia(), 150);
+    }
+
+    if (params.get('agregar_bloque') === '1') {
+      const dia = params.get('dia') || 'lunes';
+      setTimeout(() => this.abrirModalAgregarBloque(dia), 150);
+    }
+
+    if (params.get('nuevo_nodo') === '1') {
+      const mat = params.get('materia') || 'MAT-ING';
+      setTimeout(() => this.abrirModalNuevoNodo(mat), 150);
+    }
+
     if (window.lucide) window.lucide.createIcons();
   }
 
   bindEvents() {
-    // Cambio de Vistas Principales
-    ['semanal', 'guias', 'mensual'].forEach(v => {
-      const btn = document.getElementById(`btn-vista-${v}`);
-      if (btn) {
-        btn.addEventListener('click', () => this.cambiarVista(v));
-      }
-    });
-
-    // Modal de Contingencia
-    const btnReportar = document.getElementById('btn-abrir-modal-contingencia');
-    if (btnReportar) {
-      btnReportar.addEventListener('click', () => this.abrirModalContingencia());
-    }
-
-    const btnCerrarModal = document.getElementById('btn-cerrar-modal-contingencia');
-    if (btnCerrarModal) {
-      btnCerrarModal.addEventListener('click', () => this.cerrarModalContingencia());
-    }
-
-    // Formulario de Interrupción
+    // Formulario de Contingencia (Rebalanceo por corte de luz)
     const formContingencia = document.getElementById('form-contingencia');
     if (formContingencia) {
       formContingencia.addEventListener('submit', (e) => {
         e.preventDefault();
         this.ejecutarRebalanceoDesdeFormulario();
       });
-    }
-
-    // Selector de materias para vista de guías
-    const selectMatGuia = document.getElementById('select-materia-guia');
-    if (selectMatGuia) {
-      selectMatGuia.addEventListener('change', (e) => {
-        this.arbolManager.setMateria(e.target.value);
-      });
-    }
-
-    // Modal de API Key Gemini
-    const btnApiKey = document.getElementById('btn-config-gemini-key');
-    if (btnApiKey) {
-      btnApiKey.addEventListener('click', () => this.abrirModalApiKey());
     }
   }
 
@@ -259,50 +242,68 @@ class EstudioApp {
     const contenedor = document.getElementById('grid-semana-canvases');
     if (!contenedor) return;
 
-    contenedor.innerHTML = DIAS_SEMANA.map(dia => {
-      const bloques = (this.itinerario[dia.id] || []).filter(b => {
-        if (this.materiaFiltro === 'todas') return true;
-        return b.materiaCodigo === this.materiaFiltro;
-      });
+    try {
+      contenedor.innerHTML = DIAS_SEMANA.map(dia => {
+        const bloques = (this.itinerario[dia.id] || []).filter(b => {
+          if (this.materiaFiltro === 'todas') return true;
+          return b.materiaCodigo === this.materiaFiltro;
+        });
 
-      const totalHorasDia = calcularHorasDia(bloques);
+        let totalHorasDia = 0;
+        try {
+          totalHorasDia = calcularHorasDia(bloques);
+        } catch (e) {
+          console.warn('Error calculando horas para día ' + dia.id, e);
+        }
 
-      return `
-        <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-md flex flex-col min-h-[460px]">
-          <!-- Encabezado de Columna Board estilo Notion -->
-          <div class="p-2.5 border-b border-[var(--notion-border)] flex items-center justify-between">
-            <div class="flex items-center gap-1.5">
-              <span class="text-xs font-semibold text-[var(--notion-text)]">${dia.nombre}</span>
-              <span class="text-[11px] font-mono px-1.5 py-0.5 rounded bg-[var(--notion-card)] text-[var(--notion-text-muted)] border border-[var(--notion-border)]">
-                ${Math.round(totalHorasDia * 10) / 10}h
-              </span>
-            </div>
-            <button onclick="window.abrirModalAgregarBloque('${dia.id}')" class="w-5 h-5 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] flex items-center justify-center text-xs transition cursor-pointer" title="Añadir bloque">
-              +
-            </button>
-          </div>
-
-          <!-- Lista de Tarjetas del Día (Notion Cards) -->
-          <div class="p-2 space-y-2 flex-1 overflow-y-auto max-h-[520px] scrollbar-thin">
-            ${bloques.length === 0 ? `
-              <div class="py-12 text-center text-xs text-[var(--notion-text-muted)] italic">
-                Sin actividades
+        return `
+          <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-md flex flex-col min-h-[460px]">
+            <!-- Encabezado de Columna Board estilo Notion -->
+            <div class="p-2.5 border-b border-[var(--notion-border)] flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-semibold text-[var(--notion-text)]">${dia.nombre}</span>
+                <span class="text-[11px] font-mono px-1.5 py-0.5 rounded bg-[var(--notion-card)] text-[var(--notion-text-muted)] border border-[var(--notion-border)]">
+                  ${Math.round(totalHorasDia * 10) / 10}h
+                </span>
               </div>
-            ` : bloques.map(b => this.renderTarjetaBloque(b, dia.id)).join('')}
-          </div>
+              <button onclick="window.abrirModalAgregarBloque('${dia.id}')" class="w-5 h-5 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] flex items-center justify-center text-xs transition cursor-pointer" title="Añadir bloque">
+                +
+              </button>
+            </div>
 
-          <!-- Pie de Columna: Botón Añadir -->
-          <div class="p-1.5 border-t border-[var(--notion-border)]">
-            <button onclick="window.abrirModalAgregarBloque('${dia.id}')" type="button" class="w-full py-1 px-2 rounded text-xs text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] hover:bg-[var(--notion-hover)] transition flex items-center gap-1 cursor-pointer">
-              <span>+</span>
-              <span>Nuevo</span>
-            </button>
-          </div>
-        </div>
-      `;
-    }).join('');
+            <!-- Lista de Tarjetas del Día (Notion Cards) -->
+            <div class="p-2 space-y-2 flex-1 overflow-y-auto max-h-[520px] scrollbar-thin">
+              ${bloques.length === 0 ? `
+                <div class="py-12 text-center text-xs text-[var(--notion-text-muted)] italic">
+                  Sin actividades
+                </div>
+              ` : bloques.map(b => {
+                try {
+                  return this.renderTarjetaBloque(b, dia.id);
+                } catch (errCard) {
+                  console.error('Error renderizando tarjeta:', errCard);
+                  return '';
+                }
+              }).join('')}
+            </div>
 
-    if (window.lucide) window.lucide.createIcons();
+            <!-- Pie de Columna: Botón Añadir -->
+            <div class="p-1.5 border-t border-[var(--notion-border)]">
+              <button onclick="window.abrirModalAgregarBloque('${dia.id}')" type="button" class="w-full py-1 px-2 rounded text-xs text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] hover:bg-[var(--notion-hover)] transition flex items-center gap-1 cursor-pointer">
+                <span>+</span>
+                <span>Nuevo</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch (errGrid) {
+      console.error('Error renderizando tablero semanal:', errGrid);
+    }
+
+    try {
+      if (window.lucide?.createIcons) window.lucide.createIcons();
+    } catch {}
   }
 
   renderTarjetaBloque(bloque, diaId) {
@@ -310,6 +311,8 @@ class EstudioApp {
     const completado = Boolean(bloque.completado);
     const bitacora = bitacoraVoz.obtenerPorBloque(diaId, bloque.id);
     const tieneBitacora = Boolean(bitacora && (bitacora.aprendido || bitacora.mejorar || bitacora.audioData));
+
+    const esMateriaAcademica = ['MAT-ING', 'SIS-ARQ', 'GEO-EST', 'ORA-CAS', 'ING-TEC', 'ECO-DIG'].includes(bloque.materiaCodigo);
 
     if (bloque.cancelado) {
       return `
@@ -369,9 +372,11 @@ class EstudioApp {
             <button onclick="window.abrirModalBitacora('${diaId}', '${bloque.id}')" class="p-1 rounded hover:bg-[var(--notion-hover)] ${tieneBitacora ? 'text-amber-400' : 'text-[var(--notion-text-muted)]'} hover:text-amber-400 text-xs transition cursor-pointer" title="Grabar o ver bitácora de conclusión (voz)">
               🎙️
             </button>
-            <button onclick="window.abrirGuiaDeMateria('${bloque.materiaCodigo}')" class="p-1 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] text-xs transition cursor-pointer" title="Ver temas de esta materia">
-              📖
-            </button>
+            ${esMateriaAcademica ? `
+              <button onclick="window.abrirGuiaDeMateria('${bloque.materiaCodigo}')" class="p-1 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] text-xs transition cursor-pointer" title="Ver temas de esta materia">
+                📖
+              </button>
+            ` : ''}
             <button onclick="window.eliminarBloqueManual('${diaId}', '${bloque.id}')" class="p-1 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-red-400 text-xs transition cursor-pointer" title="Eliminar bloque">
               ✕
             </button>
@@ -601,28 +606,28 @@ class EstudioApp {
 
     contenido.innerHTML = `
       <div class="space-y-4">
-        <div class="p-3 rounded-xl ${resultado.desbordeMensualHoras === 0 ? 'bg-emerald-950/60 border border-emerald-500/50' : 'bg-amber-950/60 border border-amber-500/50'} text-xs sm:text-sm text-white font-semibold">
+        <div class="p-3 rounded-md ${resultado.desbordeMensualHoras === 0 ? 'bg-emerald-950/40 border border-emerald-500/40 text-emerald-300' : 'bg-amber-950/40 border border-amber-500/40 text-amber-300'} text-xs sm:text-sm font-semibold">
           ${resultado.mensaje}
         </div>
 
         <div class="space-y-2">
-          <span class="text-xs font-black text-slate-300 uppercase tracking-wider block">Acciones de Redistribución Aplicadas:</span>
+          <span class="text-xs font-semibold text-[var(--notion-text)] uppercase tracking-wider block">Acciones de Redistribución Aplicadas:</span>
           <div class="space-y-1.5 max-h-60 overflow-y-auto scrollbar-thin">
             ${resultado.logAcciones.map(a => `
-              <div class="p-2.5 rounded-xl bg-[#0e092e] border border-[#2d1f85] flex items-center justify-between text-xs">
+              <div class="p-2.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] flex items-center justify-between text-xs">
                 <div>
-                  <span class="font-bold text-white">${a.materiaNombre}</span>
-                  <span class="text-slate-400 block">${a.diaDestino.toUpperCase()} • ${a.horario}</span>
+                  <span class="font-medium text-[var(--notion-text)]">${a.materiaNombre}</span>
+                  <span class="text-[var(--notion-text-muted)] block">${a.diaDestino.toUpperCase()} • ${a.horario}</span>
                 </div>
-                <span class="font-mono font-bold text-sky-400">+${a.duracion}h</span>
+                <span class="font-mono font-bold text-emerald-400">+${a.duracion}h</span>
               </div>
             `).join('')}
           </div>
         </div>
 
         ${resultado.planMensual ? `
-          <div class="p-3 bg-[#100b33] rounded-xl border border-sky-500/30 text-xs text-sky-200">
-            <strong>Plan de Amortización Mensual:</strong> ${resultado.planMensual.recomendacion}
+          <div class="p-3 bg-[var(--notion-card)] rounded-md border border-[var(--notion-border)] text-xs text-[var(--notion-text-muted)]">
+            <strong class="text-[var(--notion-text)]">Plan de Amortización Mensual:</strong> ${resultado.planMensual.recomendacion}
           </div>
         ` : ''}
       </div>
@@ -1037,7 +1042,8 @@ class EstudioApp {
     const textoInicial = el.value ? el.value.trim() + ' ' : '';
 
     if (!bitacoraVoz.esSoportadoSpeechRecognition()) {
-      alert('Tu navegador no tiene activado el reconocimiento de voz nativo (Web Speech API). Puedes escribir tus conclusiones directamente en el recuadro.');
+      el.focus();
+      alert('Tu navegador no tiene activado el reconocimiento de voz por micrófono (Web Speech API). Puedes escribir tus conclusiones directamente en este recuadro.');
       return;
     }
 
@@ -1249,10 +1255,10 @@ window.exportarItinerarioMarkdown = () => app.exportarItinerarioMarkdown();
 window.cambiarVista = (vista) => app.cambiarVista(vista);
 
 window.abrirGuiaDeMateria = (materiaCod) => {
+  const materiasValidas = ['MAT-ING', 'SIS-ARQ', 'GEO-EST', 'ORA-CAS', 'ING-TEC', 'ECO-DIG'];
+  const codDestino = materiasValidas.includes(materiaCod) ? materiaCod : 'MAT-ING';
   app.cambiarVista('guias');
-  app.arbolManager.setMateria(materiaCod);
-  const sel = document.getElementById('select-materia-guia');
-  if (sel) sel.value = materiaCod;
+  app.arbolManager.setMateria(codDestino);
 };
 
 // Enviar mensaje al asistente desde el panel
