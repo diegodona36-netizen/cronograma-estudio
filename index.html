@@ -62,66 +62,58 @@
       <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
         <div class="flex items-center gap-2.5">
           <div class="w-10 h-10 rounded-xl bg-[#1d1554] p-2 border border-indigo-400/30 flex items-center justify-center shrink-0 shadow-sm text-indigo-300">
-            <i data-lucide="brain-circuit" class="w-6 h-6 text-indigo-400"></i>
+            <i data-lucide="calendar" class="w-6 h-6 text-indigo-400"></i>
           </div>
           <div>
             <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 block leading-tight">
-              ESPACIO PERSONAL DE ESTUDIO
+              MI AGENDA PERSONAL
             </span>
             <h1 class="text-sm sm:text-base font-black text-white tracking-wide block leading-none uppercase">
-              SISTEMA DE ESTUDIO INTELIGENTE (AXIOM)
+              HORARIO SEMANAL
             </h1>
             <span class="text-xs text-amber-300 font-bold uppercase tracking-wider block leading-tight">
-              TIMEBOXING Y RESCHEDULING ANTIFRÁGIL
+              ESTUDIO • GIMNASIO (5:00 PM) • OCIO
             </span>
           </div>
         </div>
 
         <!-- Botón de Contingencia Rápida (Móvil) -->
-        <button id="btn-abrir-modal-contingencia" type="button" class="md:hidden px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 text-white text-xs font-black flex items-center gap-1 shadow-md animate-pulse">
+        <button id="btn-abrir-modal-contingencia" type="button" class="md:hidden px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 text-white text-xs font-black flex items-center gap-1 shadow-md">
           <span>⚡ Corte de Luz</span>
         </button>
       </div>
 
-      <!-- Lado Derecho: Navegación de Vistas y Botón de Contingencia -->
+      <!-- Lado Derecho: Navegación de Vistas y Botones Prácticos -->
       <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-between md:justify-end">
         
         <!-- Botones de Vista Dual -->
         <div class="flex items-center p-1 bg-[#0e092e] rounded-xl border border-[#2d1f85] text-xs">
           <button id="btn-vista-semanal" onclick="window.cambiarVista('semanal')" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg font-black bg-[#23176d] text-white border border-sky-400/50 shadow-sm transition cursor-pointer flex items-center gap-1.5">
             <i data-lucide="calendar" class="w-3.5 h-3.5 text-sky-300"></i>
-            <span>Semanal</span>
+            <span>Horario Semanal</span>
           </button>
           <button id="btn-vista-guias" onclick="window.cambiarVista('guias')" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition cursor-pointer flex items-center gap-1.5">
             <i data-lucide="book-open" class="w-3.5 h-3.5 text-amber-300"></i>
-            <span>Guías (3 Niveles)</span>
+            <span>Temas de Estudio</span>
           </button>
           <button id="btn-vista-mensual" onclick="window.cambiarVista('mensual')" type="button" class="px-3 sm:px-4 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition cursor-pointer flex items-center gap-1.5">
             <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-emerald-300"></i>
-            <span>Mensual</span>
+            <span>Resumen del Mes</span>
           </button>
         </div>
 
         <!-- Botón de Contingencia Rápida (Escritorio) -->
-        <button onclick="window.abrirModalContingencia()" type="button" class="hidden md:flex px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs sm:text-sm font-black items-center gap-1.5 shadow-md active:scale-95 transition cursor-pointer" title="Reportar corte de luz o imprevisto para redistribuir horas">
+        <button onclick="window.abrirModalContingencia()" type="button" class="hidden md:flex px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs sm:text-sm font-black items-center gap-1.5 shadow-md active:scale-95 transition cursor-pointer" title="Reportar corte de luz o imprevisto para mover horas">
           <i data-lucide="zap" class="w-4 h-4 text-slate-950"></i>
-          <span>Reportar Corte de Luz / Salida</span>
+          <span>Reportar Corte de Luz</span>
         </button>
 
-        <!-- Opciones Rápidas -->
-        <button onclick="window.exportarItinerarioMarkdown()" type="button" class="p-2 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 hover:text-white text-xs transition cursor-pointer" title="Exportar Cronograma a Markdown / Obsidian">
+        <!-- Opciones Rápidas: Exportar a Markdown y Restablecer -->
+        <button onclick="window.exportarItinerarioMarkdown()" type="button" class="p-2 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-slate-300 hover:text-white text-xs transition cursor-pointer" title="Descargar Horario en Markdown">
           <i data-lucide="share-2" class="w-4 h-4 text-emerald-400"></i>
         </button>
 
-        <button onclick="window.abrirModalConfiguracionIA()" type="button" class="p-2 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-sky-300 hover:text-white text-xs transition cursor-pointer" title="Ajustes de IA (Gemini / OpenRouter) y Telegram">
-          <i data-lucide="settings" class="w-4 h-4 text-sky-400"></i>
-        </button>
-
-        <button onclick="window.abrirPanelAsistente()" type="button" class="px-3 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-sky-600 text-white text-xs font-black transition cursor-pointer flex items-center gap-1.5 shadow-md active:scale-95" title="Abrir Copiloto IA (Sócrates & Chronos)">
-          <span>🤖 Copiloto</span>
-        </button>
-
-        <button onclick="window.restablecerItinerarioBase()" type="button" class="p-2 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-slate-400 hover:text-white text-xs transition cursor-pointer" title="Restablecer al plan semanal base">
+        <button onclick="window.restablecerItinerarioBase()" type="button" class="p-2 rounded-xl bg-[#140e40] hover:bg-[#23176d] border border-[#2d1f85] text-slate-400 hover:text-white text-xs transition cursor-pointer" title="Restablecer al horario original">
           <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
         </button>
       </div>
@@ -178,20 +170,21 @@
     <section id="seccion-vista-semanal" class="space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <h2 class="text-lg font-black text-white tracking-wide">Itinerario Semanal Inteligente</h2>
-          <p class="text-xs sm:text-sm text-slate-400">Distribución de Lunes a Sábado con protección contra sobrecarga cognitiva.</p>
+          <h2 class="text-lg font-black text-white tracking-wide">Tu Semana de un Vistazo</h2>
+          <p class="text-xs sm:text-sm text-slate-400">Distribución de Lunes a Sábado con tus horarios, tu reunión y tu gimnasio diario a las 5:00 PM.</p>
         </div>
 
         <div class="flex items-center gap-2">
           <span class="text-xs text-slate-400 font-bold">Filtrar:</span>
           <select id="select-filtro-materia" onchange="window.estudioApp.materiaFiltro = this.value; window.estudioApp.renderVista();" class="px-2.5 py-1 rounded-xl bg-[#140e40] border border-[#2d1f85] text-xs font-bold text-white cursor-pointer focus:outline-none">
-            <option value="todas">Todas las Asignaturas</option>
+            <option value="todas">Todas las Materias</option>
             <option value="MAT-ING">Matemáticas Pre-Ingeniería (MAT-ING)</option>
             <option value="SIS-ARQ">Programación & Arquitectura (SIS-ARQ)</option>
             <option value="GEO-EST">Geopolítica & Estrategia (GEO-EST)</option>
             <option value="ORA-CAS">Castellano & Retórica (ORA-CAS)</option>
             <option value="ING-TEC">Inglés Técnico (ING-TEC)</option>
             <option value="ECO-DIG">Economía Digital (ECO-DIG)</option>
+            <option value="REU-COM">Reuniones de Trabajo (REU-COM)</option>
             <option value="GIM-FIT">Gimnasio & Físico (GIM-FIT)</option>
             <option value="OCI-LIB">Ocio & Desconexión (OCI-LIB)</option>
           </select>

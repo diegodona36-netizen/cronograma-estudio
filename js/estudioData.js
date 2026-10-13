@@ -100,6 +100,18 @@ export const MATERIAS_CONFIG = [
     icono: 'smile',
     demandaCognitiva: 'ocio',
     descripcion: 'Espacio diario garantizado para videojuegos (Play, emuladores), desconexión mental y esparcimiento sin culpa.'
+  },
+  {
+    codigo: 'REU-COM',
+    nombre: 'Reunión de Trabajo (Compromiso Presencial)',
+    categoria: 'compromiso',
+    metaSemanalHoras: 2.0,
+    colorHex: '#f43f5e', // Rosa fuerte / Rojo
+    colorBg: 'rgba(244, 63, 94, 0.15)',
+    colorBorder: 'rgba(244, 63, 94, 0.5)',
+    icono: 'users',
+    demandaCognitiva: 'medium',
+    descripcion: 'Reuniones de trabajo, citas presenciales y compromisos directos.'
   }
 ];
 
@@ -141,20 +153,20 @@ export const FRANJAS_HORARIAS = [
  */
 export const ITINERARIO_BASE_SEMANAL = {
   lunes: [
-    { id: 'b_lun_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Álgebra Universitaria: Leyes de Exponentes y Polinomios', completado: false },
-    { id: 'b_lun_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Duolingo Hábitos + Vocabulario Técnico en Inglés', completado: false },
-    { id: 'b_lun_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Arquitectura de Software: Flujo Cliente-Servidor y Módulos', completado: false },
-    { id: 'b_lun_4', materiaCodigo: 'GEO-EST', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Teoría de las Relaciones Internacionales y Dilema de Seguridad', completado: false },
-    { id: 'b_lun_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos (Desconexión Mental)', completado: false },
-    { id: 'b_lun_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio: Tren Superior (Pecho, Hombro y Tríceps)', completado: false }
+    { id: 'b_lun_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Álgebra: Leyes de Exponentes y Polinomios', completado: false },
+    { id: 'b_lun_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Inglés: 15 min de práctica técnica', completado: false },
+    { id: 'b_lun_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Programación: Arquitectura y Módulos', completado: false },
+    { id: 'b_lun_4', materiaCodigo: 'GEO-EST', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Geopolítica y Estrategia', completado: false },
+    { id: 'b_lun_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
+    { id: 'b_lun_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio (5:00 PM a 6:30 PM)', completado: false }
   ],
   martes: [
-    { id: 'b_mar_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Concepto Riguroso de Función: Dominio, Rango y Composición', completado: false },
-    { id: 'b_mar_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Lectura de Documentación Oficial en Inglés', completado: false },
-    { id: 'b_mar_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Defensa Técnica: Cómo Explicar un Módulo a Terceros (Pitch)', completado: false },
-    { id: 'b_mar_4', materiaCodigo: 'ORA-CAS', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Retórica Clásica: Exordio, Narratio y Monólogo en Telegram', completado: false },
+    { id: 'b_mar_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Matemáticas: Concepto de Funciones y Dominio', completado: false },
+    { id: 'b_mar_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Inglés: Lectura de Documentación Oficial', completado: false },
+    { id: 'b_mar_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Programación: Cómo Explicar un Módulo a Terceros', completado: false },
+    { id: 'b_mar_reu', materiaCodigo: 'REU-COM', inicio: '14:00', fin: '16:00', duracion: 2.0, tema: '🤝 REUNIÓN DE TRABAJO (A las 2:00 PM)', completado: false },
     { id: 'b_mar_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
-    { id: 'b_mar_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio: Tren Inferior (Pierna, Gemelos y Core)', completado: false }
+    { id: 'b_mar_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio (5:00 PM a 6:30 PM)', completado: false }
   ],
   miercoles: [
     { id: 'b_mie_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Sistemas de Ecuaciones Lineales y Método de Gauss', completado: false },

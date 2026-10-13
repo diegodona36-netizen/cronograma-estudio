@@ -39,7 +39,7 @@ class EstudioApp {
   }
 
   cargarItinerario() {
-    const CURRENT_VERSION = 'v2_plan_cronologico_6m';
+    const CURRENT_VERSION = 'v3_con_reunion_martes_limpio';
     try {
       const versionGuardada = localStorage.getItem('axiom_itinerario_version');
       if (versionGuardada === CURRENT_VERSION) {
