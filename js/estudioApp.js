@@ -7,6 +7,7 @@
 import {
   MATERIAS_CONFIG,
   DIAS_SEMANA,
+  PLAN_MENSUAL_SEMANAS,
   ITINERARIO_BASE_SEMANAL,
   GUIAS_CONOCIMIENTO_3_NIVELES,
   obtenerTodasLasMaterias,
@@ -29,7 +30,13 @@ import { bitacoraVoz } from './bitacoraVozService.js';
 
 class EstudioApp {
   constructor() {
-    this.itinerario = this.cargarItinerario();
+    let semanaInicial = 1;
+    try {
+      const semGuardada = parseInt(localStorage.getItem('axiom_semana_activa'), 10);
+      if (semGuardada >= 1 && semGuardada <= 4) semanaInicial = semGuardada;
+    } catch {}
+    this.semanaActiva = semanaInicial;
+    this.itinerario = this.cargarItinerario(this.semanaActiva);
     this.vistaActiva = 'semanal'; // 'semanal' | 'guias' | 'mensual' | 'tutor'
     this.arbolManager = null;
     this.asistente = null;
@@ -50,20 +57,24 @@ class EstudioApp {
     this.timerTemaTitulo = '';
   }
 
-  cargarItinerario() {
-    const CURRENT_VERSION = 'v4_mikrotik_cctv_inversores_lectura';
+  cargarItinerario(semanaNum = this.semanaActiva || 1) {
+    const CURRENT_VERSION = 'v5_plan_mensual_4_semanas';
+    const key = `axiom_estudio_itinerario_semana_${semanaNum}`;
     try {
       const versionGuardada = localStorage.getItem('axiom_itinerario_version');
       if (versionGuardada === CURRENT_VERSION) {
-        const guardado = localStorage.getItem('axiom_estudio_itinerario');
+        const guardado = localStorage.getItem(key);
         if (guardado) return JSON.parse(guardado);
       }
     } catch (e) {
       console.warn('Error leyendo itinerario de localStorage:', e);
     }
-    const nuevo = JSON.parse(JSON.stringify(ITINERARIO_BASE_SEMANAL));
+    const semanaData = (PLAN_MENSUAL_SEMANAS && PLAN_MENSUAL_SEMANAS[semanaNum]) 
+      ? PLAN_MENSUAL_SEMANAS[semanaNum].dias 
+      : ITINERARIO_BASE_SEMANAL;
+    const nuevo = JSON.parse(JSON.stringify(semanaData));
     try {
-      localStorage.setItem('axiom_estudio_itinerario', JSON.stringify(nuevo));
+      localStorage.setItem(key, JSON.stringify(nuevo));
       localStorage.setItem('axiom_itinerario_version', CURRENT_VERSION);
     } catch {}
     return nuevo;
@@ -71,9 +82,44 @@ class EstudioApp {
 
   guardarItinerario() {
     try {
+      const semanaNum = this.semanaActiva || 1;
+      const key = `axiom_estudio_itinerario_semana_${semanaNum}`;
+      localStorage.setItem(key, JSON.stringify(this.itinerario));
       localStorage.setItem('axiom_estudio_itinerario', JSON.stringify(this.itinerario));
     } catch (e) {
       console.warn('Error guardando itinerario en localStorage:', e);
+    }
+  }
+
+  setSemana(num) {
+    const semanaNum = parseInt(num, 10);
+    if (!semanaNum || semanaNum < 1 || semanaNum > 4) return;
+    this.guardarItinerario();
+    this.semanaActiva = semanaNum;
+    try {
+      localStorage.setItem('axiom_semana_activa', String(semanaNum));
+    } catch {}
+    this.itinerario = this.cargarItinerario(semanaNum);
+    this.actualizarUISelectorSemanas();
+    this.renderKPIs();
+    this.renderVista();
+  }
+
+  actualizarUISelectorSemanas() {
+    for (let i = 1; i <= 4; i++) {
+      const btn = document.getElementById(`btn-semana-${i}`);
+      if (!btn) continue;
+      const activa = (this.semanaActiva === i);
+      if (activa) {
+        btn.className = 'btn-semana-tab px-3 py-1.5 rounded-md text-xs font-semibold border transition cursor-pointer flex items-center gap-1.5 bg-[var(--notion-card)] text-[var(--notion-text)] border-[var(--notion-border)] shadow-xs';
+      } else {
+        btn.className = 'btn-semana-tab px-3 py-1.5 rounded-md text-xs font-medium border transition cursor-pointer flex items-center gap-1.5 bg-transparent text-[var(--notion-text-muted)] border-transparent hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)]';
+      }
+    }
+    const infoSemana = document.getElementById('info-semana-activa');
+    if (infoSemana && PLAN_MENSUAL_SEMANAS && PLAN_MENSUAL_SEMANAS[this.semanaActiva]) {
+      const sem = PLAN_MENSUAL_SEMANAS[this.semanaActiva];
+      infoSemana.innerHTML = `<strong>${sem.titulo}:</strong> ${sem.descripcion}`;
     }
   }
 
@@ -235,11 +281,11 @@ class EstudioApp {
   obtenerEstiloTagNotion(materiaCodigo) {
     const mapa = {
       'MAT-ING': { bg: 'var(--tag-blue-bg)', text: 'var(--tag-blue-text)', label: 'Matemáticas' },
-      'SIS-ARQ': { bg: 'var(--tag-green-bg)', text: 'var(--tag-green-text)', label: 'Programación' },
+      'SIS-ARQ': { bg: 'var(--tag-green-bg)', text: 'var(--tag-green-text)', label: 'Redes & CCTV' },
       'GEO-EST': { bg: 'var(--tag-purple-bg)', text: 'var(--tag-purple-text)', label: 'Geopolítica' },
-      'ORA-CAS': { bg: 'var(--tag-amber-bg)', text: 'var(--tag-amber-text)', label: 'Oratoria' },
+      'ORA-CAS': { bg: 'var(--tag-amber-bg)', text: 'var(--tag-amber-text)', label: 'Léxico & Retórica' },
       'ING-TEC': { bg: 'var(--tag-indigo-bg)', text: 'var(--tag-indigo-text)', label: 'Inglés' },
-      'ECO-DIG': { bg: 'var(--tag-orange-bg)', text: 'var(--tag-orange-text)', label: 'E-Commerce' },
+      'ECO-DIG': { bg: 'var(--tag-orange-bg)', text: 'var(--tag-orange-text)', label: 'Negocios' },
       'REU-COM': { bg: 'var(--tag-rose-bg)', text: 'var(--tag-rose-text)', label: 'Reunión' },
       'GIM-FIT': { bg: 'var(--tag-orange-bg)', text: 'var(--tag-orange-text)', label: 'Gimnasio' },
       'OCI-LIB': { bg: 'var(--tag-gray-bg)', text: 'var(--tag-gray-text)', label: 'Ocio' }
@@ -249,6 +295,7 @@ class EstudioApp {
 
   renderVista() {
     if (this.vistaActiva === 'semanal') {
+      this.actualizarUISelectorSemanas();
       this.renderLienzoSemanal();
     } else if (this.vistaActiva === 'guias') {
       this.arbolManager.render();
@@ -713,8 +760,11 @@ class EstudioApp {
   }
 
   restablecerItinerarioBase() {
-    if (confirm('¿Restablecer el itinerario al plan semanal base oficial? Se borrarán las modificaciones manuales de esta semana.')) {
-      this.itinerario = JSON.parse(JSON.stringify(ITINERARIO_BASE_SEMANAL));
+    if (confirm(`¿Restablecer el itinerario de la Semana ${this.semanaActiva} al plan oficial? Se borrarán las modificaciones manuales de esta semana.`)) {
+      const semanaData = (PLAN_MENSUAL_SEMANAS && PLAN_MENSUAL_SEMANAS[this.semanaActiva]) 
+        ? PLAN_MENSUAL_SEMANAS[this.semanaActiva].dias 
+        : ITINERARIO_BASE_SEMANAL;
+      this.itinerario = JSON.parse(JSON.stringify(semanaData));
       this.guardarItinerario();
       this.renderKPIs();
       this.renderVista();

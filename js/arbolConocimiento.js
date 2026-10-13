@@ -175,7 +175,7 @@ export class ArbolConocimientoManager {
       { cod: 'GEO-EST', nom: 'Geopolítica' },
       { cod: 'ORA-CAS', nom: 'Léxico & Retórica' },
       { cod: 'ING-TEC', nom: 'Inglés' },
-      { cod: 'ECO-DIG', nom: 'E-Commerce' }
+      { cod: 'ECO-DIG', nom: 'Negocios' }
     ].map(m => {
       const tData = temarios[m.cod] || { temas: [] };
       const tList = tData.temas || [];
@@ -190,8 +190,8 @@ export class ArbolConocimientoManager {
     this.container.innerHTML = `
       <div class="space-y-4">
         
-        <!-- Selector de Materias Adhesivo (Filtros estilo Notion Database Pills con Contadores) -->
-        <div class="sticky top-[102px] z-10 bg-[var(--notion-bg)]/95 backdrop-blur-xs py-2 border-b border-[var(--notion-border)] -mt-2">
+        <!-- Selector de Materias (Filtros estilo Notion Database Pills con Contadores) -->
+        <div class="bg-[var(--notion-bg)] py-2 border-b border-[var(--notion-border)] mb-2">
           <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
             ${listaMaterias.map(m => {
               const activa = this.materiaActivaCodigo === m.cod;

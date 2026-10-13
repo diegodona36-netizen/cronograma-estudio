@@ -7,7 +7,7 @@
 export const MATERIAS_CONFIG = [
   {
     codigo: 'MAT-ING',
-    nombre: 'Matemáticas Pre-Ingeniería (Álgebra, Matrices & Funciones)',
+    nombre: 'Matemáticas Aplicadas & Lógica Conceptual (No Mecánica)',
     categoria: 'ingenieria',
     metaSemanalHoras: 4.5,
     colorHex: '#06b6d4', // Cyan
@@ -15,7 +15,7 @@ export const MATERIAS_CONFIG = [
     colorBorder: 'rgba(6, 182, 212, 0.4)',
     icono: 'layers',
     demandaCognitiva: 'heavy',
-    descripcion: 'Fundamentos de álgebra universitaria, polinomios, matrices, transformaciones lineales, funciones y precálculo.'
+    descripcion: 'Comprensión lógica, geométrica y visual de álgebra, variables, funciones y matrices (enfoque 3Blue1Brown) aplicadas al mundo real sin memorización mecánica.'
   },
   {
     codigo: 'SIS-ARQ',
@@ -55,7 +55,7 @@ export const MATERIAS_CONFIG = [
   },
   {
     codigo: 'ING-TEC',
-    nombre: 'Inglés Técnico & Inmersión',
+    nombre: 'Inglés Técnico (Redes, CCTV, Winbox & Inversores)',
     categoria: 'idiomas',
     metaSemanalHoras: 2.0,
     colorHex: '#10b981', // Esmeralda
@@ -63,11 +63,11 @@ export const MATERIAS_CONFIG = [
     colorBorder: 'rgba(16, 185, 129, 0.4)',
     icono: 'globe',
     demandaCognitiva: 'light',
-    descripcion: 'Hábito diario de Duolingo (15 min), lectura de documentación técnica oficial e inmersión en video con subtítulos en inglés.'
+    descripcion: 'Lectura de datasheets oficiales (MikroTik, Dahua, Hikvision), interfaces de software (Winbox, DMSS) y manuales de inversores sin depender de traductores.'
   },
   {
     codigo: 'ECO-DIG',
-    nombre: 'E-Commerce Realista & Negocios en Venezuela',
+    nombre: 'Negocios de Tecnología, Redes & Seguridad en Venezuela',
     categoria: 'economia',
     metaSemanalHoras: 2.0,
     colorHex: '#22c55e', // Verde
@@ -75,7 +75,7 @@ export const MATERIAS_CONFIG = [
     colorBorder: 'rgba(34, 197, 94, 0.4)',
     icono: 'dollar-sign',
     demandaCognitiva: 'light',
-    descripcion: 'Comercio digital en contexto venezolano: WhatsApp CRM, catálogos móviles, pasarelas multimoneda (Zelle, Pago Móvil, USDT) y logística local.'
+    descripcion: 'Estructura de costos de instalación, relación con importadores mayoristas de Dahua/Hikvision/MikroTik, presupuestos llave en mano y cobros multimoneda.'
   },
   {
     codigo: 'GIM-FIT',
@@ -150,77 +150,259 @@ export const FRANJAS_HORARIAS = [
 ];
 
 /**
- * Itinerario Semanal Base (Lunes a Sábado) pre-configurado
+ * Plan de Estudio Mensual Estructurado en 4 Semanas de Progresión
  */
-export const ITINERARIO_BASE_SEMANAL = {
-  lunes: [
-    { id: 'b_lun_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
-    { id: 'b_lun_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Álgebra: Leyes de Exponentes y Polinomios', completado: false },
-    { id: 'b_lun_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Inglés: 15 min de práctica técnica', completado: false },
-    { id: 'b_lun_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Redes MikroTik & Winbox: Direccionamiento IP y DHCP Server', completado: false },
-    { id: 'b_lun_4', materiaCodigo: 'GEO-EST', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Geopolítica y Estrategia', completado: false },
-    { id: 'b_lun_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
-    { id: 'b_lun_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio (5:00 PM a 6:30 PM)', completado: false }
-  ],
-  martes: [
-    { id: 'b_mar_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Prosa rica - Carlos Ruiz Zafón)', completado: false },
-    { id: 'b_mar_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Matemáticas: Concepto de Funciones y Dominio', completado: false },
-    { id: 'b_mar_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Inglés: Lectura de Documentación Oficial', completado: false },
-    { id: 'b_mar_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'CCTV Profesional: Cámaras IP Dahua / Hikvision y Conexión PoE', completado: false },
-    { id: 'b_mar_reu', materiaCodigo: 'REU-COM', inicio: '14:00', fin: '16:00', duracion: 2.0, tema: '🤝 REUNIÓN DE TRABAJO (A las 2:00 PM)', completado: false },
-    { id: 'b_mar_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
-    { id: 'b_mar_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio (5:00 PM a 6:30 PM)', completado: false }
-  ],
-  miercoles: [
-    { id: 'b_mie_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
-    { id: 'b_mie_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Sistemas de Ecuaciones Lineales y Método de Gauss', completado: false },
-    { id: 'b_mie_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Duolingo Hábitos + Audio Inmersivo en Inglés', completado: false },
-    { id: 'b_mie_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Acceso Remoto P2P: Configuración en DMSS (Dahua) y Hik-Connect (Hikvision)', completado: false },
-    { id: 'b_mie_4', materiaCodigo: 'ECO-DIG', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'E-Commerce en Venezuela: WhatsApp Business CRM y Catálogos', completado: false },
-    { id: 'b_mie_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:30', duracion: 1.5, tema: 'Ocio Extendido / Día de Descanso Físico', completado: false }
-  ],
-  jueves: [
-    { id: 'b_jue_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Ensayo y Retórica - Baltasar Gracián)', completado: false },
-    { id: 'b_jue_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Álgebra Lineal: Matrices, Multiplicación y Determinantes', completado: false },
-    { id: 'b_jue_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Práctica Dialéctica en Inglés con Sócrates', completado: false },
-    { id: 'b_jue_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Inversores de Respaldo & Baterías: Cálculo de Watts y Autonomía para CCTV', completado: false },
-    { id: 'b_jue_4', materiaCodigo: 'GEO-EST', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Doctrina de la Guerra (Clausewitz y Sun Tzu) y Chokepoints', completado: false },
-    { id: 'b_jue_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
-    { id: 'b_jue_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio: Tracción (Espalda, Hombro Posterior y Bíceps)', completado: false }
-  ],
-  viernes: [
-    { id: 'b_vie_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
-    { id: 'b_vie_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Taller de Ejercicios Matemáticos: Resolución y Autoevaluación', completado: false },
-    { id: 'b_vie_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Duolingo Hábitos + Vocabulario Técnico', completado: false },
-    { id: 'b_vie_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Integración & Cotizaciones: Presupuesto Comercial de Seguridad y Energía', completado: false },
-    { id: 'b_vie_4', materiaCodigo: 'ORA-CAS', inicio: '14:30', fin: '15:30', duracion: 1.0, tema: 'Pitch Comercial & Nota de Voz de Telegram (Monólogo con nuevo vocabulario)', completado: false },
-    { id: 'b_vie_5', materiaCodigo: 'OCI-LIB', inicio: '15:30', fin: '17:00', duracion: 1.5, tema: 'Tarde Libre y Espacio de Juegos', completado: false },
-    { id: 'b_vie_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio: Fullbody / Acondicionamiento Físico', completado: false }
-  ],
-  sabado: [
-    { id: 'b_sab_1', materiaCodigo: 'ECO-DIG', inicio: '09:30', fin: '10:30', duracion: 1.0, tema: 'Logística de Pagos Multimoneda y Envíos en Venezuela', completado: false },
-    { id: 'b_sab_2', materiaCodigo: 'ING-TEC', inicio: '10:30', fin: '11:30', duracion: 1.0, tema: 'Inmersión en Video de Ingeniería y Tecnología en Inglés', completado: false }
-  ]
+export const PLAN_MENSUAL_SEMANAS = {
+  1: {
+    id: 1,
+    numero: 1,
+    titulo: 'Semana 1: Cimientos Lógicos, Redes IP Básicas y Hábitos',
+    descripcion: 'Álgebra intuitiva con variables reales, Winbox y DHCP en MikroTik, lectura matutina (25 min) y costos técnicos.',
+    dias: {
+      lunes: [
+        { id: 's1_lun_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras - Ruiz Zafón)', completado: false },
+        { id: 's1_lun_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Álgebra Conceptual: Variables como Modelos de la Realidad (3Blue1Brown)', completado: false },
+        { id: 's1_lun_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Inglés Técnico: Vocabulario de Interfaces de Red y Winbox', completado: false },
+        { id: 's1_lun_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Fundamentos de Redes IP: Direccionamiento 192.168.x.x, Máscaras y Gateways', completado: false },
+        { id: 's1_lun_4', materiaCodigo: 'GEO-EST', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Conceptos Fundamentales de Geopolítica: Territorio y Recursos', completado: false },
+        { id: 's1_lun_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
+        { id: 's1_lun_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio (5:00 PM a 6:30 PM)', completado: false }
+      ],
+      martes: [
+        { id: 's1_mar_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Prosa rica - Carlos Ruiz Zafón)', completado: false },
+        { id: 's1_mar_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Funciones Lógicas: Entradas (Input), Salidas (Output) y Relaciones', completado: false },
+        { id: 's1_mar_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Lectura de Datasheet: Router MikroTik hEX (RB750Gr3) en Inglés', completado: false },
+        { id: 's1_mar_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'MikroTik RouterOS & Winbox: Conexión por MAC y Primeros Pasos', completado: false },
+        { id: 's1_mar_reu', materiaCodigo: 'REU-COM', inicio: '14:00', fin: '16:00', duracion: 2.0, tema: '🤝 REUNIÓN DE TRABAJO (A las 2:00 PM)', completado: false },
+        { id: 's1_mar_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
+        { id: 's1_mar_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio (5:00 PM a 6:30 PM)', completado: false }
+      ],
+      miercoles: [
+        { id: 's1_mie_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
+        { id: 's1_mie_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Ecuaciones como Balanzas de Equilibrio: Visualización en Gráficas', completado: false },
+        { id: 's1_mie_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Duolingo (15 min) + Pronunciación de Acrónimos de Red (DHCP, DNS, PoE)', completado: false },
+        { id: 's1_mie_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'DHCP Server en MikroTik: Asignación Dinámica y Reservas Estáticas', completado: false },
+        { id: 's1_mie_4', materiaCodigo: 'ECO-DIG', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Estructura de Costos de un Servicio Técnico de Instalación en Monagas', completado: false },
+        { id: 's1_mie_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:30', duracion: 1.5, tema: 'Ocio Extendido / Día de Descanso Físico', completado: false }
+      ],
+      jueves: [
+        { id: 's1_jue_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Ensayo y Retórica - Baltasar Gracián)', completado: false },
+        { id: 's1_jue_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Sistemas de Ecuaciones Lineales: Comprensión Geométrica de Intersección', completado: false },
+        { id: 's1_jue_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Términos de Diagnóstico: Timeout, Unreachable, Gateway, Broadcast', completado: false },
+        { id: 's1_jue_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Cálculo de Consumo Eléctrico de Equipos: Ley de Ohm (Watts = V × I)', completado: false },
+        { id: 's1_jue_4', materiaCodigo: 'GEO-EST', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Pensamiento Estratégico Clásico: Sun Tzu y Conocimiento del Terreno', completado: false },
+        { id: 's1_jue_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
+        { id: 's1_jue_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio: Tracción (Espalda, Hombro Posterior y Bíceps)', completado: false }
+      ],
+      viernes: [
+        { id: 's1_vie_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
+        { id: 's1_vie_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Taller de Razonamiento Lógico: Modelar 3 Problemas Reales con Ecuaciones', completado: false },
+        { id: 's1_vie_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Lectura de Error Logs: Diagnóstico de Fallas en Equipos de Red', completado: false },
+        { id: 's1_vie_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Laboratorio Semanal: Montaje de Subred Local y Verificación (Ping/Tracert)', completado: false },
+        { id: 's1_vie_4', materiaCodigo: 'ORA-CAS', inicio: '14:30', fin: '15:30', duracion: 1.0, tema: 'Pitch Técnico en Nota de Voz (Telegram): Explicar la Red a un Cliente', completado: false },
+        { id: 's1_vie_5', materiaCodigo: 'OCI-LIB', inicio: '15:30', fin: '17:00', duracion: 1.5, tema: 'Tarde Libre y Espacio de Juegos', completado: false },
+        { id: 's1_vie_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio: Fullbody / Acondicionamiento Físico', completado: false }
+      ],
+      sabado: [
+        { id: 's1_sab_1', materiaCodigo: 'ECO-DIG', inicio: '09:30', fin: '10:30', duracion: 1.0, tema: 'Logística de Cobros Multimoneda (Pago Móvil, Zelle, USDT) en Venezuela', completado: false },
+        { id: 's1_sab_2', materiaCodigo: 'ING-TEC', inicio: '10:30', fin: '11:30', duracion: 1.0, tema: 'Inmersión en Video de Redes MikroTik en Inglés (NetworkChuck)', completado: false }
+      ]
+    }
+  },
+  2: {
+    id: 2,
+    numero: 2,
+    titulo: 'Semana 2: MikroTik Avanzado, Balanceo Multi-WAN y Cableado',
+    descripcion: 'Sistemas lineales visuales, Failover de internet, VLANs para CCTV, cableado estructurado UTP cat6 y mayoristas.',
+    dias: {
+      lunes: [
+        { id: 's2_lun_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Adjetivación y vocabulario - Ruiz Zafón)', completado: false },
+        { id: 's2_lun_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Sistemas 3x3 y Matrices: Tres Ecuaciones como Planos en el Espacio', completado: false },
+        { id: 's2_lun_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Vocabulario de Firewall MikroTik: Filter, NAT, Mangle, Drop, Accept', completado: false },
+        { id: 's2_lun_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'MikroTik Firewall & DNS: Seguridad de Red y Bloqueo de Ataques', completado: false },
+        { id: 's2_lun_4', materiaCodigo: 'GEO-EST', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Cuellos de Botella Mundiales (Chokepoints): Rutas Marítimas y Energía', completado: false },
+        { id: 's2_lun_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
+        { id: 's2_lun_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio (5:00 PM a 6:30 PM)', completado: false }
+      ],
+      martes: [
+        { id: 's2_mar_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
+        { id: 's2_mar_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Tasa de Cambio y Pendiente: Visualizar la Velocidad de Variación en Curvas', completado: false },
+        { id: 's2_mar_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Lectura de Especificaciones: Switches PoE 802.3af vs 802.3at (PoE+)', completado: false },
+        { id: 's2_mar_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Balanceo Multi-WAN en MikroTik: Failover Automático (Fibra + Cantv)', completado: false },
+        { id: 's2_mar_reu', materiaCodigo: 'REU-COM', inicio: '14:00', fin: '16:00', duracion: 2.0, tema: '🤝 REUNIÓN DE TRABAJO (A las 2:00 PM)', completado: false },
+        { id: 's2_mar_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
+        { id: 's2_mar_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio (5:00 PM a 6:30 PM)', completado: false }
+      ],
+      miercoles: [
+        { id: 's2_mie_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
+        { id: 's2_mie_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Polinomios y Curvas de Tendencia: Simulador Visual en GeoGebra', completado: false },
+        { id: 's2_mie_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Duolingo (15 min) + Términos de Routing: Default Route, Distance, Gateway', completado: false },
+        { id: 's2_mie_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'VLANs y Segmentación: Separar Cámaras IP de la Red de Oficinas', completado: false },
+        { id: 's2_mie_4', materiaCodigo: 'ECO-DIG', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Proveedores Mayoristas de Seguridad en Venezuela (Caracas/Valencia/Oriente)', completado: false },
+        { id: 's2_mie_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:30', duracion: 1.5, tema: 'Ocio Extendido / Día de Descanso Físico', completado: false }
+      ],
+      jueves: [
+        { id: 's2_jue_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Ensayo y Retórica - Baltasar Gracián)', completado: false },
+        { id: 's2_jue_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Introducción Visual a Matrices: Tablas de Datos como Transformadores', completado: false },
+        { id: 's2_jue_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Glosario de Cableado UTP: Twisted Pair, Crosstalk, Attenuation, AWG', completado: false },
+        { id: 's2_jue_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Cableado Estructurado para CCTV: UTP Cat6, 100% Cobre vs CCA y T568B', completado: false },
+        { id: 's2_jue_4', materiaCodigo: 'GEO-EST', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Clausewitz y la Fricción en Operaciones: La Realidad Frente a la Teoría', completado: false },
+        { id: 's2_jue_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
+        { id: 's2_jue_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio: Tracción (Espalda, Hombro Posterior y Bíceps)', completado: false }
+      ],
+      viernes: [
+        { id: 's2_vie_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
+        { id: 's2_vie_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Laboratorio Lógico en GeoGebra: Resolver Sistemas Gráficamente', completado: false },
+        { id: 's2_vie_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Lectura de Diagnósticos MikroTik: Torch, Ping Speed, Bandwidth Test', completado: false },
+        { id: 's2_vie_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Diagnóstico de Caídas de Enlace y Saturación de Tráfico con MikroTik', completado: false },
+        { id: 's2_vie_4', materiaCodigo: 'ORA-CAS', inicio: '14:30', fin: '15:30', duracion: 1.0, tema: 'Monólogo en Telegram: Cómo Justificar un Router MikroTik a una Empresa', completado: false },
+        { id: 's2_vie_5', materiaCodigo: 'OCI-LIB', inicio: '15:30', fin: '17:00', duracion: 1.5, tema: 'Tarde Libre y Espacio de Juegos', completado: false },
+        { id: 's2_vie_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio: Fullbody / Acondicionamiento Físico', completado: false }
+      ],
+      sabado: [
+        { id: 's2_sab_1', materiaCodigo: 'ECO-DIG', inicio: '09:30', fin: '10:30', duracion: 1.0, tema: 'Cálculo de Fletes, Envíos y Tiempos de Entrega de Equipos en Monagas', completado: false },
+        { id: 's2_sab_2', materiaCodigo: 'ING-TEC', inicio: '10:30', fin: '11:30', duracion: 1.0, tema: 'Inmersión en Video: Tutorial de Failover en MikroTik en Inglés', completado: false }
+      ]
+    }
+  },
+  3: {
+    id: 3,
+    numero: 3,
+    titulo: 'Semana 3: Videovigilancia IP Profesional: Dahua y Hikvision',
+    descripcion: 'Matemáticas de imagen y píxeles, cálculo de TB en H.265+, NVRs, PoE, acceso remoto en DMSS y Hik-Connect y detección SMD.',
+    dias: {
+      lunes: [
+        { id: 's3_lun_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Precisión de conceptos - Jorge Luis Borges)', completado: false },
+        { id: 's3_lun_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Matemáticas de la Imagen Digital: Píxeles, Resolución (2MP/4MP/8MP) y 16:9', completado: false },
+        { id: 's3_lun_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Vocabulario de CCTV: Lux, Shutter Speed, Dynamic Range (WDR), IR Cut', completado: false },
+        { id: 's3_lun_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'CCTV Digital IP vs Analógico: Ventajas de NVR sobre DVR y Topología PoE', completado: false },
+        { id: 's3_lun_4', materiaCodigo: 'GEO-EST', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Ciberseguridad y Guerra de la Información: Vulnerabilidades en Cámaras IP', completado: false },
+        { id: 's3_lun_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
+        { id: 's3_lun_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio (5:00 PM a 6:30 PM)', completado: false }
+      ],
+      martes: [
+        { id: 's3_mar_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
+        { id: 's3_mar_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Compresión de Video y Tasa de Bits: Fórmulas de Bitrate y Ahorro H.265+', completado: false },
+        { id: 's3_mar_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Manual de Inicialización de NVR Dahua y Hikvision en Inglés', completado: false },
+        { id: 's3_mar_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Puesta en Marcha de NVR: Inicialización, Contraseña, IP Fija y Detección', completado: false },
+        { id: 's3_mar_reu', materiaCodigo: 'REU-COM', inicio: '14:00', fin: '16:00', duracion: 2.0, tema: '🤝 REUNIÓN DE TRABAJO (A las 2:00 PM)', completado: false },
+        { id: 's3_mar_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
+        { id: 's3_mar_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio (5:00 PM a 6:30 PM)', completado: false }
+      ],
+      miercoles: [
+        { id: 's3_mie_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
+        { id: 's3_mie_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Cálculo de Almacenamiento en Disco Duro: Fórmula de Días de Grabación en TB', completado: false },
+        { id: 's3_mie_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Duolingo (15 min) + Términos de Nube P2P: QR Code, Cloud ID, Encryption', completado: false },
+        { id: 's3_mie_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Acceso Remoto P2P: Configuración en DMSS (Dahua) y Hik-Connect (Hikvision)', completado: false },
+        { id: 's3_mie_4', materiaCodigo: 'ECO-DIG', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Diseño de Paquetes Comerciales de Cámaras (Kit 4 Residencial vs Kit 8 Comercial)', completado: false },
+        { id: 's3_mie_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:30', duracion: 1.5, tema: 'Ocio Extendido / Día de Descanso Físico', completado: false }
+      ],
+      jueves: [
+        { id: 's3_jue_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Ensayo y Retórica - Baltasar Gracián)', completado: false },
+        { id: 's3_jue_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Geometría Óptica y Lentes: Distancia Focal (2.8mm vs 4mm), Ángulos y DORI', completado: false },
+        { id: 's3_jue_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Términos de IA en CCTV: SMD, Perimeter Protection, AcuSense, Tripwire', completado: false },
+        { id: 's3_jue_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Detección Inteligente (SMD/AcuSense): Filtro de Humanos y Vehículos', completado: false },
+        { id: 's3_jue_4', materiaCodigo: 'GEO-EST', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Inteligencia Estratégica: Detección Temprana y Análisis de Patrones', completado: false },
+        { id: 's3_jue_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
+        { id: 's3_jue_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio: Tracción (Espalda, Hombro Posterior y Bíceps)', completado: false }
+      ],
+      viernes: [
+        { id: 's3_vie_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
+        { id: 's3_vie_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Taller de Dimensionamiento: Calcular Disco Duro y Lente para un Galpón Real', completado: false },
+        { id: 's3_vie_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Preguntas Frecuentes de Soporte Técnico en Inglés para Clientes de CCTV', completado: false },
+        { id: 's3_vie_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Laboratorio Integrado: Conectar Cámara IP a MikroTik, Aislar y Ver en DMSS', completado: false },
+        { id: 's3_vie_4', materiaCodigo: 'ORA-CAS', inicio: '14:30', fin: '15:30', duracion: 1.0, tema: 'Simulacro de Venta: Explicar a un Cliente por qué sus Cámaras se Verán en Celular', completado: false },
+        { id: 's3_vie_5', materiaCodigo: 'OCI-LIB', inicio: '15:30', fin: '17:00', duracion: 1.5, tema: 'Tarde Libre y Espacio de Juegos', completado: false },
+        { id: 's3_vie_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio: Fullbody / Acondicionamiento Físico', completado: false }
+      ],
+      sabado: [
+        { id: 's3_sab_1', materiaCodigo: 'ECO-DIG', inicio: '09:30', fin: '10:30', duracion: 1.0, tema: 'Políticas de Garantía y Reposición Inmediata de Cámaras y NVRs', completado: false },
+        { id: 's3_sab_2', materiaCodigo: 'ING-TEC', inicio: '10:30', fin: '11:30', duracion: 1.0, tema: 'Inmersión en Video: Comparativa Oficial Dahua vs Hikvision en Inglés', completado: false }
+      ]
+    }
+  },
+  4: {
+    id: 4,
+    numero: 4,
+    titulo: 'Semana 4: Respaldo Energético con Inversores, Baterías y Cotizaciones',
+    descripcion: 'Matemáticas de energía eléctrica (Watts/Ah/DoD), inversores de onda pura, baterías de Litio LiFePO4 y cotización formal.',
+    dias: {
+      lunes: [
+        { id: 's4_lun_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Aforismos y persuasión - Baltasar Gracián)', completado: false },
+        { id: 's4_lun_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Matemáticas de la Energía Eléctrica: Vatios (W), Amperios-hora (Ah) y Eficiencia (%)', completado: false },
+        { id: 's4_lun_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Glosario de Energía: Pure Sine Wave, Rated Power, Peak Surge, Transfer Time', completado: false },
+        { id: 's4_lun_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Inversores de Onda Pura vs Modificada: Por qué los NVRs Exigen Onda Pura', completado: false },
+        { id: 's4_lun_4', materiaCodigo: 'GEO-EST', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Seguridad Energética: La Fragilidad Eléctrica en Monagas y Resiliencia', completado: false },
+        { id: 's4_lun_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
+        { id: 's4_lun_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio (5:00 PM a 6:30 PM)', completado: false }
+      ],
+      martes: [
+        { id: 's4_mar_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
+        { id: 's4_mar_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Curvas de Descarga y Profundidad (DoD): Vida Útil de Litio LiFePO4 vs Gel', completado: false },
+        { id: 's4_mar_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Lectura de Datasheet de Baterías LiFePO4 y Sistemas BMS en Inglés', completado: false },
+        { id: 's4_mar_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Bancos de Baterías para Respaldo: 12V vs 24V, Ciclos y Gestión Térmica', completado: false },
+        { id: 's4_mar_reu', materiaCodigo: 'REU-COM', inicio: '14:00', fin: '16:00', duracion: 2.0, tema: '🤝 REUNIÓN DE TRABAJO (A las 2:00 PM)', completado: false },
+        { id: 's4_mar_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
+        { id: 's4_mar_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio (5:00 PM a 6:30 PM)', completado: false }
+      ],
+      miercoles: [
+        { id: 's4_mie_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
+        { id: 's4_mie_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Fórmula de Autonomía de Respaldo: Horas Reales con NVR + 4 Cámaras + MikroTik', completado: false },
+        { id: 's4_mie_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Duolingo (15 min) + Términos Eléctricos: Breaker, Fuse, Grounding, DC Wiring', completado: false },
+        { id: 's4_mie_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Instalación Segura de Inversores: Calibre de Cables DC (AWG), Fusibles y Tierra', completado: false },
+        { id: 's4_mie_4', materiaCodigo: 'ECO-DIG', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Cálculo del Retorno de Inversión (ROI) para Vender Respaldo Eléctrico a Negocios', completado: false },
+        { id: 's4_mie_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:30', duracion: 1.5, tema: 'Ocio Extendido / Día de Descanso Físico', completado: false }
+      ],
+      jueves: [
+        { id: 's4_jue_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Ensayo y Retórica - Baltasar Gracián)', completado: false },
+        { id: 's4_jue_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Modelado Financiero de una Cotización: Margen Bruto, Costos y Utilidad Neta', completado: false },
+        { id: 's4_jue_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Lectura de Mensajes del Inversor: Fault Code, Low Battery, Overload Trip', completado: false },
+        { id: 's4_jue_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Integración Completa: Tablero Eléctrico Protegido para CCTV, Wi-Fi y Servidor', completado: false },
+        { id: 's4_jue_4', materiaCodigo: 'GEO-EST', inicio: '14:30', fin: '16:00', duracion: 1.5, tema: 'Doctrina de Continuidad Operativa: Sistemas sin Punto Único de Falla (SPOF)', completado: false },
+        { id: 's4_jue_5', materiaCodigo: 'OCI-LIB', inicio: '16:00', fin: '17:00', duracion: 1.0, tema: 'Tiempo Libre y Videojuegos', completado: false },
+        { id: 's4_jue_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio: Tracción (Espalda, Hombro Posterior y Bíceps)', completado: false }
+      ],
+      viernes: [
+        { id: 's4_vie_0', materiaCodigo: 'ORA-CAS', inicio: '08:00', fin: '08:30', duracion: 0.5, tema: 'Lectura Diaria: 25 min (Técnica de las 3 palabras)', completado: false },
+        { id: 's4_vie_1', materiaCodigo: 'MAT-ING', inicio: '08:30', fin: '10:00', duracion: 1.5, tema: 'Taller Integral de Cálculo: Dimensionar Kit Completo (Cámaras + Inversor + Batería)', completado: false },
+        { id: 's4_vie_2', materiaCodigo: 'ING-TEC', inicio: '10:00', fin: '10:30', duracion: 0.5, tema: 'Defensa Oral de un Presupuesto Técnico en Inglés y Términos Comerciales', completado: false },
+        { id: 's4_vie_3', materiaCodigo: 'SIS-ARQ', inicio: '10:30', fin: '12:00', duracion: 1.5, tema: 'Simulacro de Cotización Real: Armado de Propuesta Formal Llave en Mano', completado: false },
+        { id: 's4_vie_4', materiaCodigo: 'ORA-CAS', inicio: '14:30', fin: '15:30', duracion: 1.0, tema: 'Pitch Comercial de Cierre: Presentar la Cotización y Cerrar el Contrato', completado: false },
+        { id: 's4_vie_5', materiaCodigo: 'OCI-LIB', inicio: '15:30', fin: '17:00', duracion: 1.5, tema: 'Tarde Libre y Espacio de Juegos', completado: false },
+        { id: 's4_vie_6', materiaCodigo: 'GIM-FIT', inicio: '17:00', fin: '18:30', duracion: 1.5, tema: 'Gimnasio: Fullbody / Acondicionamiento Físico', completado: false }
+      ],
+      sabado: [
+        { id: 's4_sab_1', materiaCodigo: 'ECO-DIG', inicio: '09:30', fin: '10:30', duracion: 1.0, tema: 'Estrategia de Cierre de Ventas y Cobro de Anticipo (60% Inicial / 40% Final)', completado: false },
+        { id: 's4_sab_2', materiaCodigo: 'ING-TEC', inicio: '10:30', fin: '11:30', duracion: 1.0, tema: 'Inmersión en Video: Instalación Real de Inversor Híbrido y Baterías de Litio', completado: false }
+      ]
+    }
+  }
 };
+
+/**
+ * Itinerario Semanal Base (Lunes a Sábado) pre-configurado (Semana 1 por defecto)
+ */
+export const ITINERARIO_BASE_SEMANAL = PLAN_MENSUAL_SEMANAS[1].dias;
 
 /**
  * Temarios Simplificados y Herramientas Prácticas para el Estudiante
  */
 export const TEMARIOS_Y_HERRAMIENTAS = {
   'MAT-ING': {
-    nombre: 'Matemáticas Pre-Ingeniería',
-    objetivo: 'Dominar álgebra universitaria, funciones y matrices para no pasar trabajo en ingeniería.',
+    nombre: 'Matemáticas Aplicadas & Lógica Conceptual (No Mecánica)',
+    objetivo: 'Comprender el álgebra, las funciones y las matrices de forma intuitiva, visual y lógica (3Blue1Brown/GeoGebra), aplicadas a tecnología y energía sin memorizaciones mecánicas.',
     temas: [
-      { id: 'mat_t1', titulo: 'Polinomios, productos notables y factorización', descripcion: 'Leyes de exponentes, simplificación de expresiones algebraicas y binomios al cuadrado.' },
-      { id: 'mat_t2', titulo: 'Ecuaciones lineales y cuadráticas', descripcion: 'Despeje de incógnitas, fórmula general de segundo grado y problemas aplicados.' },
-      { id: 'mat_t3', titulo: 'Sistemas de ecuaciones (2x2 y 3x3)', descripcion: 'Método de sustitución, reducción y método de Gauss para resolver sistemas.' },
-      { id: 'mat_t4', titulo: 'Concepto de funciones y gráficas', descripcion: 'Dominio, rango, funciones lineales, cuadráticas, exponenciales y racionales.' },
-      { id: 'mat_t5', titulo: 'Álgebra lineal: Matrices y determinantes', descripcion: 'Suma y multiplicación de matrices, determinantes 2x2 y 3x3 y regla de Cramer.' }
+      { id: 'mat_t1', titulo: 'La Intuición del Álgebra y las Variables (Enfoque Lógico)', descripcion: 'No es memorizar fórmulas mecánicas; es modelar relaciones reales usando letras como incógnitas lógicas (ej. calcular autonomía de batería o ancho de banda).' },
+      { id: 'mat_t2', titulo: 'Ecuaciones y Balanzas de Equilibrio', descripcion: 'Despejar incógnitas como un equilibrio físico entre dos lados de una balanza en vez de reglas arbitrarias de signos.' },
+      { id: 'mat_t3', titulo: 'Sistemas de Ecuaciones como Intersección Geométrica', descripcion: 'Visualizar dos o tres rectas cruzándose en un punto único en un plano cartesiano, comprendiendo la solución antes de calcular.' },
+      { id: 'mat_t4', titulo: 'Funciones como Máquinas de Transformación y Gráficas', descripcion: 'Entradas (input), salidas (output) y cómo se comportan curvas de potencia eléctrica, tasas de descarga y flujo de datos.' },
+      { id: 'mat_t5', titulo: 'Álgebra Lineal Visual: Matrices como Transformaciones del Espacio', descripcion: 'Las matrices como motores que deforman, rotan o proyectan espacios y redes al estilo de 3Blue1Brown, no como tablas muertas de números.' }
     ],
     herramientas: [
-      { tipo: 'video', nombre: 'YouTube: JulioProfe / Profe Alex', desc: 'Explicaciones paso a paso en español de cada tema con ejercicios resueltos.', url: 'https://www.youtube.com/@julioprofe' },
-      { tipo: 'web', nombre: 'Khan Academy (Álgebra I y Álgebra Lineal)', desc: 'Cursos 100% gratuitos con ejercicios interactivos y pistas si te trabas.', url: 'https://es.khanacademy.org/math' },
-      { tipo: 'libro', nombre: 'Libro: Álgebra de Baldor / Precálculo de Stewart', desc: 'Para buscar problemas tipo examen y resolver 5 ejercicios a mano por sesión.', url: 'https://archive.org/details/AlgebraDeBaldor' }
+      { tipo: 'video', nombre: '3Blue1Brown en Español (Esencia del Álgebra Lineal y Cálculo)', desc: 'Animaciones visuales que explican la intuición geométrica de matrices y funciones antes de hacer fórmulas.', url: 'https://www.youtube.com/@3blue1brownespanol' },
+      { tipo: 'web', nombre: 'Simulador Visual Interactivo GeoGebra / Desmos', desc: 'Mover deslizadores y ver gráficamente cómo cambian curvas y sistemas de ecuaciones en tiempo real.', url: 'https://www.geogebra.org/calculator' },
+      { tipo: 'video', nombre: 'YouTube: Derivando (Eduardo Sáenz de Cabezón)', desc: 'Matemáticas conceptuales, trucos lógicos y aplicaciones reales sin aburrimiento memorístico.', url: 'https://www.youtube.com/@Derivando' },
+      { tipo: 'web', nombre: 'Khan Academy (Álgebra I y Álgebra Lineal Intuitiva)', desc: 'Ejercicios interactivos con pistas paso a paso para consolidar la lógica.', url: 'https://es.khanacademy.org/math' }
     ]
   },
   'SIS-ARQ': {
@@ -270,30 +452,32 @@ export const TEMARIOS_Y_HERRAMIENTAS = {
     ]
   },
   'ING-TEC': {
-    nombre: 'Inglés Técnico & Inmersión',
-    objetivo: 'Poder leer documentación técnica de ingeniería y hablar frases directas sin miedo.',
+    nombre: 'Inglés Técnico (Redes, CCTV, Winbox & Inversores)',
+    objetivo: 'Leer con total soltura manuales de Winbox, interfaces de NVRs Dahua/Hikvision, datasheets de inversores y mensajes de diagnóstico de red sin depender de traductores.',
     temas: [
-      { id: 'ing_t1', titulo: 'Vocabulario nuclear de ingeniería', descripcion: 'Palabras de sistemas: file, path, build, deploy, database, request, response, error.' },
-      { id: 'ing_t2', titulo: 'Estructura SVO (Sujeto + Verbo + Objeto)', descripcion: 'Construir oraciones directas sin traducir mentalmente: «The server runs on Linux».' },
-      { id: 'ing_t3', titulo: 'Verbos modales obligatorios', descripcion: 'Uso de MUST (obligatorio), SHOULD (recomendado), CAN (posible).' }
+      { id: 'ing_t1', titulo: 'Vocabulario de Interfaces de Red & Winbox', descripcion: 'IP address, Subnet Mask, Gateway, Bridge, Interface, Static Lease, Port Forwarding, Bandwidth, Throughput.' },
+      { id: 'ing_t2', titulo: 'Lectura de Datasheets de Cámaras & NVRs', descripcion: 'Focal Length, Field of View (FOV), PoE Budget, Frame Rate (FPS), Bitrate, Day/Night Sensor, Ingress Protection (IP67).' },
+      { id: 'ing_t3', titulo: 'Especificaciones de Inversores & Energía', descripcion: 'Pure Sine Wave, Rated Output, Surge Power, Battery Voltage, Depth of Discharge (DoD), Transfer Time, Cutoff Voltage.' },
+      { id: 'ing_t4', titulo: 'Mensajes de Error y Diagnóstico en Inglés', descripcion: 'Host Unreachable, Connection Timed Out, DNS Probe Finished, Overload Warning, Low Battery Cutoff.' }
     ],
     herramientas: [
-      { tipo: 'app', nombre: 'App Móvil Duolingo (15 min diarios)', desc: 'Mantiene el hábito y la memoria léxica activa todos los días.', url: 'https://www.duolingo.com' },
-      { tipo: 'voz', nombre: 'Gemini Voice en el Celular (5 a 10 min)', desc: 'Hablar con audífonos sobre tecnología con pronunciación nativa y corrección amable.', url: 'https://gemini.google.com' },
-      { tipo: 'video', nombre: 'Videos técnicos de YouTube con subtítulos en inglés', desc: 'Ver cómo los ingenieros nativos pronuncian los términos técnicos.', url: 'https://www.youtube.com' }
+      { tipo: 'app', nombre: 'App Móvil Duolingo (15 min diarios)', desc: 'Mantiene el hábito y la agilidad léxica todos los días.', url: 'https://www.duolingo.com' },
+      { tipo: 'doc', nombre: 'Datasheets Oficiales en Inglés (MikroTik / Dahua / Hikvision)', desc: 'Ejercicios de lectura directa de especificaciones reales de equipos.', url: 'https://mikrotik.com/products' },
+      { tipo: 'video', nombre: 'YouTube: NetworkChuck / Crosstalk Solutions (con subtítulos)', desc: 'Canales de redes y CCTV en inglés para afinar oído y pronunciación técnica.', url: 'https://www.youtube.com/@NetworkChuck' }
     ]
   },
   'ECO-DIG': {
-    nombre: 'E-Commerce Realista & Negocios en Venezuela',
-    objetivo: 'Entender cómo funciona el comercio digital y las pasarelas de pago reales en el país.',
+    nombre: 'Negocios de Tecnología, Redes & Seguridad en Venezuela',
+    objetivo: 'Dominar la estructura de costos, margen de ganancia, negociación con distribuidores y cotizaciones formales de servicios tecnológicos en Venezuela.',
     temas: [
-      { id: 'eco_t1', titulo: 'Ventas por WhatsApp Business y CRM', descripcion: 'Configuración de catálogo, respuestas rápidas y embudo de atención al cliente.' },
-      { id: 'eco_t2', titulo: 'Pasarelas de cobro multimoneda', descripcion: 'Pago Móvil, transferencias en bolívares, Zelle y liquidación en USDT (Binance P2P).' },
-      { id: 'eco_t3', titulo: 'Cálculo de margen neto real', descripcion: 'Restar costos de producto, comisiones bancarias, delivery y empaque para ver ganancia real.' }
+      { id: 'eco_t1', titulo: 'Estructura de Costos de Instalación de CCTV & Redes', descripcion: 'Cálculo de mano de obra por punto, insumos (UTP cat6, conectores RJ45, baluns, tubería), transporte e imprevistos en Monagas.' },
+      { id: 'eco_t2', titulo: 'Cotizaciones Comerciales Llave en Mano', descripcion: 'Cómo estructurar y presentar una propuesta formal a un comercio o residencia con alcance, garantías y condiciones de pago claras.' },
+      { id: 'eco_t3', titulo: 'Negociación con Mayoristas e Importadores en Venezuela', descripcion: 'Manejo de fletes (Caracas/Valencia/Oriente), inventario mínimo, margen de reventa de equipos y cobros multimoneda (Zelle, USDT, Bs).' },
+      { id: 'eco_t4', titulo: 'Contratos de Mantenimiento y Servicios Recurrentes', descripcion: 'Planes mensuales de limpieza de cámaras, revisión de voltajes de baterías de inversores y soporte remoto de red.' }
     ],
     herramientas: [
-      { tipo: 'app', nombre: 'WhatsApp Business', desc: 'Para estructurar catálogos y probar flujos de atención comercial.', url: 'https://business.whatsapp.com' },
-      { tipo: 'finanzas', nombre: 'Binance P2P / El Dorado', desc: 'Entender el spread cambiario y las transferencias de valor seguras.', url: 'https://p2p.binance.com' }
+      { tipo: 'app', nombre: 'Hoja de Cálculo de Costos y Cotizaciones (Sheets/Excel)', desc: 'Plantilla para calcular materiales, mano de obra y margen de ganancia neto en minutos.', url: 'https://sheets.google.com' },
+      { tipo: 'finanzas', nombre: 'Binance P2P / El Dorado (Liquidación en USDT/Bs)', desc: 'Manejo de tesorería multimoneda y protección contra inflación cambiaria.', url: 'https://p2p.binance.com' }
     ]
   }
 };

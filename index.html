@@ -205,29 +205,45 @@
   <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-4 space-y-6">
 
     <!-- VISTA 1: TABLERO SEMANAL NOTION (BOARD VIEW) -->
-    <section id="seccion-vista-semanal" class="space-y-4">
-      <div class="flex items-center justify-between text-xs text-[var(--notion-text-muted)]">
-        <div class="flex items-center gap-2">
-          <span>Vista por Días (Lunes a Sábado)</span>
-          <span>•</span>
-          <span>Gimnasio diario a las 5:00 PM</span>
+    <section id="seccion-vista-semanal" class="space-y-3">
+      <!-- Selector de Semanas del Mes (Mes 1: Semanas 1 a 4) -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-[var(--notion-border)]">
+        <div class="flex items-center gap-1.5 overflow-x-auto scrollbar-thin">
+          <span class="text-xs font-semibold text-[var(--notion-text-muted)] mr-1">Mes 1:</span>
+          <button id="btn-semana-1" onclick="window.estudioApp.setSemana(1)" type="button" class="btn-semana-tab px-3 py-1.5 rounded-md text-xs font-semibold border transition cursor-pointer flex items-center gap-1.5 bg-[var(--notion-card)] text-[var(--notion-text)] border-[var(--notion-border)] shadow-xs">
+            <span>1️⃣ Sem 1: Cimientos</span>
+          </button>
+          <button id="btn-semana-2" onclick="window.estudioApp.setSemana(2)" type="button" class="btn-semana-tab px-3 py-1.5 rounded-md text-xs font-medium border transition cursor-pointer flex items-center gap-1.5 bg-transparent text-[var(--notion-text-muted)] border-transparent hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)]">
+            <span>2️⃣ Sem 2: MikroTik & WAN</span>
+          </button>
+          <button id="btn-semana-3" onclick="window.estudioApp.setSemana(3)" type="button" class="btn-semana-tab px-3 py-1.5 rounded-md text-xs font-medium border transition cursor-pointer flex items-center gap-1.5 bg-transparent text-[var(--notion-text-muted)] border-transparent hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)]">
+            <span>3️⃣ Sem 3: CCTV Dahua/Hikvision</span>
+          </button>
+          <button id="btn-semana-4" onclick="window.estudioApp.setSemana(4)" type="button" class="btn-semana-tab px-3 py-1.5 rounded-md text-xs font-medium border transition cursor-pointer flex items-center gap-1.5 bg-transparent text-[var(--notion-text-muted)] border-transparent hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)]">
+            <span>4️⃣ Sem 4: Inversores & Negocio</span>
+          </button>
         </div>
 
-        <div class="flex items-center gap-2">
-          <span>Filtrar por:</span>
+        <div class="flex items-center gap-2 text-xs">
+          <span class="text-[var(--notion-text-muted)]">Filtrar:</span>
           <select id="select-filtro-materia" onchange="window.estudioApp.materiaFiltro = this.value; window.estudioApp.renderVista();" class="px-2 py-1 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-xs text-[var(--notion-text)] cursor-pointer focus:outline-none">
             <option value="todas">Todas las Materias</option>
             <option value="MAT-ING">Matemáticas (MAT-ING)</option>
-            <option value="SIS-ARQ">Programación (SIS-ARQ)</option>
+            <option value="SIS-ARQ">Redes & CCTV (SIS-ARQ)</option>
             <option value="GEO-EST">Geopolítica (GEO-EST)</option>
-            <option value="ORA-CAS">Oratoria (ORA-CAS)</option>
+            <option value="ORA-CAS">Léxico & Retórica (ORA-CAS)</option>
             <option value="ING-TEC">Inglés Técnico (ING-TEC)</option>
-            <option value="ECO-DIG">E-Commerce (ECO-DIG)</option>
+            <option value="ECO-DIG">Negocios de Tecnología (ECO-DIG)</option>
             <option value="REU-COM">Reuniones de Trabajo</option>
             <option value="GIM-FIT">Gimnasio</option>
             <option value="OCI-LIB">Ocio y Descanso</option>
           </select>
         </div>
+      </div>
+
+      <!-- Resumen explicativo de la semana activa -->
+      <div id="info-semana-activa" class="text-xs text-[var(--notion-text-muted)] bg-[var(--notion-hover)]/40 px-3 py-1.5 rounded-md border border-[var(--notion-border)]/60">
+        <strong>Semana 1: Cimientos Lógicos, Redes IP Básicas y Hábitos:</strong> Álgebra intuitiva con variables reales, Winbox y DHCP en MikroTik, lectura matutina (25 min) y costos técnicos.
       </div>
 
       <!-- Tablero Kanban de Días -->
