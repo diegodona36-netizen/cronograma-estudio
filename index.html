@@ -7,6 +7,10 @@
 
   <meta name="theme-color" content="#191919">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AXIOM Notion">
 
   <!-- Anti-Cache Meta Tags -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
@@ -105,6 +109,24 @@
 
       <!-- Lado Derecho: Acciones de Base de Datos -->
       <div class="flex items-center gap-1.5 shrink-0 text-xs">
+        <!-- Botón de Sincronizar Celular & Recordatorios -->
+        <button onclick="window.abrirModalSincronizarCelular()" type="button" class="px-2.5 py-1.5 rounded-md bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-xs active:scale-95" title="Sincronizar horario y recordatorios en el celular">
+          <span>📲</span>
+          <span class="hidden sm:inline">Recordatorios Celular</span>
+        </button>
+
+        <!-- Botón de Exportar a Google Docs & IA -->
+        <button onclick="window.abrirModalExportarDocs()" type="button" class="px-2.5 py-1.5 rounded-md bg-[var(--notion-hover)] hover:bg-[var(--notion-active)] border border-sky-500/30 text-sky-400 hover:text-sky-300 font-medium flex items-center gap-1.5 transition cursor-pointer" title="Exportar formato estructurado para Google Docs y Asistente IA">
+          <span>📄</span>
+          <span class="hidden sm:inline">Google Docs & IA</span>
+        </button>
+
+        <!-- Botón de Respaldo JSON (Backup) -->
+        <button onclick="window.abrirModalBackupJSON()" type="button" class="px-2.5 py-1.5 rounded-md bg-[var(--notion-hover)] hover:bg-[var(--notion-active)] border border-[var(--notion-border)] text-[var(--notion-text)] font-medium flex items-center gap-1.5 transition cursor-pointer" title="Exportar o importar respaldo JSON completo">
+          <span>💾</span>
+          <span class="hidden sm:inline">Respaldo JSON</span>
+        </button>
+
         <!-- Botón de Contingencia / Corte de Luz (Estilo Notion Action) -->
         <button onclick="window.abrirModalContingencia()" type="button" class="px-2.5 py-1.5 rounded-md bg-[var(--notion-hover)] hover:bg-[var(--notion-active)] border border-[var(--notion-border)] text-[var(--notion-text)] font-medium flex items-center gap-1.5 transition cursor-pointer" title="Reportar corte de luz o imprevisto">
           <span class="text-amber-400">⚡</span>
@@ -170,6 +192,10 @@
         <button id="btn-vista-guias" onclick="window.cambiarVista('guias')" type="button" class="notion-view-btn">
           <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
           <span>Temas & Herramientas</span>
+        </button>
+        <button id="btn-vista-biblioteca" onclick="window.cambiarVista('biblioteca')" type="button" class="notion-view-btn">
+          <i data-lucide="book-marked" class="w-3.5 h-3.5"></i>
+          <span>📚 Libros Gratuitos</span>
         </button>
         <button id="btn-vista-mensual" onclick="window.cambiarVista('mensual')" type="button" class="notion-view-btn">
           <i data-lucide="table" class="w-3.5 h-3.5"></i>
@@ -252,6 +278,11 @@
         <strong>Semana 1: Cimientos Lógicos, Redes IP Básicas y Hábitos:</strong> Álgebra intuitiva con variables reales, Winbox y DHCP en MikroTik, lectura matutina (25 min) y costos técnicos.
       </div>
 
+      <!-- Selector de Días para Pantallas Móviles y Tablets (< xl) -->
+      <div id="selector-dias-movil" class="flex xl:hidden items-center gap-1.5 overflow-x-auto scrollbar-thin py-1 pb-1">
+        <!-- Renderizado dinámicamente con pills por estudioApp.js -->
+      </div>
+
       <!-- Tablero Kanban de Días -->
       <div id="grid-semana-canvases" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 items-start">
         <!-- Renderizado por estudioApp.js -->
@@ -270,6 +301,87 @@
     <section id="seccion-vista-mensual" class="hidden space-y-4">
       <div id="contenedor-vista-mensual">
         <!-- Renderizado por estudioApp.js -->
+      </div>
+    </section>
+
+    <!-- VISTA 4: BANCO DE LIBROS & MANUALES 100% GRATUITOS (OPEN ACCESS) -->
+    <section id="seccion-vista-biblioteca" class="hidden space-y-4">
+      <!-- Banner Informativo de Acceso Abierto -->
+      <div class="p-4 rounded-lg bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">📚</span>
+              <h2 class="text-base sm:text-lg font-bold text-[var(--notion-text)]">
+                Banco de Libros & Manuales 100% Gratuitos (Open Access)
+              </h2>
+            </div>
+            <p class="text-sm text-[var(--notion-text-muted)] max-w-3xl">
+              Biblioteca abierta curada sin costos ni suscripciones: libros universitarios completos de OpenStax (Rice University), manuales oficiales de MikroTik y CCTV, obras clásicas de dominio público y guías OER preparadas para tu autoformación profesional.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="px-3 py-1.5 rounded-full text-xs font-mono font-medium bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+              ✓ 24 Obras Libres Sin Paywall
+            </span>
+          </div>
+        </div>
+
+        <!-- Buscador y Filtros por Materia -->
+        <div class="pt-3 border-t border-[var(--notion-border)] space-y-3">
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[var(--notion-text-muted)] text-sm">
+              🔍
+            </span>
+            <input type="text"
+                   id="input-busqueda-libros"
+                   oninput="window.filtrarLibrosPorBusqueda(this.value)"
+                   placeholder="Buscar por título, autor, tecnología o tema (ej. MikroTik, Álgebra, Inversores, Sun Tzu, PoE)..."
+                   class="w-full pl-9 pr-4 py-2.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-base text-[var(--notion-text)] placeholder-[var(--notion-text-muted)] focus:outline-none focus:border-[var(--notion-accent)] transition">
+          </div>
+
+          <!-- Filtro por Píldoras de Materia -->
+          <div class="flex items-center gap-1.5 overflow-x-auto scrollbar-thin pb-1" id="contenedor-pildoras-materias-libros">
+            <button type="button" onclick="window.filtrarLibrosPorMateria('todas')" data-materia="todas" class="pildora-filtro-libro px-3 py-1.5 rounded-md text-xs font-semibold border transition cursor-pointer bg-[var(--notion-card)] text-[var(--notion-text)] border-[var(--notion-border)] shadow-xs">
+              Todas (24)
+            </button>
+            <button type="button" onclick="window.filtrarLibrosPorMateria('MAT-ING')" data-materia="MAT-ING" class="pildora-filtro-libro px-3 py-1.5 rounded-md text-xs font-medium border transition cursor-pointer bg-transparent text-[var(--notion-text-muted)] border-transparent hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)]">
+              📐 MAT-ING (6)
+            </button>
+            <button type="button" onclick="window.filtrarLibrosPorMateria('SIS-ARQ')" data-materia="SIS-ARQ" class="pildora-filtro-libro px-3 py-1.5 rounded-md text-xs font-medium border transition cursor-pointer bg-transparent text-[var(--notion-text-muted)] border-transparent hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)]">
+              🌐 SIS-ARQ (7)
+            </button>
+            <button type="button" onclick="window.filtrarLibrosPorMateria('ING-TEC')" data-materia="ING-TEC" class="pildora-filtro-libro px-3 py-1.5 rounded-md text-xs font-medium border transition cursor-pointer bg-transparent text-[var(--notion-text-muted)] border-transparent hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)]">
+              🗣️ ING-TEC (3)
+            </button>
+            <button type="button" onclick="window.filtrarLibrosPorMateria('ECO-DIG')" data-materia="ECO-DIG" class="pildora-filtro-libro px-3 py-1.5 rounded-md text-xs font-medium border transition cursor-pointer bg-transparent text-[var(--notion-text-muted)] border-transparent hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)]">
+              💼 ECO-DIG (3)
+            </button>
+            <button type="button" onclick="window.filtrarLibrosPorMateria('GEO-EST')" data-materia="GEO-EST" class="pildora-filtro-libro px-3 py-1.5 rounded-md text-xs font-medium border transition cursor-pointer bg-transparent text-[var(--notion-text-muted)] border-transparent hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)]">
+              ⚔️ GEO-EST (4)
+            </button>
+            <button type="button" onclick="window.filtrarLibrosPorMateria('ORA-CAS')" data-materia="ORA-CAS" class="pildora-filtro-libro px-3 py-1.5 rounded-md text-xs font-medium border transition cursor-pointer bg-transparent text-[var(--notion-text-muted)] border-transparent hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)]">
+              🏛️ ORA-CAS (4)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid de Tarjetas de Libros -->
+      <div id="grid-libros-gratuitos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
+        <!-- Renderizado por renderBibliotecaLibros() en estudioApp.js -->
+      </div>
+
+      <!-- Estado Vacío si la Búsqueda no Arroja Resultados -->
+      <div id="estado-vacio-libros" class="hidden py-16 text-center space-y-3 bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-lg">
+        <span class="text-4xl">🔎</span>
+        <h4 class="text-base font-semibold text-[var(--notion-text)]">No se encontraron libros con ese término</h4>
+        <p class="text-sm text-[var(--notion-text-muted)] max-w-md mx-auto">
+          Prueba buscando por la materia (ej. Álgebra, MikroTik, Redes, Retórica) o pulsa "Todas" para restablecer los filtros.
+        </p>
+        <button type="button" onclick="window.restablecerFiltrosLibros()" class="px-4 py-2 rounded-md bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-xs text-[var(--notion-text)] transition cursor-pointer">
+          Restablecer Filtros
+        </button>
       </div>
     </section>
 
@@ -407,6 +519,89 @@
     </div>
   </div>
 
+  <!-- Modal Interactivo: Ajustar Horario y Desplazamiento Rápido de Sesión -->
+  <div id="modal-ajustar-horario" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+    <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-lg max-w-md w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-[var(--notion-border)] pb-3">
+        <div>
+          <h3 class="text-sm font-semibold text-[var(--notion-text)]">
+            Ajustar Horario de Sesión
+          </h3>
+          <p id="lbl-ajustar-horario-sub" class="text-xs text-[var(--notion-text-muted)] mt-0.5">
+            Modificar horario o desplazar sesión por retraso
+          </p>
+        </div>
+        <button type="button" onclick="window.cerrarModalAjustarHorario()" class="text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] p-1 text-sm cursor-pointer">✕</button>
+      </div>
+
+      <!-- Presets de Retraso Rápido -->
+      <div class="space-y-1.5">
+        <label class="block text-xs font-medium text-[var(--notion-text-muted)]">Retraso Rápido (1 Click):</label>
+        <div class="grid grid-cols-4 gap-2">
+          <button type="button" onclick="window.aplicarRetrasoRapidoModal(15)" class="py-1.5 px-2 rounded-md bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-xs font-mono text-[var(--notion-text)] hover:text-amber-300 transition cursor-pointer text-center" title="Retrasar 15 minutos">
+            +15m
+          </button>
+          <button type="button" onclick="window.aplicarRetrasoRapidoModal(30)" class="py-1.5 px-2 rounded-md bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-amber-500/40 text-xs font-mono text-amber-300 hover:bg-amber-500/10 transition cursor-pointer text-center font-bold" title="Retrasar 30 minutos">
+            +30m ⚡
+          </button>
+          <button type="button" onclick="window.aplicarRetrasoRapidoModal(60)" class="py-1.5 px-2 rounded-md bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-xs font-mono text-[var(--notion-text)] hover:text-amber-300 transition cursor-pointer text-center" title="Retrasar 1 hora">
+            +1h
+          </button>
+          <button type="button" onclick="window.moverBloqueModalDiaSiguiente()" class="py-1.5 px-2 rounded-md bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-xs text-[var(--notion-text)] hover:text-sky-300 transition cursor-pointer text-center" title="Mover al día siguiente">
+            Mañana ➡️
+          </button>
+        </div>
+      </div>
+
+      <!-- Campos de Formulario -->
+      <div class="space-y-3 pt-1">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Hora Inicio:</label>
+            <input type="time" id="form-ajustar-inicio" class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] font-mono focus:outline-none focus:border-[var(--notion-accent)]">
+          </div>
+          <div>
+            <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Hora Fin:</label>
+            <input type="time" id="form-ajustar-fin" class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] font-mono focus:outline-none focus:border-[var(--notion-accent)]">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Día Asignado:</label>
+          <select id="form-ajustar-dia" class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] focus:outline-none focus:border-[var(--notion-accent)]">
+            <option value="lunes">Lunes</option>
+            <option value="martes">Martes</option>
+            <option value="miercoles">Miércoles</option>
+            <option value="jueves">Jueves</option>
+            <option value="viernes">Viernes</option>
+            <option value="sabado">Sábado</option>
+            <option value="domingo">Domingo</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Tema / Actividad:</label>
+          <input type="text" id="form-ajustar-tema" class="w-full px-2.5 py-1.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-sm text-[var(--notion-text)] focus:outline-none focus:border-[var(--notion-accent)]">
+        </div>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="pt-3 border-t border-[var(--notion-border)] flex items-center justify-between">
+        <button type="button" onclick="window.eliminarBloqueModalAjuste()" class="px-2.5 py-1.5 rounded-md hover:bg-red-500/10 text-xs text-red-400 hover:text-red-300 transition cursor-pointer">
+          Eliminar Sesión
+        </button>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="window.cerrarModalAjustarHorario()" class="px-3 py-1.5 rounded-md hover:bg-[var(--notion-hover)] text-xs text-[var(--notion-text-muted)] cursor-pointer">
+            Cancelar
+          </button>
+          <button type="button" onclick="window.guardarAjusteHorarioForm()" class="px-3 py-1.5 rounded-md bg-[var(--notion-accent)] text-white font-medium text-xs hover:opacity-90 transition cursor-pointer">
+            Guardar Cambios
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal B: Añadir Tema Personal a la Materia -->
   <div id="modal-nuevo-nodo" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
     <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-lg max-w-md w-full p-5 shadow-2xl space-y-4">
@@ -475,7 +670,7 @@
       <div id="contenedor-audio-grabado" class="hidden p-2.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] space-y-1.5">
         <div class="flex items-center justify-between text-xs text-[var(--notion-text-muted)]">
           <span>Audio grabado de la sesión:</span>
-          <button type="button" onclick="window.eliminarAudioBitacora()" class="text-red-400 hover:underline text-[11px] cursor-pointer">Eliminar audio</button>
+          <button type="button" onclick="window.eliminarAudioBitacora()" class="text-red-400 hover:underline text-xs cursor-pointer">Eliminar audio</button>
         </div>
         <audio id="reproductor-audio-bitacora" controls class="w-full h-8"></audio>
       </div>
@@ -614,7 +809,7 @@
       </div>
 
       <div class="space-y-1">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--notion-text-muted)]">Tema Objetivo</span>
+        <span class="text-xs font-mono uppercase tracking-wider text-[var(--notion-text-muted)]">Tema Objetivo</span>
         <h4 id="timer-tema-titulo" class="text-xs sm:text-sm font-semibold text-[var(--notion-text)] leading-snug px-3 py-2 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)]">
           Polinomios, productos notables y factorización
         </h4>
@@ -669,7 +864,7 @@
           <div>
             <h3 class="text-base font-semibold text-[var(--notion-text)] flex items-center gap-2">
               Mi Watchlist de Series & Cine
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-pink-500/15 text-pink-400 border border-pink-500/30">Ocio + Inglés</span>
+              <span class="px-2 py-0.5 rounded-full text-xs font-mono bg-pink-500/15 text-pink-400 border border-pink-500/30">Ocio + Inglés</span>
             </h3>
             <p class="text-xs text-[var(--notion-text-muted)]">
               Control de episodios para no perder el hilo • Inmersión auditiva en inglés (Audio EN + Sub)
@@ -703,11 +898,11 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
           <div>
-            <label class="block text-[11px] text-[var(--notion-text-muted)] mb-1">Título de la Serie o Película *</label>
+            <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Título de la Serie o Película *</label>
             <input type="text" id="wl-input-titulo" placeholder="Ej. Silicon Valley, Mr. Robot..." class="w-full px-2.5 py-1.5 rounded bg-[var(--notion-card)] border border-[var(--notion-border)] text-[var(--notion-text)] focus:outline-hidden focus:border-[var(--notion-accent)] text-xs">
           </div>
           <div>
-            <label class="block text-[11px] text-[var(--notion-text-muted)] mb-1">Plataforma</label>
+            <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Plataforma</label>
             <select id="wl-select-plataforma" class="w-full px-2.5 py-1.5 rounded bg-[var(--notion-card)] border border-[var(--notion-border)] text-[var(--notion-text)] text-xs">
               <option value="Netflix">Netflix</option>
               <option value="Max">Max (HBO)</option>
@@ -719,7 +914,7 @@
             </select>
           </div>
           <div>
-            <label class="block text-[11px] text-[var(--notion-text-muted)] mb-1">Tipo & Estado</label>
+            <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Tipo & Estado</label>
             <div class="grid grid-cols-2 gap-1.5">
               <select id="wl-select-tipo" class="px-2 py-1.5 rounded bg-[var(--notion-card)] border border-[var(--notion-border)] text-[var(--notion-text)] text-xs">
                 <option value="serie">Serie</option>
@@ -734,20 +929,20 @@
             </div>
           </div>
           <div>
-            <label class="block text-[11px] text-[var(--notion-text-muted)] mb-1">Progreso Actual</label>
+            <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Progreso Actual</label>
             <div class="grid grid-cols-2 gap-1.5">
               <div class="flex items-center gap-1">
-                <span class="text-[11px] text-[var(--notion-text-muted)]">Temp:</span>
+                <span class="text-xs text-[var(--notion-text-muted)]">Temp:</span>
                 <input type="number" id="wl-input-temporada" value="1" min="1" class="w-full px-2 py-1.5 rounded bg-[var(--notion-card)] border border-[var(--notion-border)] text-[var(--notion-text)] text-xs">
               </div>
               <div class="flex items-center gap-1">
-                <span class="text-[11px] text-[var(--notion-text-muted)]">Cap:</span>
+                <span class="text-xs text-[var(--notion-text-muted)]">Cap:</span>
                 <input type="number" id="wl-input-capitulo" value="1" min="1" class="w-full px-2 py-1.5 rounded bg-[var(--notion-card)] border border-[var(--notion-border)] text-[var(--notion-text)] text-xs">
               </div>
             </div>
           </div>
           <div class="sm:col-span-2">
-            <label class="block text-[11px] text-[var(--notion-text-muted)] mb-1">Notas / Vocabulario / Por qué verla</label>
+            <label class="block text-xs text-[var(--notion-text-muted)] mb-1">Notas / Vocabulario / Por qué verla</label>
             <input type="text" id="wl-input-notas" placeholder="Ej. Ideal para aprender términos de startups, servidores y retórica en inglés" class="w-full px-2.5 py-1.5 rounded bg-[var(--notion-card)] border border-[var(--notion-border)] text-[var(--notion-text)] text-xs">
           </div>
         </div>
@@ -770,7 +965,7 @@
 
       <!-- Pie del Modal con Estadísticas y Cierre -->
       <div class="pt-3 border-t border-[var(--notion-border)] flex items-center justify-between text-xs">
-        <div id="stats-watchlist-texto" class="text-[var(--notion-text-muted)] font-mono text-[11px]">
+        <div id="stats-watchlist-texto" class="text-[var(--notion-text-muted)] font-mono text-xs">
           Cargando catálogo...
         </div>
         <button type="button" onclick="window.cerrarModalWatchlist()" class="px-3.5 py-1.5 rounded-md bg-[var(--notion-accent)] text-white font-medium cursor-pointer">
@@ -781,7 +976,265 @@
     </div>
   </div>
 
+  <!-- Modal: Exportación Estructurada para Google Docs & Asistente IA -->
+  <div id="modal-exportar-docs" class="fixed inset-0 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+    <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-lg max-w-2xl w-full p-5 sm:p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-[var(--notion-border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📄</span>
+          <div>
+            <h3 class="text-base font-semibold text-[var(--notion-text)]">
+              Exportar Estado para Google Docs & Asistente IA
+            </h3>
+            <p class="text-xs text-[var(--notion-text-muted)]">
+              Formato Markdown estructurado con estado en tiempo real, balance semanal y contingencias
+            </p>
+          </div>
+        </div>
+        <button type="button" onclick="window.cerrarModalExportarDocs()" class="text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] p-1 text-sm cursor-pointer">✕</button>
+      </div>
+
+      <!-- Resumen en vivo de estado actual -->
+      <div id="preview-estado-actual-docs" class="p-3 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] text-xs space-y-1">
+        <!-- Inyectado dinámicamente con hora y bloque actual -->
+      </div>
+
+      <!-- Área de Texto con Markdown Generado -->
+      <div class="flex-1 min-h-[220px] max-h-[360px] flex flex-col space-y-1.5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-medium text-[var(--notion-text-muted)]">Vista Previa del Documento Maestro (Markdown):</label>
+          <span class="text-xs text-sky-400 font-mono">Compatible con Google Docs, Obsidian y ChatGPT/Gemini</span>
+        </div>
+        <textarea id="textarea-exportar-docs-markdown" readonly class="w-full flex-1 p-3 rounded-md bg-[var(--notion-bg)] border border-[var(--notion-border)] font-mono text-xs text-[var(--notion-text)] leading-relaxed select-all resize-none focus:outline-none scrollbar-thin"></textarea>
+      </div>
+
+      <!-- Sección de Sincronización con Google Drive (Webhook) -->
+      <div class="p-3 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5">
+            <span class="text-base">☁️</span>
+            <span class="text-xs font-semibold text-[var(--notion-text)]">Sincronización Directa con Google Drive</span>
+          </div>
+          <button type="button" onclick="window.toggleConfiguracionWebhookDocs()" class="text-xs text-sky-400 hover:underline cursor-pointer">
+            Configurar Webhook
+          </button>
+        </div>
+        
+        <div id="contenedor-config-webhook-docs" class="hidden space-y-2 pt-1 border-t border-[var(--notion-border)]">
+          <p class="text-xs text-[var(--notion-text-muted)]">
+            Ingresa la URL de tu Webhook de Google Apps Script para actualizar automáticamente tu Google Doc con 1 clic:
+          </p>
+          <div class="flex gap-2">
+            <input type="url" id="input-webhook-gdrive-url" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 px-2.5 py-1.5 rounded bg-[var(--notion-bg)] border border-[var(--notion-border)] text-xs text-[var(--notion-text)] font-mono focus:outline-none focus:border-[var(--notion-accent)]">
+            <button type="button" onclick="window.guardarWebhookGDriveUrl()" class="px-3 py-1.5 rounded bg-[var(--notion-accent)] text-white text-xs font-medium cursor-pointer">
+              Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Acciones del Pie -->
+      <div class="pt-3 border-t border-[var(--notion-border)] flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="window.copiarExportacionDocsMarkdown()" class="px-3.5 py-2 rounded-md bg-[var(--notion-accent)] hover:opacity-90 text-white font-medium text-xs flex items-center gap-1.5 cursor-pointer transition shadow-sm">
+            <span>📋</span>
+            <span>Copiar al Portapapeles</span>
+          </button>
+          <button type="button" onclick="window.descargarExportacionDocsMarkdown()" class="px-3.5 py-2 rounded-md bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-[var(--notion-text)] font-medium text-xs flex items-center gap-1.5 cursor-pointer transition">
+            <span>⬇️</span>
+            <span>Descargar .md</span>
+          </button>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="window.sincronizarConGoogleDriveWebhook()" id="btn-sync-gdrive" class="px-3.5 py-2 rounded-md bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 font-medium text-xs flex items-center gap-1.5 cursor-pointer transition">
+            <span>🚀</span>
+            <span>Enviar a Google Drive</span>
+          </button>
+          <button type="button" onclick="window.cerrarModalExportarDocs()" class="px-3 py-2 rounded-md hover:bg-[var(--notion-hover)] text-xs text-[var(--notion-text-muted)] cursor-pointer">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Copia de Seguridad & Respaldo JSON -->
+  <div id="modal-backup-json" class="fixed inset-0 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+    <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-lg max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-[var(--notion-border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">💾</span>
+          <div>
+            <h3 class="text-base font-semibold text-[var(--notion-text)]">
+              Respaldo & Copia de Seguridad JSON
+            </h3>
+            <p class="text-xs text-[var(--notion-text-muted)]">
+              Exporta o importa el estado completo del horario para no perder datos
+            </p>
+          </div>
+        </div>
+        <button type="button" onclick="window.cerrarModalBackupJSON()" class="text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] p-1 text-sm cursor-pointer">✕</button>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Opción 1: Exportar Respaldo -->
+        <div class="p-3.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-[var(--notion-text)]">Exportar Copia de Seguridad Completa</span>
+            <span class="text-xs font-mono text-emerald-400">Todo incluido</span>
+          </div>
+          <p class="text-xs text-[var(--notion-text-muted)]">
+            Genera un archivo JSON con los itinerarios de las 4 semanas, todas las bitácoras de voz, lista de ocio/series y contingencias.
+          </p>
+          <button type="button" onclick="window.exportarBackupCompletoJSON()" class="w-full py-2 px-3 rounded-md bg-[var(--notion-accent)] text-white text-xs font-medium hover:opacity-90 flex items-center justify-center gap-1.5 transition cursor-pointer">
+            <span>📥</span>
+            <span>Descargar Respaldo (cronograma_backup.json)</span>
+          </button>
+        </div>
+
+        <!-- Opción 2: Importar Respaldo -->
+        <div class="p-3.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-[var(--notion-text)]">Restaurar desde Archivo JSON</span>
+            <span class="text-xs font-mono text-amber-400">Sobrescribe datos</span>
+          </div>
+          <p class="text-xs text-[var(--notion-text-muted)]">
+            Selecciona un archivo de respaldo previo para restablecer todo el horario y notas en este navegador.
+          </p>
+          <input type="file" id="input-archivo-backup-json" accept=".json" class="block w-full text-xs text-[var(--notion-text-muted)] file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-[var(--notion-hover)] file:text-[var(--notion-text)] hover:file:bg-[var(--notion-active)] cursor-pointer">
+          <button type="button" onclick="window.importarBackupDesdeArchivoJSON()" class="w-full py-2 px-3 rounded-md bg-[var(--notion-hover)] hover:bg-[var(--notion-active)] border border-[var(--notion-border)] text-[var(--notion-text)] text-xs font-medium flex items-center justify-center gap-1.5 transition cursor-pointer">
+            <span>📤</span>
+            <span>Restaurar Datos desde Archivo</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-[var(--notion-border)] flex items-center justify-end">
+        <button type="button" onclick="window.cerrarModalBackupJSON()" class="px-3.5 py-1.5 rounded-md hover:bg-[var(--notion-hover)] text-xs text-[var(--notion-text-muted)] cursor-pointer">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Sincronización Celular y Recordatorios Nativos (.ICS) -->
+  <div id="modal-sincronizar-celular" class="fixed inset-0 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+    <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-lg max-w-xl w-full p-5 sm:p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-[var(--notion-border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">📲</span>
+          <div>
+            <h3 class="text-base font-semibold text-[var(--notion-text)]">
+              Recordatorios y Sincronización con el Celular
+            </h3>
+            <p class="text-xs text-[var(--notion-text-muted)]">
+              Recibe notificaciones automáticas y alarmas en tu teléfono para cada bloque de estudio
+            </p>
+          </div>
+        </div>
+        <button type="button" onclick="window.cerrarModalSincronizarCelular()" class="text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] p-1 text-sm cursor-pointer">✕</button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <!-- Método 1: Exportar Calendario con Alarmas Nativas (.ICS) -->
+        <div class="p-4 rounded-md bg-[var(--notion-card)] border border-emerald-500/30 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-semibold text-emerald-400 flex items-center gap-1.5">
+              <span>🔔</span>
+              <span>1. Alarmas Nativas en el Teléfono (Google / Apple Calendar)</span>
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300">Recomendado</span>
+          </div>
+          <p class="text-[var(--notion-text-muted)] leading-relaxed">
+            Descarga el archivo <strong class="text-[var(--notion-text)]">.ics</strong> con tu horario de Lunes a Sábado. Cada bloque incluye una <strong>alarma sonora y notificación push 10 minutos antes</strong> de empezar. Al tocar el archivo en tu teléfono, se agregan todos los eventos a tu calendario automáticamente.
+          </p>
+          <div class="pt-1">
+            <button type="button" onclick="window.descargarCalendarioICS()" class="w-full py-2.5 px-4 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-sm active:scale-95">
+              <span>📥</span>
+              <span>Descargar Horario con Alarmas (.ics para Celular)</span>
+            </button>
+          </div>
+          <p class="text-[11px] text-[var(--notion-text-muted)] italic">
+            💡 En Android abre con Google Calendar. En iPhone abre con Calendario de Apple. Funciona sin internet.
+          </p>
+        </div>
+
+        <!-- Método 2: Bot de Telegram en el Celular (@mi_estudio_personal_bot) -->
+        <div class="p-4 rounded-md bg-[var(--notion-card)] border border-sky-500/30 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-semibold text-sky-400 flex items-center gap-1.5">
+              <span>🤖</span>
+              <span>2. Recordatorios Directos por Telegram (@mi_estudio_personal_bot)</span>
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-300">Push al Móvil</span>
+          </div>
+          <p class="text-[var(--notion-text-muted)] leading-relaxed">
+            Tu asistente de Telegram personal está vinculado a tu teléfono. Te envía alertas sonoras antes de cada clase y responde comandos como <code class="text-sky-300 font-mono">/hoy</code>, <code class="text-sky-300 font-mono">/iniciar</code>, <code class="text-sky-300 font-mono">/parar</code> y <code class="text-sky-300 font-mono">/apagon</code>.
+          </p>
+          <div class="pt-1 flex flex-col sm:flex-row gap-2">
+            <a href="https://t.me/mi_estudio_personal_bot" target="_blank" rel="noopener noreferrer" class="flex-1 py-2 px-3 rounded-md bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition text-center shadow-xs">
+              <span>✈️</span>
+              <span>Abrir Bot en Telegram</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Método 3: Abrir AXIOM Notion en tu Celular (Nube 24/7 y App PWA) -->
+        <div class="p-4 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-semibold text-[var(--notion-text)] flex items-center gap-1.5">
+              <span>🌐</span>
+              <span>3. Abrir en el Celular (Nube 24/7 / PWA)</span>
+            </span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300">En Cualquier Lugar</span>
+          </div>
+          <p class="text-[var(--notion-text-muted)] leading-relaxed">
+            Disponible 24/7 en internet con datos móviles o Wi-Fi sin depender de que tu computadora esté encendida:
+          </p>
+          <div class="p-2.5 rounded bg-[var(--notion-bg)] border border-[var(--notion-border)] flex items-center justify-between font-mono text-sky-400 select-all">
+            <span id="txt-url-movil" class="truncate pr-2">https://diegodona36-netizen.github.io/cronograma-estudio/</span>
+            <button type="button" onclick="window.copiarUrlMovil()" class="text-xs px-2 py-1 rounded bg-[var(--notion-hover)] text-[var(--notion-text)] hover:text-white transition shrink-0">Copiar</button>
+          </div>
+          <div class="flex items-center gap-3 pt-1">
+            <div class="bg-white p-2 rounded-lg shrink-0">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https%3A%2F%2Fdiegodona36-netizen.github.io%2Fcronograma-estudio%2F" alt="QR Acceso Móvil" class="w-[90px] h-[90px] block" />
+            </div>
+            <div class="space-y-1 text-[11px] text-[var(--notion-text-muted)]">
+              <strong class="text-[var(--notion-text)] block">📱 Escanea con tu cámara:</strong>
+              <span>Apunta la cámara del celular al código QR para abrir el tablero al instante.</span>
+              <span class="block text-emerald-400 font-medium">💡 Pulsa "Instalar" o "Agregar a pantalla de inicio" para tener el ícono como App independiente en tu teléfono.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Método 4: Notificaciones Web del Navegador -->
+        <div class="p-3.5 rounded-md bg-[var(--notion-card)] border border-[var(--notion-border)] flex items-center justify-between gap-3">
+          <div>
+            <span class="font-semibold text-[var(--notion-text)] block">🔔 Notificaciones Web en Pantalla</span>
+            <span class="text-[var(--notion-text-muted)] text-[11px]">Recibir aviso emergente en este navegador cuando empiece cada bloque de estudio.</span>
+          </div>
+          <button type="button" onclick="window.solicitarPermisoNotificaciones()" id="btn-permiso-notif" class="px-3 py-1.5 rounded bg-[var(--notion-hover)] hover:bg-[var(--notion-active)] border border-[var(--notion-border)] text-[var(--notion-text)] font-medium shrink-0 transition">
+            Activar Avisos
+          </button>
+        </div>
+
+      </div>
+
+      <div class="pt-3 border-t border-[var(--notion-border)] flex items-center justify-end">
+        <button type="button" onclick="window.cerrarModalSincronizarCelular()" class="px-3.5 py-1.5 rounded-md hover:bg-[var(--notion-hover)] text-xs text-[var(--notion-text-muted)] cursor-pointer">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de Notificación Flotante para Movimiento y Retraso de Bloques -->
+  <div id="toast-notificacion-flotante" class="fixed bottom-6 right-6 z-50 transform translate-y-12 opacity-0 pointer-events-none transition-all duration-300 px-4 py-2.5 rounded-lg bg-[var(--notion-card)] border border-[var(--notion-border)] shadow-2xl text-sm font-medium text-[var(--notion-text)] flex items-center gap-2.5">
+    <span id="toast-icono" class="text-base">✨</span>
+    <span id="toast-mensaje" class="text-xs sm:text-sm">Operación realizada</span>
+  </div>
+
   <!-- Scripts ES Modules -->
-  <script type="module" src="js/estudioApp.js?v=203"></script>
+  <script type="module" src="js/estudioApp.js?v=206"></script>
 </body>
 </html>

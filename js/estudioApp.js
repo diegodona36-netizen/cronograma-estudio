@@ -10,15 +10,19 @@ import {
   PLAN_MENSUAL_SEMANAS,
   ITINERARIO_BASE_SEMANAL,
   GUIAS_CONOCIMIENTO_3_NIVELES,
+  BANCO_LIBROS_GRATUITOS,
   obtenerTodasLasMaterias,
-  obtenerTodasLasGuias
+  obtenerTodasLasGuias,
+  obtenerTodosLosLibros
 } from './estudioData.js';
 
 import {
   rebalancearItinerario,
   detectarBloquesAfectados,
   calcularMetricasSemanales,
-  calcularHorasDia
+  calcularHorasDia,
+  timeToMinutes,
+  minutesToTime
 } from './reschedulingEngine.js';
 
 import { ArbolConocimientoManager } from './arbolConocimiento.js';
@@ -47,6 +51,7 @@ class EstudioApp {
     this.bitacoraBloqueActivo = null;
     this.campoDictadoActivo = null;
     this.audioDataTemporal = null;
+    this.bloqueAjusteActivo = null; // { diaId, bloqueId } para el modal de ajuste de horario
 
     // Estado del Temporizador de Enfoque (Focus Mode)
     this.timerDuracionMinutos = 25;
@@ -59,6 +64,20 @@ class EstudioApp {
     // Estado de Watchlist (Series & Películas para Ocio e Inmersión en Inglés)
     this.watchlist = this.cargarWatchlist();
     this.filtroWatchlist = 'todas';
+
+    // Filtro móvil de días para el tablero semanal ('hoy' | 'todos' | diaId)
+    this.diaFiltroMovil = 'hoy';
+
+    // Estado del Banco de Libros Gratuitos
+    this.filtroMateriaLibros = 'todas';
+    this.busquedaLibros = '';
+  }
+
+  obtenerDiaActualId() {
+    const mapa = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+    const diaNum = new Date().getDay();
+    const diaStr = mapa[diaNum];
+    return (diaStr === 'domingo') ? 'lunes' : diaStr;
   }
 
   cargarWatchlist() {
@@ -280,12 +299,12 @@ class EstudioApp {
     contenedor.innerHTML = items.map(item => {
       const esSerie = (item.tipo === 'serie' || item.tipo === 'miniserie');
       const badgeIngles = item.inglesAudio 
-        ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-sky-500/15 text-sky-400 border border-sky-500/30 flex items-center gap-1" title="Inmersión en inglés recomendada: audio en inglés + subtítulos">🎧 Audio EN</span>` 
+        ? `<span class="px-1.5 py-0.5 rounded text-xs font-mono bg-sky-500/15 text-sky-400 border border-sky-500/30 flex items-center gap-1" title="Inmersión en inglés recomendada: audio en inglés + subtítulos">🎧 Audio EN</span>` 
         : '';
       
-      const badgePlataforma = `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-[var(--notion-hover)] text-[var(--notion-text-muted)] border border-[var(--notion-border)]">${item.plataforma || 'Streaming'}</span>`;
+      const badgePlataforma = `<span class="px-1.5 py-0.5 rounded text-xs font-medium bg-[var(--notion-hover)] text-[var(--notion-text-muted)] border border-[var(--notion-border)]">${item.plataforma || 'Streaming'}</span>`;
       
-      const badgeTipo = `<span class="px-1.5 py-0.5 rounded text-[10px] uppercase font-mono tracking-wider ${esSerie ? 'bg-purple-500/15 text-purple-400 border border-purple-500/30' : 'bg-amber-500/15 text-amber-400 border border-amber-500/30'}">${item.tipo}</span>`;
+      const badgeTipo = `<span class="px-1.5 py-0.5 rounded text-xs uppercase font-mono tracking-wider ${esSerie ? 'bg-purple-500/15 text-purple-400 border border-purple-500/30' : 'bg-amber-500/15 text-amber-400 border border-amber-500/30'}">${item.tipo}</span>`;
 
       let progresoTexto = '';
       if (esSerie) {
@@ -324,14 +343,14 @@ class EstudioApp {
             <div class="flex items-center gap-2">
               <span class="font-mono text-[var(--notion-text)] font-medium">${progresoTexto}</span>
               ${esSerie ? `
-                <button onclick="window.avanzarCapitulo('${item.id}')" class="px-2 py-0.5 rounded bg-pink-500/15 hover:bg-pink-500/25 border border-pink-500/30 text-pink-300 font-mono font-bold text-[11px] transition cursor-pointer flex items-center gap-1" title="Sumar 1 capítulo visto">
+                <button onclick="window.avanzarCapitulo('${item.id}')" class="px-2 py-0.5 rounded bg-pink-500/15 hover:bg-pink-500/25 border border-pink-500/30 text-pink-300 font-mono font-bold text-xs transition cursor-pointer flex items-center gap-1" title="Sumar 1 capítulo visto">
                   <span>+1 Cap</span>
                   <span>▶</span>
                 </button>
               ` : ''}
             </div>
 
-            <span class="text-[11px] text-[var(--notion-text-muted)] truncate max-w-[200px] sm:max-w-[280px]">
+            <span class="text-xs text-[var(--notion-text-muted)] truncate max-w-[200px] sm:max-w-[280px]">
               ${item.notas ? item.notas : ''}
             </span>
           </div>
@@ -512,7 +531,7 @@ class EstudioApp {
   cambiarVista(nuevaVista) {
     this.vistaActiva = nuevaVista;
 
-    ['semanal', 'guias', 'mensual'].forEach(v => {
+    ['semanal', 'guias', 'biblioteca', 'mensual'].forEach(v => {
       const btn = document.getElementById(`btn-vista-${v}`);
       const sec = document.getElementById(`seccion-vista-${v}`);
 
@@ -532,6 +551,8 @@ class EstudioApp {
     if (breadcrumbActive) {
       if (nuevaVista === 'semanal') {
         breadcrumbActive.innerHTML = `<span>📅</span><span class="truncate font-semibold">Tablero Semanal</span>`;
+      } else if (nuevaVista === 'biblioteca') {
+        breadcrumbActive.innerHTML = `<span>📚</span><span class="truncate font-semibold">Banco de Libros Gratuitos</span>`;
       } else if (nuevaVista === 'mensual') {
         breadcrumbActive.innerHTML = `<span>📊</span><span class="truncate font-semibold">Resumen del Mes</span>`;
       }
@@ -582,14 +603,54 @@ class EstudioApp {
       this.renderLienzoSemanal();
     } else if (this.vistaActiva === 'guias') {
       this.arbolManager.render();
+    } else if (this.vistaActiva === 'biblioteca') {
+      this.renderBibliotecaLibros();
     } else if (this.vistaActiva === 'mensual') {
       this.renderVistaMensual();
     }
   }
 
+  actualizarSelectorDiasMovil() {
+    const contenedor = document.getElementById('selector-dias-movil');
+    if (!contenedor) return;
+
+    const diaActualId = this.obtenerDiaActualId();
+
+    const opciones = [
+      { id: 'hoy', etiqueta: `⚡ Hoy (${diaActualId.slice(0, 3).toUpperCase()})` },
+      { id: 'todos', etiqueta: 'Todos (6 Días)' },
+      ...DIAS_SEMANA.map(d => ({ id: d.id, etiqueta: d.nombre.slice(0, 3) }))
+    ];
+
+    contenedor.innerHTML = opciones.map(op => {
+      const esActivo = (this.diaFiltroMovil === op.id);
+      const clases = esActivo
+        ? 'bg-[var(--notion-card)] text-[var(--notion-text)] border-[var(--notion-accent)] font-semibold shadow-xs'
+        : 'bg-transparent text-[var(--notion-text-muted)] border-transparent hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)] font-medium';
+
+      return `
+        <button type="button"
+                onclick="window.setDiaFiltroMovil('${op.id}')"
+                class="px-2.5 py-1 rounded-md text-xs border transition cursor-pointer shrink-0 ${clases}">
+          ${op.etiqueta}
+        </button>
+      `;
+    }).join('');
+  }
+
+  setDiaFiltroMovil(diaId) {
+    this.diaFiltroMovil = diaId;
+    this.renderLienzoSemanal();
+  }
+
   renderLienzoSemanal() {
     const contenedor = document.getElementById('grid-semana-canvases');
     if (!contenedor) return;
+
+    this.actualizarSelectorDiasMovil();
+
+    const diaActualId = this.obtenerDiaActualId();
+    const diaEfectivo = (this.diaFiltroMovil === 'hoy') ? diaActualId : this.diaFiltroMovil;
 
     try {
       contenedor.innerHTML = DIAS_SEMANA.map(dia => {
@@ -605,26 +666,38 @@ class EstudioApp {
           console.warn('Error calculando horas para día ' + dia.id, e);
         }
 
+        const esVisibleMovil = (this.diaFiltroMovil === 'todos') || (dia.id === diaEfectivo);
+        const clasesColumna = esVisibleMovil ? 'flex' : 'hidden xl:flex';
+
         return `
-          <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-md flex flex-col min-h-[460px]">
-            <!-- Encabezado de Columna Board estilo Notion -->
+          <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-md flex-col min-h-[460px] ${clasesColumna}">
+            <!-- Encabezado de Columna Board estilo Notion con Acción Rápida de Retraso -->
             <div class="p-2.5 border-b border-[var(--notion-border)] flex items-center justify-between">
               <div class="flex items-center gap-1.5">
                 <span class="text-xs font-semibold text-[var(--notion-text)]">${dia.nombre}</span>
-                <span class="text-[11px] font-mono px-1.5 py-0.5 rounded bg-[var(--notion-card)] text-[var(--notion-text-muted)] border border-[var(--notion-border)]">
+                <span class="text-xs font-mono px-1.5 py-0.5 rounded bg-[var(--notion-card)] text-[var(--notion-text-muted)] border border-[var(--notion-border)]">
                   ${Math.round(totalHorasDia * 10) / 10}h
                 </span>
               </div>
-              <button onclick="window.abrirModalAgregarBloque('${dia.id}')" class="w-5 h-5 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] flex items-center justify-center text-xs transition cursor-pointer" title="Añadir bloque">
-                +
-              </button>
+              <div class="flex items-center gap-1">
+                <button onclick="window.rodarHorarioDelDia('${dia.id}', 30)" class="px-1.5 py-0.5 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-amber-300 flex items-center gap-0.5 text-xs font-mono transition cursor-pointer" title="Retrasar 30 min todos los bloques pendientes de este día">
+                  ⏳ +30m
+                </button>
+                <button onclick="window.abrirModalAgregarBloque('${dia.id}')" class="w-5 h-5 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] flex items-center justify-center text-xs transition cursor-pointer" title="Añadir bloque a ${dia.nombre}">
+                  +
+                </button>
+              </div>
             </div>
 
-            <!-- Lista de Tarjetas del Día (Notion Cards) -->
-            <div class="p-2 space-y-2 flex-1 overflow-y-auto max-h-[520px] scrollbar-thin">
+            <!-- Lista de Tarjetas del Día (Zona de Soltado / Dropzone) -->
+            <div class="p-2 space-y-2 flex-1 overflow-y-auto max-h-[520px] scrollbar-thin columna-dia-dropzone transition-colors duration-150"
+                 data-dia-id="${dia.id}"
+                 ondragover="window.permitirArrastre(event)"
+                 ondragleave="window.salirArrastre(event)"
+                 ondrop="window.soltarBloque(event, '${dia.id}')">
               ${bloques.length === 0 ? `
-                <div class="py-12 text-center text-xs text-[var(--notion-text-muted)] italic">
-                  Sin actividades
+                <div class="py-12 text-center text-xs text-[var(--notion-text-muted)] italic pointer-events-none">
+                  Sin actividades (arrastra una casilla aquí)
                 </div>
               ` : bloques.map(b => {
                 try {
@@ -655,6 +728,129 @@ class EstudioApp {
     } catch {}
   }
 
+  renderBibliotecaLibros() {
+    const contenedorGrid = document.getElementById('grid-libros-gratuitos');
+    const estadoVacio = document.getElementById('estado-vacio-libros');
+    if (!contenedorGrid) return;
+
+    const busqueda = (this.busquedaLibros || '').toLowerCase().trim();
+    const filtroMateria = this.filtroMateriaLibros || 'todas';
+
+    // Actualizar estilo visual de las píldoras de materia
+    const pildoras = document.querySelectorAll('.pildora-filtro-libro');
+    pildoras.forEach(btn => {
+      const mat = btn.getAttribute('data-materia');
+      if (mat === filtroMateria) {
+        btn.className = 'pildora-filtro-libro px-3 py-1.5 rounded-md text-xs font-semibold border transition cursor-pointer bg-[var(--notion-card)] text-[var(--notion-text)] border-[var(--notion-accent)] shadow-xs';
+      } else {
+        btn.className = 'pildora-filtro-libro px-3 py-1.5 rounded-md text-xs font-medium border transition cursor-pointer bg-transparent text-[var(--notion-text-muted)] border-transparent hover:bg-[var(--notion-hover)] hover:text-[var(--notion-text)]';
+      }
+    });
+
+    const libros = BANCO_LIBROS_GRATUITOS || [];
+    const librosFiltrados = libros.filter(libro => {
+      if (filtroMateria !== 'todas' && libro.materiaCodigo !== filtroMateria) {
+        return false;
+      }
+      if (busqueda) {
+        const matchTitulo = (libro.titulo || '').toLowerCase().includes(busqueda);
+        const matchAutor = (libro.autor || '').toLowerCase().includes(busqueda);
+        const matchDesc = (libro.descripcion || '').toLowerCase().includes(busqueda);
+        const matchBadge = (libro.badge || '').toLowerCase().includes(busqueda);
+        const matchMateria = (libro.materiaCodigo || '').toLowerCase().includes(busqueda);
+        const matchTemas = (libro.temasClave || []).some(t => t.toLowerCase().includes(busqueda));
+        return matchTitulo || matchAutor || matchDesc || matchBadge || matchMateria || matchTemas;
+      }
+      return true;
+    });
+
+    if (librosFiltrados.length === 0) {
+      contenedorGrid.innerHTML = '';
+      if (estadoVacio) estadoVacio.classList.remove('hidden');
+      return;
+    }
+
+    if (estadoVacio) estadoVacio.classList.add('hidden');
+
+    contenedorGrid.innerHTML = librosFiltrados.map(libro => {
+      const tagEstilo = this.obtenerEstiloTagNotion(libro.materiaCodigo);
+      const temasHtml = (libro.temasClave || []).map(t => `
+        <span class="px-2 py-0.5 rounded text-xs font-mono bg-[var(--notion-bg)] text-[var(--notion-text-muted)] border border-[var(--notion-border)]">
+          #${t}
+        </span>
+      `).join('');
+
+      const tituloEscapado = (libro.titulo || '').replace(/'/g, "\\'");
+
+      return `
+        <div class="bg-[var(--notion-bg-sidebar)] border border-[var(--notion-border)] rounded-lg p-4 sm:p-5 flex flex-col justify-between hover:border-[var(--notion-accent)]/60 hover:shadow-lg transition-all duration-200 group">
+          <div class="space-y-3">
+            <!-- Cabecera de la Tarjeta con Badges -->
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <span class="px-2.5 py-0.5 rounded text-xs font-semibold uppercase tracking-wider" style="background-color: ${tagEstilo.bg}; color: ${tagEstilo.text};">
+                ${libro.icono} ${libro.materiaCodigo} • ${tagEstilo.label}
+              </span>
+              <span class="px-2 py-0.5 rounded-full text-xs font-mono font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
+                ${libro.badge}
+              </span>
+            </div>
+
+            <!-- Título y Autor -->
+            <div class="space-y-1">
+              <h3 class="text-base font-bold text-[var(--notion-text)] leading-snug group-hover:text-sky-400 transition-colors">
+                ${libro.titulo}
+              </h3>
+              <p class="text-xs text-[var(--notion-text-muted)] flex items-center gap-1.5 flex-wrap">
+                <span>✍️ <strong>${libro.autor}</strong></span>
+                <span>•</span>
+                <span class="font-mono">${libro.paginas}</span>
+                <span>•</span>
+                <span>${libro.idioma}</span>
+              </p>
+            </div>
+
+            <!-- Nivel y Formato -->
+            <div class="p-2 rounded bg-[var(--notion-card)] border border-[var(--notion-border)] flex items-center justify-between text-xs text-[var(--notion-text-muted)]">
+              <span class="truncate">Nivel: <strong class="text-[var(--notion-text)]">${libro.nivel}</strong></span>
+              <span class="text-sky-400 font-mono shrink-0">${libro.formato}</span>
+            </div>
+
+            <!-- Descripción Pedagógica -->
+            <p class="text-sm text-[var(--notion-text-muted)] leading-relaxed">
+              ${libro.descripcion}
+            </p>
+
+            <!-- Temas Clave -->
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              ${temasHtml}
+            </div>
+          </div>
+
+          <!-- Acciones Inferiores -->
+          <div class="pt-4 mt-4 border-t border-[var(--notion-border)] flex items-center justify-between gap-2 flex-wrap">
+            <a href="${libro.urlLectura}"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="flex-1 py-2 px-3 rounded-md bg-[var(--notion-accent)] hover:opacity-90 text-white font-medium text-xs flex items-center justify-center gap-1.5 transition shadow-sm cursor-pointer"
+               title="Abrir libro gratuito en nueva pestaña">
+              <span>📖</span>
+              <span>Leer Gratis Online</span>
+              <span>↗</span>
+            </a>
+
+            <button type="button"
+                    onclick="window.iniciarSesionEnfoqueConLibro('${libro.materiaCodigo}', '${tituloEscapado}')"
+                    class="py-2 px-3 rounded-md bg-[var(--notion-card)] hover:bg-[var(--notion-hover)] border border-[var(--notion-border)] text-[var(--notion-text)] text-xs font-medium flex items-center gap-1 transition cursor-pointer"
+                    title="Iniciar sesión Pomodoro de 25 minutos con este libro">
+              <span>⏱️</span>
+              <span>Estudiar (Focus)</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
   renderTarjetaBloque(bloque, diaId) {
     const tag = this.obtenerEstiloTagNotion(bloque.materiaCodigo);
     const completado = Boolean(bloque.completado);
@@ -666,7 +862,7 @@ class EstudioApp {
     if (bloque.cancelado) {
       return `
         <div class="notion-item-card p-2.5 opacity-50 space-y-1">
-          <div class="flex items-center justify-between text-[11px] font-mono text-[var(--notion-text-muted)]">
+          <div class="flex items-center justify-between text-xs font-mono text-[var(--notion-text-muted)]">
             <span class="line-through">${bloque.inicio} - ${bloque.fin}</span>
             <span class="text-rose-400 font-sans">⚡ Corte</span>
           </div>
@@ -676,20 +872,29 @@ class EstudioApp {
     }
 
     return `
-      <div class="notion-item-card p-2.5 space-y-2 group">
-        <!-- Fila Superior: Horario y Tag Pastel Notion -->
+      <div class="notion-item-card p-2.5 space-y-2 group cursor-grab active:cursor-grabbing transition-all hover:shadow-md"
+           draggable="true"
+           data-dia-id="${diaId}"
+           data-bloque-id="${bloque.id}"
+           ondragstart="window.iniciarArrastreBloque(event, '${diaId}', '${bloque.id}')"
+           ondragend="window.finalizarArrastreBloque(event)">
+
+        <!-- Fila Superior: Horario Interactivo y Tag Pastel Notion -->
         <div class="flex items-center justify-between gap-1">
-          <span class="text-[11px] font-mono text-[var(--notion-text-muted)]">
-            ${bloque.inicio} - ${bloque.fin}
-          </span>
-          <span class="text-[10px] font-medium px-1.5 py-0.5 rounded" style="background-color: ${tag.bg}; color: ${tag.text};">
+          <button onclick="window.abrirModalAjustarHorario('${diaId}', '${bloque.id}')" 
+                  type="button" 
+                  class="text-xs font-mono text-[var(--notion-text-muted)] hover:text-sky-400 hover:underline flex items-center gap-1 cursor-pointer transition text-left"
+                  title="Click para ajustar horario o retrasar este bloque">
+            <span>🕒 ${bloque.inicio} - ${bloque.fin}</span>
+          </button>
+          <span class="text-xs font-medium px-1.5 py-0.5 rounded select-none" style="background-color: ${tag.bg}; color: ${tag.text};">
             ${tag.label}
           </span>
         </div>
 
         <!-- Título del Tema -->
         <div class="space-y-0.5">
-          <h4 class="text-xs sm:text-[13px] font-medium text-[var(--notion-text)] leading-snug ${completado ? 'line-through opacity-60' : ''}">
+          <h4 class="text-xs sm:text-sm font-medium text-[var(--notion-text)] leading-snug ${completado ? 'line-through opacity-60' : ''}">
             ${bloque.tema || 'Sesión de Estudio'}
           </h4>
         </div>
@@ -697,14 +902,14 @@ class EstudioApp {
         <!-- Etiqueta de Bitácora Registrada si existe -->
         ${tieneBitacora ? `
           <div class="pt-0.5">
-            <button onclick="window.abrirModalBitacora('${diaId}', '${bloque.id}')" type="button" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] font-medium bg-amber-500/10 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20 transition cursor-pointer max-w-full" title="Ver o editar reflexión grabada">
+            <button onclick="window.abrirModalBitacora('${diaId}', '${bloque.id}')" type="button" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20 transition cursor-pointer max-w-full" title="Ver o editar reflexión grabada">
               <span>🎙️</span>
               <span class="truncate">${bitacora.mejorar ? 'Duda: ' + bitacora.mejorar : 'Bitácora guardada'}</span>
             </button>
           </div>
         ` : ''}
 
-        <!-- Fila Inferior: Checkbox Inline y Acciones -->
+        <!-- Fila Inferior: Checkbox Inline y Acciones Interactivas -->
         <div class="pt-1.5 border-t border-[var(--notion-border)] flex items-center justify-between text-xs">
           <label class="flex items-center gap-1.5 cursor-pointer select-none">
             <input 
@@ -712,20 +917,40 @@ class EstudioApp {
               class="notion-checkbox" 
               onchange="window.toggleCompletarBloque('${diaId}', '${bloque.id}')"
               ${completado ? 'checked' : ''}>
-            <span class="text-[11px] ${completado ? 'text-emerald-400 font-medium' : 'text-[var(--notion-text-muted)]'}">
+            <span class="text-xs ${completado ? 'text-emerald-400 font-medium' : 'text-[var(--notion-text-muted)]'}">
               ${completado ? 'Hecho' : 'Pendiente'}
             </span>
           </label>
 
-          <div class="flex items-center gap-1 ${tieneBitacora ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity">
+          <div class="flex items-center gap-1">
+            <!-- Botón de Retraso Rápido +30m -->
+            <button onclick="window.retrasarBloque('${diaId}', '${bloque.id}', 30)" 
+                    type="button"
+                    class="px-1.5 py-0.5 rounded hover:bg-amber-500/10 text-[var(--notion-text-muted)] hover:text-amber-300 text-xs font-mono transition cursor-pointer" 
+                    title="Retrasar sesión 30 minutos (+30m)">
+              +30m
+            </button>
+            <!-- Mover a Mañana -->
+            <button onclick="window.moverBloqueADiaSiguiente('${diaId}', '${bloque.id}')" 
+                    type="button"
+                    class="p-1 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-sky-300 text-xs transition cursor-pointer" 
+                    title="Mover al día siguiente">
+              ➡️
+            </button>
             <button onclick="window.abrirModalBitacora('${diaId}', '${bloque.id}')" class="p-1 rounded hover:bg-[var(--notion-hover)] ${tieneBitacora ? 'text-amber-400' : 'text-[var(--notion-text-muted)]'} hover:text-amber-400 text-xs transition cursor-pointer" title="Grabar o ver bitácora de conclusión (voz)">
               🎙️
             </button>
             ${esMateriaAcademica ? `
+              <button onclick="window.abrirLibrosDeMateria('${bloque.materiaCodigo}')" class="p-1 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-sky-300 text-xs transition cursor-pointer" title="Ver libros gratuitos de esta materia">
+                📚
+              </button>
               <button onclick="window.abrirGuiaDeMateria('${bloque.materiaCodigo}')" class="p-1 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] text-xs transition cursor-pointer" title="Ver temas de esta materia">
                 📖
               </button>
             ` : ''}
+            <button onclick="window.abrirModalAjustarHorario('${diaId}', '${bloque.id}')" class="p-1 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-[var(--notion-text)] text-xs transition cursor-pointer" title="Editar horario y detalles">
+              ✏️
+            </button>
             <button onclick="window.eliminarBloqueManual('${diaId}', '${bloque.id}')" class="p-1 rounded hover:bg-[var(--notion-hover)] text-[var(--notion-text-muted)] hover:text-red-400 text-xs transition cursor-pointer" title="Eliminar bloque">
               ✕
             </button>
@@ -803,7 +1028,7 @@ class EstudioApp {
                     <td class="p-3">
                       <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium" style="background-color: ${tag.bg}; color: ${tag.text};">
                         <span>${m.nombre}</span>
-                        <span class="text-[10px] opacity-75 font-mono">(${m.codigo})</span>
+                        <span class="text-xs opacity-75 font-mono">(${m.codigo})</span>
                       </span>
                     </td>
                     <td class="p-3 font-mono text-[var(--notion-text-muted)]">${m.metaSemanal}h</td>
@@ -1054,6 +1279,195 @@ class EstudioApp {
     }
   }
 
+  // ==============================================================
+  // MÉTODOS DE INTERACTIVIDAD: ARRASTRE, RETRASO, AJUSTE DE HORARIO
+  // ==============================================================
+
+  moverBloqueADia(bloqueId, diaOrigen, diaDestino) {
+    if (!this.itinerario[diaOrigen] || !this.itinerario[diaDestino]) return;
+    if (diaOrigen === diaDestino) return;
+    const idx = this.itinerario[diaOrigen].findIndex(b => b.id === bloqueId);
+    if (idx === -1) return;
+    const [bloque] = this.itinerario[diaOrigen].splice(idx, 1);
+    this.itinerario[diaDestino].push(bloque);
+    this.itinerario[diaDestino].sort((a, b) => a.inicio.localeCompare(b.inicio));
+    this.guardarItinerario();
+    this.renderKPIs();
+    this.renderVista();
+    const diaNombre = (DIAS_SEMANA.find(d => d.id === diaDestino) || {}).nombre || diaDestino;
+    this.mostrarToast(`Bloque movido a ${diaNombre}`, 'mover');
+  }
+
+  retrasarBloque(diaId, bloqueId, minutos) {
+    if (!this.itinerario[diaId]) return;
+    const bloque = this.itinerario[diaId].find(b => b.id === bloqueId);
+    if (!bloque) return;
+    const iniMin = timeToMinutes(bloque.inicio);
+    const finMin = timeToMinutes(bloque.fin);
+    bloque.inicio = minutesToTime(iniMin + minutos);
+    bloque.fin = minutesToTime(finMin + minutos);
+    this.itinerario[diaId].sort((a, b) => a.inicio.localeCompare(b.inicio));
+    this.guardarItinerario();
+    this.renderKPIs();
+    this.renderVista();
+    this.mostrarToast(`Retrasado ${minutos} minutos`, 'retraso');
+  }
+
+  rodarHorarioDelDia(diaId, minutos) {
+    if (!this.itinerario[diaId]) return;
+    const pendientes = this.itinerario[diaId].filter(b => !b.completado && !b.cancelado);
+    if (pendientes.length === 0) {
+      this.mostrarToast('Sin bloques pendientes para retrasar', 'info');
+      return;
+    }
+    pendientes.forEach(b => {
+      b.inicio = minutesToTime(timeToMinutes(b.inicio) + minutos);
+      b.fin = minutesToTime(timeToMinutes(b.fin) + minutos);
+    });
+    this.itinerario[diaId].sort((a, b) => a.inicio.localeCompare(b.inicio));
+    this.guardarItinerario();
+    this.renderKPIs();
+    this.renderVista();
+    this.mostrarToast(`${pendientes.length} bloques retrasados +${minutos}m`, 'retraso');
+  }
+
+  moverBloqueADiaSiguiente(diaId, bloqueId) {
+    if (!this.itinerario[diaId]) return;
+    const idxDia = DIAS_SEMANA.findIndex(d => d.id === diaId);
+    if (idxDia === -1) return;
+    const diaDestino = (idxDia < DIAS_SEMANA.length - 1)
+      ? DIAS_SEMANA[idxDia + 1].id
+      : DIAS_SEMANA[0].id;
+    if (!this.itinerario[diaDestino]) this.itinerario[diaDestino] = [];
+    this.moverBloqueADia(bloqueId, diaId, diaDestino);
+  }
+
+  abrirModalAjustarHorario(diaId, bloqueId) {
+    this.bloqueAjusteActivo = { diaId, bloqueId };
+    const bloque = (this.itinerario[diaId] || []).find(b => b.id === bloqueId);
+    if (!bloque) return;
+
+    const modal = document.getElementById('modal-ajustar-horario');
+    const lblSub = document.getElementById('lbl-ajustar-horario-sub');
+    const inputInicio = document.getElementById('form-ajustar-inicio');
+    const inputFin = document.getElementById('form-ajustar-fin');
+    const selectDia = document.getElementById('form-ajustar-dia');
+    const inputTema = document.getElementById('form-ajustar-tema');
+
+    if (lblSub) lblSub.textContent = `${bloque.materiaCodigo} • ${bloque.tema || 'Sesión'}`;
+    if (inputInicio) inputInicio.value = bloque.inicio;
+    if (inputFin) inputFin.value = bloque.fin;
+    if (selectDia) selectDia.value = diaId;
+    if (inputTema) inputTema.value = bloque.tema || '';
+
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+  }
+
+  cerrarModalAjustarHorario() {
+    const modal = document.getElementById('modal-ajustar-horario');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+    this.bloqueAjusteActivo = null;
+  }
+
+  guardarAjusteHorarioForm() {
+    if (!this.bloqueAjusteActivo) return;
+    const { diaId: diaOrig, bloqueId } = this.bloqueAjusteActivo;
+
+    const bloque = (this.itinerario[diaOrig] || []).find(b => b.id === bloqueId);
+    if (!bloque) return;
+
+    const nuevoInicio = document.getElementById('form-ajustar-inicio')?.value || bloque.inicio;
+    const nuevoFin = document.getElementById('form-ajustar-fin')?.value || bloque.fin;
+    const nuevoDia = document.getElementById('form-ajustar-dia')?.value || diaOrig;
+    const nuevoTema = document.getElementById('form-ajustar-tema')?.value || '';
+
+    bloque.inicio = nuevoInicio;
+    bloque.fin = nuevoFin;
+    if (nuevoTema.trim()) bloque.tema = nuevoTema.trim();
+
+    // Si cambió el día, mover el bloque
+    if (nuevoDia !== diaOrig) {
+      if (!this.itinerario[nuevoDia]) this.itinerario[nuevoDia] = [];
+      this.itinerario[diaOrig] = this.itinerario[diaOrig].filter(b => b.id !== bloqueId);
+      this.itinerario[nuevoDia].push(bloque);
+    }
+
+    this.itinerario[nuevoDia]?.sort((a, b) => a.inicio.localeCompare(b.inicio));
+    this.guardarItinerario();
+    this.cerrarModalAjustarHorario();
+    this.renderKPIs();
+    this.renderVista();
+    this.mostrarToast('Horario actualizado', 'guardar');
+  }
+
+  aplicarRetrasoRapidoModal(minutos) {
+    if (!this.bloqueAjusteActivo) return;
+    const { diaId, bloqueId } = this.bloqueAjusteActivo;
+
+    const bloque = (this.itinerario[diaId] || []).find(b => b.id === bloqueId);
+    if (!bloque) return;
+
+    bloque.inicio = minutesToTime(timeToMinutes(bloque.inicio) + minutos);
+    bloque.fin = minutesToTime(timeToMinutes(bloque.fin) + minutos);
+
+    // Actualizar campos del modal
+    const inputInicio = document.getElementById('form-ajustar-inicio');
+    const inputFin = document.getElementById('form-ajustar-fin');
+    if (inputInicio) inputInicio.value = bloque.inicio;
+    if (inputFin) inputFin.value = bloque.fin;
+
+    this.guardarItinerario();
+    this.renderKPIs();
+    this.renderVista();
+    this.mostrarToast(`Retraso rápido +${minutos}m aplicado`, 'retraso');
+  }
+
+  moverBloqueModalDiaSiguiente() {
+    if (!this.bloqueAjusteActivo) return;
+    const { diaId, bloqueId } = this.bloqueAjusteActivo;
+    this.cerrarModalAjustarHorario();
+    this.moverBloqueADiaSiguiente(diaId, bloqueId);
+  }
+
+  eliminarBloqueModalAjuste() {
+    if (!this.bloqueAjusteActivo) return;
+    const { diaId, bloqueId } = this.bloqueAjusteActivo;
+    const bloque = (this.itinerario[diaId] || []).find(b => b.id === bloqueId);
+    const nombre = bloque?.tema || 'esta sesión';
+    if (!confirm(`¿Eliminar "${nombre}" del horario?`)) return;
+    this.cerrarModalAjustarHorario();
+    this.eliminarBloqueManual(diaId, bloqueId);
+    this.mostrarToast('Sesión eliminada', 'info');
+  }
+
+  mostrarToast(mensaje, tipo = 'info') {
+    const toast = document.getElementById('toast-notificacion-flotante');
+    const iconoEl = document.getElementById('toast-icono');
+    const mensajeEl = document.getElementById('toast-mensaje');
+    if (!toast || !mensajeEl) return;
+
+    const iconos = { mover: '➡️', retraso: '⏳', guardar: '✅', info: 'ℹ️' };
+    if (iconoEl) iconoEl.textContent = iconos[tipo] || '✨';
+    mensajeEl.textContent = mensaje;
+
+    // Si ya hay un timeout activo, cancelarlo para reiniciar el contador
+    if (this._toastTimeout) clearTimeout(this._toastTimeout);
+
+    toast.classList.remove('translate-y-12', 'opacity-0', 'pointer-events-none');
+    toast.classList.add('translate-y-0', 'opacity-100');
+
+    this._toastTimeout = setTimeout(() => {
+      toast.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none');
+      toast.classList.remove('translate-y-0', 'opacity-100');
+    }, 2500);
+  }
+
   abrirModalConfiguracionIA() {
     const modal = document.getElementById('modal-configuracion-ia');
     if (!modal) return;
@@ -1249,7 +1663,7 @@ class EstudioApp {
 
     // Copiar al portapapeles o descargar
     navigator.clipboard.writeText(md).then(() => {
-      alert('¡Cronograma copiado al portapapeles en formato Markdown! Puedes pegarlo directamente en Obsidian.');
+      this.mostrarToast('¡Cronograma copiado al portapapeles en Markdown!', '📋');
     }).catch(() => {
       const blob = new Blob([md], { type: 'text/markdown' });
       const a = document.createElement('a');
@@ -1257,6 +1671,387 @@ class EstudioApp {
       a.download = `itinerario_estudio_${new Date().toISOString().slice(0, 10)}.md`;
       a.click();
     });
+  }
+
+  // ==============================================================
+  // MÉTODOS DE EXPORTACIÓN GOOGLE DOCS & SINCRONIZACIÓN IA
+  // ==============================================================
+
+  generarMarkdownParaDocs() {
+    const ahora = new Date();
+    const diasSemanaMap = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+    const diaActualId = diasSemanaMap[ahora.getDay()];
+    const diaObj = DIAS_SEMANA.find(d => d.id === diaActualId) || { nombre: diaActualId };
+
+    const fechaFormateada = ahora.toLocaleDateString('es-ES', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    const horaActual = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
+    const horaMinutosActual = timeToMinutes(horaActual);
+
+    const metricas = calcularMetricasSemanales(this.itinerario, obtenerTodasLasMaterias());
+    const bloquesHoy = this.itinerario[diaActualId] || [];
+
+    // Detectar bloque en curso en tiempo real
+    let bloqueEnCurso = null;
+    let proximoBloque = null;
+
+    bloquesHoy.forEach(b => {
+      const bIni = timeToMinutes(b.inicio);
+      const bFin = timeToMinutes(b.fin);
+      if (horaMinutosActual >= bIni && horaMinutosActual < bFin) {
+        bloqueEnCurso = b;
+      } else if (bIni > horaMinutosActual && (!proximoBloque || bIni < timeToMinutes(proximoBloque.inicio))) {
+        proximoBloque = b;
+      }
+    });
+
+    let md = `# CONTROL Y SEGUIMIENTO DIARIO DE ESTUDIO • AXIOM\n\n`;
+    md += `**Fecha de Sincronización:** ${fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1)}\n`;
+    md += `**Hora Exacta del Sistema:** \`${horaActual}\` | **Día:** **${diaObj.nombre.toUpperCase()}**\n\n`;
+
+    md += `---\n\n`;
+    md += `## ⏱️ ESTADO EN TIEMPO REAL (AHORA MISMO)\n\n`;
+    if (bloqueEnCurso) {
+      const tag = this.obtenerEstiloTagNotion(bloqueEnCurso.materiaCodigo);
+      md += `> **👉 EN CURSO AHORA (${bloqueEnCurso.inicio} a ${bloqueEnCurso.fin}):**\n`;
+      md += `> **Materia:** \`[${bloqueEnCurso.materiaCodigo}]\` ${tag.label}\n`;
+      md += `> **Tema Objetivo:** ${bloqueEnCurso.tema || 'Sesión de Estudio'}\n`;
+      md += `> **Estado:** ${bloqueEnCurso.completado ? '✅ Ya completado' : '⏳ En desarrollo activo'}\n\n`;
+    } else if (proximoBloque) {
+      const tag = this.obtenerEstiloTagNotion(proximoBloque.materiaCodigo);
+      md += `> **☕ Momento de descanso / transición.**\n`;
+      md += `> **Próximo bloque:** \`[${proximoBloque.materiaCodigo}]\` ${tag.label} a las **${proximoBloque.inicio}** (${proximoBloque.tema || 'Estudio'}).\n\n`;
+    } else {
+      md += `> **🏁 No hay más bloques activos programados para hoy.** Jornada de estudio finalizada o día de descanso.\n\n`;
+    }
+
+    md += `## 📅 ITINERARIO ACTIVO DE HOY (${diaObj.nombre.toUpperCase()})\n\n`;
+    if (bloquesHoy.length === 0) {
+      md += `*Sin actividades programadas para hoy.*\n\n`;
+    } else {
+      md += `| Horario | Materia | Tema / Actividad | Duración | Estado |\n`;
+      md += `| :--- | :--- | :--- | :--- | :--- |\n`;
+      bloquesHoy.forEach(b => {
+        const tag = this.obtenerEstiloTagNotion(b.materiaCodigo);
+        let estadoTxt = '[ ] Pendiente';
+        if (b.completado) estadoTxt = '[✅ Hecho]';
+        else if (bloqueEnCurso && bloqueEnCurso.id === b.id) estadoTxt = '[⏳ En curso]';
+        else if (b.cancelado) estadoTxt = '[⚡ Corte Luz]';
+
+        md += `| \`${b.inicio} - ${b.fin}\` | \`[${b.materiaCodigo}]\` ${tag.label} | ${b.tema || 'Sesión'} | ${b.duracion}h | ${estadoTxt} |\n`;
+      });
+      md += `\n`;
+    }
+
+    md += `---\n\n`;
+    md += `## 📊 BALANCE SEMANAL Y CUMPLIMIENTO (SEMANA ${this.semanaActiva || 1})\n\n`;
+    md += `- **Meta Semanal:** **${metricas.totalMeta}h**\n`;
+    md += `- **Horas Completadas:** **${metricas.totalCompletado}h** (${metricas.porcentajeGlobal}% de la meta)\n`;
+    md += `- **Horas Restantes por Completar:** **${Math.max(0, Math.round((metricas.totalMeta - metricas.totalCompletado) * 10) / 10)}h**\n`;
+    md += `- **Total Horas Programadas en Horario:** ${metricas.totalProgramado}h\n\n`;
+
+    md += `## ⚡ HISTORIAL DE CONTINGENCIAS Y CORTES DE LUZ\n\n`;
+    if (!this.historialEventos || this.historialEventos.length === 0) {
+      md += `*Sin contingencias reportadas en esta sesión.*\n\n`;
+    } else {
+      this.historialEventos.forEach((ev, idx) => {
+        md += `- **Evento #${idx + 1}:** ${ev.motivo || 'Interrupción'} en día **${(ev.dia || '').toUpperCase()}** (${ev.horaInicio} a ${ev.horaFin}). Rebalanceo aplicado.\n`;
+      });
+      md += `\n`;
+    }
+
+    md += `## 🎙️ ÚLTIMA BITÁCORA Y REFLEXIÓN REGISTRADA\n\n`;
+    const todasBitacoras = bitacoraVoz.obtenerTodas();
+    if (todasBitacoras.length === 0) {
+      md += `*Aún no se han grabado bitácoras de voz en esta semana.*\n\n`;
+    } else {
+      const ultima = todasBitacoras[0];
+      md += `- **Sesión:** \`[${ultima.materiaCodigo || 'MAT'}]\` ${ultima.diaId ? ultima.diaId.toUpperCase() : ''}\n`;
+      if (ultima.aprendido) md += `- **Lo que se dominó:** ${ultima.aprendido}\n`;
+      if (ultima.mejorar) md += `- **Duda / Punto a reforzar:** ${ultima.mejorar}\n`;
+      if (ultima.gusto) md += `- **Aspecto positivo:** ${ultima.gusto}\n`;
+      md += `\n`;
+    }
+
+    md += `## 📋 HORARIO SEMANAL COMPLETO (LUNES A DOMINGO)\n\n`;
+    DIAS_SEMANA.forEach(d => {
+      md += `### ${d.nombre.toUpperCase()}\n`;
+      const bloques = this.itinerario[d.id] || [];
+      if (bloques.length === 0) {
+        md += `*Sin actividades*\n\n`;
+      } else {
+        bloques.forEach(b => {
+          const tag = this.obtenerEstiloTagNotion(b.materiaCodigo);
+          const st = b.completado ? '✅ Hecho' : (b.cancelado ? '⚡ Corte' : 'Pendiente');
+          md += `- \`${b.inicio} - ${b.fin}\` (${b.duracion}h) | **[${b.materiaCodigo}]** ${b.tema} | *${st}*\n`;
+        });
+        md += `\n`;
+      }
+    });
+
+    md += `---\n*Documento Maestro de Gestión Operativa • Generado por AXIOM & MIGATO 2026*\n`;
+    return md;
+  }
+
+  abrirModalExportarDocs() {
+    const modal = document.getElementById('modal-exportar-docs');
+    const textarea = document.getElementById('textarea-exportar-docs-markdown');
+    const preview = document.getElementById('preview-estado-actual-docs');
+    const inputWebhook = document.getElementById('input-webhook-gdrive-url');
+
+    const md = this.generarMarkdownParaDocs();
+    if (textarea) textarea.value = md;
+
+    // Resumen dinámico en el preview superior
+    const ahora = new Date();
+    const horaActual = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
+    const diasSemanaMap = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+    const diaActualId = diasSemanaMap[ahora.getDay()];
+    const bloquesHoy = this.itinerario[diaActualId] || [];
+    const bloqueEnCurso = bloquesHoy.find(b => {
+      const ini = timeToMinutes(b.inicio);
+      const fin = timeToMinutes(b.fin);
+      const act = timeToMinutes(horaActual);
+      return act >= ini && act < fin;
+    });
+
+    if (preview) {
+      if (bloqueEnCurso) {
+        preview.innerHTML = `
+          <div class="flex items-center justify-between text-emerald-400 font-medium">
+            <span>⏱️ Bloque Activo Ahora (${horaActual}):</span>
+            <span class="font-mono">${bloqueEnCurso.inicio} - ${bloqueEnCurso.fin}</span>
+          </div>
+          <p class="text-[var(--notion-text)] font-semibold">${bloqueEnCurso.tema || 'Sesión de Estudio'} <span class="font-mono text-xs opacity-75">([${bloqueEnCurso.materiaCodigo}])</span></p>
+        `;
+      } else {
+        preview.innerHTML = `
+          <div class="flex items-center justify-between text-[var(--notion-text-muted)]">
+            <span>⏱️ Hora actual del sistema: <strong class="text-[var(--notion-text)] font-mono">${horaActual}</strong></span>
+            <span class="text-xs">Sin bloque activo en este minuto</span>
+          </div>
+        `;
+      }
+    }
+
+    // Cargar URL de Webhook guardada
+    const webhookGuardado = localStorage.getItem('axiom_gdrive_webhook_url') || '';
+    if (inputWebhook) inputWebhook.value = webhookGuardado;
+
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+  }
+
+  cerrarModalExportarDocs() {
+    const modal = document.getElementById('modal-exportar-docs');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+  }
+
+  copiarExportacionDocsMarkdown() {
+    const textarea = document.getElementById('textarea-exportar-docs-markdown');
+    const md = textarea ? textarea.value : this.generarMarkdownParaDocs();
+    navigator.clipboard.writeText(md).then(() => {
+      this.mostrarToast('¡Formato Google Docs copiado al portapapeles!', '📋');
+    }).catch(err => {
+      console.error('Error al copiar:', err);
+      this.mostrarToast('Error copiando. Selecciona el texto manualmente.', '⚠️');
+    });
+  }
+
+  descargarExportacionDocsMarkdown() {
+    const md = this.generarMarkdownParaDocs();
+    const fecha = new Date().toISOString().slice(0, 10);
+    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `cronograma_seguimiento_estudio_${fecha}.md`;
+    a.click();
+    this.mostrarToast('Archivo Markdown descargado con éxito', '⬇️');
+  }
+
+  toggleConfiguracionWebhookDocs() {
+    const cont = document.getElementById('contenedor-config-webhook-docs');
+    if (cont) {
+      cont.classList.toggle('hidden');
+    }
+  }
+
+  guardarWebhookGDriveUrl() {
+    const input = document.getElementById('input-webhook-gdrive-url');
+    if (!input) return;
+    const url = input.value.trim();
+    localStorage.setItem('axiom_gdrive_webhook_url', url);
+    this.mostrarToast('URL de Webhook de Google Drive guardada', '✅');
+  }
+
+  async sincronizarConGoogleDriveWebhook() {
+    const webhookUrl = localStorage.getItem('axiom_gdrive_webhook_url');
+    if (!webhookUrl) {
+      this.toggleConfiguracionWebhookDocs();
+      alert('Por favor configura primero la URL del Webhook de Google Apps Script.');
+      return;
+    }
+
+    const btn = document.getElementById('btn-sync-gdrive');
+    const txtOriginal = btn ? btn.innerHTML : '';
+    if (btn) btn.innerHTML = `<span>⏳</span><span>Sincronizando...</span>`;
+
+    const md = this.generarMarkdownParaDocs();
+    const metricas = calcularMetricasSemanales(this.itinerario, obtenerTodasLasMaterias());
+    const payload = {
+      markdown: md,
+      fecha: new Date().toLocaleString('es-ES'),
+      metricas: metricas,
+      itinerario: this.itinerario
+    };
+
+    try {
+      const resp = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      const data = await resp.json();
+      if (data && data.ok) {
+        this.mostrarToast('¡Sincronizado con Google Drive exitosamente!', '☁️');
+        if (data.docUrl) {
+          window.open(data.docUrl, '_blank');
+        }
+      } else {
+        alert(`Error al sincronizar con Google Drive: ${data?.error || 'Respuesta desconocida'}`);
+      }
+    } catch (e) {
+      console.error('Error enviando al Webhook:', e);
+      this.mostrarToast('Error de red al conectar con el Webhook', '⚠️');
+    } finally {
+      if (btn) btn.innerHTML = txtOriginal;
+    }
+  }
+
+  // ==============================================================
+  // MÉTODOS DE RESPALDO Y PERSISTENCIA JSON (BACKUP & RESTORE)
+  // ==============================================================
+
+  abrirModalBackupJSON() {
+    const modal = document.getElementById('modal-backup-json');
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+  }
+
+  cerrarModalBackupJSON() {
+    const modal = document.getElementById('modal-backup-json');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+  }
+
+  exportarBackupCompletoJSON() {
+    const backup = {
+      version: '2.0.0',
+      fechaExportacion: new Date().toISOString(),
+      semanaActiva: this.semanaActiva || 1,
+      semanas: {},
+      bitacoras: bitacoraVoz.obtenerTodas(),
+      watchlist: this.watchlist || [],
+      historialEventos: this.historialEventos || []
+    };
+
+    for (let sem = 1; sem <= 4; sem++) {
+      const key = `axiom_estudio_itinerario_semana_${sem}`;
+      try {
+        const data = localStorage.getItem(key);
+        if (data) backup.semanas[sem] = JSON.parse(data);
+        else if (sem === this.semanaActiva) backup.semanas[sem] = this.itinerario;
+      } catch {}
+    }
+
+    const jsonStr = JSON.stringify(backup, null, 2);
+    const fecha = new Date().toISOString().slice(0, 10);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `cronograma_estudio_backup_${fecha}.json`;
+    a.click();
+
+    this.mostrarToast('Respaldo JSON descargado con éxito', '💾');
+    this.cerrarModalBackupJSON();
+  }
+
+  importarBackupDesdeArchivoJSON() {
+    const input = document.getElementById('input-archivo-backup-json');
+    if (!input || !input.files || input.files.length === 0) {
+      alert('Por favor selecciona un archivo .json de respaldo.');
+      return;
+    }
+
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      try {
+        const backup = JSON.parse(e.target.result);
+        if (!backup.semanas && !backup.itinerarios && !backup.itinerario) {
+          alert('El archivo no contiene un formato de respaldo válido de Cronograma de Estudio.');
+          return;
+        }
+
+        // Restaurar semanas
+        if (backup.semanas) {
+          Object.keys(backup.semanas).forEach(sem => {
+            const key = `axiom_estudio_itinerario_semana_${sem}`;
+            localStorage.setItem(key, JSON.stringify(backup.semanas[sem]));
+          });
+        }
+
+        // Restaurar semana activa
+        if (backup.semanaActiva) {
+          this.semanaActiva = backup.semanaActiva;
+          localStorage.setItem('axiom_semana_activa', String(backup.semanaActiva));
+        }
+
+        // Restaurar bitacoras
+        if (Array.isArray(backup.bitacoras)) {
+          localStorage.setItem('axiom_bitacora_reflexiones', JSON.stringify(backup.bitacoras));
+        }
+
+        // Restaurar watchlist
+        if (Array.isArray(backup.watchlist)) {
+          this.watchlist = backup.watchlist;
+          localStorage.setItem('axiom_watchlist_series', JSON.stringify(backup.watchlist));
+        }
+
+        // Restaurar historial de eventos
+        if (Array.isArray(backup.historialEventos)) {
+          this.historialEventos = backup.historialEventos;
+          localStorage.setItem('axiom_historial_contingencias', JSON.stringify(backup.historialEventos));
+        }
+
+        // Recargar itinerario activo
+        this.itinerario = this.cargarItinerario(this.semanaActiva);
+        this.renderKPIs();
+        this.renderVista();
+
+        this.mostrarToast('¡Copia de seguridad restaurada exitosamente!', '🎉');
+        this.cerrarModalBackupJSON();
+      } catch (err) {
+        console.error('Error parseando respaldo JSON:', err);
+        alert('Error al leer el archivo JSON: archivo corrupto o formato no válido.');
+      }
+    };
+
+    reader.readAsText(file);
   }
 
   // ==============================================================
@@ -1495,7 +2290,7 @@ class EstudioApp {
         <div class="py-12 text-center text-xs text-[var(--notion-text-muted)] space-y-2">
           <span class="text-3xl block">🎙️</span>
           <p class="font-medium text-[var(--notion-text)]">No tienes bitácoras de conclusión grabadas aún.</p>
-          <p class="text-[11px] opacity-75">Al finalizar cualquier bloque de tu horario semanal, presiona el botón 🎙️ para registrar lo que aprendiste, lo que te gustó y tus dudas.</p>
+          <p class="text-xs opacity-75">Al finalizar cualquier bloque de tu horario semanal, presiona el botón 🎙️ para registrar lo que aprendiste, lo que te gustó y tus dudas.</p>
         </div>
       `;
     } else {
@@ -1507,7 +2302,7 @@ class EstudioApp {
               <span class="text-xs font-medium px-2 py-0.5 rounded" style="background-color: ${tag.bg}; color: ${tag.text};">
                 ${b.materiaCodigo} • ${tag.label}
               </span>
-              <span class="text-[11px] font-mono text-[var(--notion-text-muted)]">
+              <span class="text-xs font-mono text-[var(--notion-text-muted)]">
                 ${b.diaId.toUpperCase()} • ${b.horario}
               </span>
             </div>
@@ -1679,6 +2474,55 @@ window.cerrarModalContingencia = () => app.cerrarModalContingencia();
 window.cerrarModalResultadoRebalanceo = () => app.cerrarModalResultadoRebalanceo();
 window.actualizarPreviewContingencia = () => app.actualizarPreviewContingencia();
 window.restablecerItinerarioBase = () => app.restablecerItinerarioBase();
+
+// Interactividad Drag & Drop
+window.iniciarArrastreBloque = (event, diaId, bloqueId) => {
+  event.dataTransfer.setData('text/plain', JSON.stringify({ diaId, bloqueId }));
+  event.dataTransfer.effectAllowed = 'move';
+  event.currentTarget.classList.add('opacity-50');
+};
+window.finalizarArrastreBloque = (event) => {
+  event.currentTarget.classList.remove('opacity-50');
+  document.querySelectorAll('.columna-dia-dropzone').forEach(el => {
+    el.classList.remove('bg-[var(--notion-accent)]/10', 'border-[var(--notion-accent)]/40');
+  });
+};
+window.permitirArrastre = (event) => {
+  event.preventDefault();
+  event.dataTransfer.dropEffect = 'move';
+  event.currentTarget.classList.add('bg-[var(--notion-accent)]/10', 'border-[var(--notion-accent)]/40');
+};
+window.salirArrastre = (event) => {
+  event.currentTarget.classList.remove('bg-[var(--notion-accent)]/10', 'border-[var(--notion-accent)]/40');
+};
+window.soltarBloque = (event, diaDestino) => {
+  event.preventDefault();
+  event.currentTarget.classList.remove('bg-[var(--notion-accent)]/10', 'border-[var(--notion-accent)]/40');
+  document.querySelectorAll('.columna-dia-dropzone').forEach(el => {
+    el.classList.remove('bg-[var(--notion-accent)]/10', 'border-[var(--notion-accent)]/40');
+  });
+  const datos = event.dataTransfer.getData('text/plain');
+  if (!datos) return;
+  try {
+    const { diaId, bloqueId } = JSON.parse(datos);
+    app.moverBloqueADia(bloqueId, diaId, diaDestino);
+  } catch (e) {
+    console.warn('Error al procesar soltar bloque:', e);
+  }
+};
+
+// Interactividad de Retraso y Movimiento Rápido
+window.retrasarBloque = (diaId, bloqueId, minutos) => app.retrasarBloque(diaId, bloqueId, minutos);
+window.rodarHorarioDelDia = (diaId, minutos) => app.rodarHorarioDelDia(diaId, minutos);
+window.moverBloqueADiaSiguiente = (diaId, bloqueId) => app.moverBloqueADiaSiguiente(diaId, bloqueId);
+
+// Modal de Ajuste de Horario
+window.abrirModalAjustarHorario = (diaId, bloqueId) => app.abrirModalAjustarHorario(diaId, bloqueId);
+window.cerrarModalAjustarHorario = () => app.cerrarModalAjustarHorario();
+window.guardarAjusteHorarioForm = () => app.guardarAjusteHorarioForm();
+window.aplicarRetrasoRapidoModal = (minutos) => app.aplicarRetrasoRapidoModal(minutos);
+window.moverBloqueModalDiaSiguiente = () => app.moverBloqueModalDiaSiguiente();
+window.eliminarBloqueModalAjuste = () => app.eliminarBloqueModalAjuste();
 
 // Métodos de Bitácora y Voz en Window
 window.abrirModalBitacora = (dia, id) => app.abrirModalBitacora(dia, id);
@@ -1889,9 +2733,109 @@ window.cerrarModalQuiz = () => {
   }
 };
 
-function escapeHtml(str) {
-  return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-}
+// Bindings para Exportación Google Docs & Asistente IA
+window.abrirModalExportarDocs = () => app.abrirModalExportarDocs();
+window.cerrarModalExportarDocs = () => app.cerrarModalExportarDocs();
+window.copiarExportacionDocsMarkdown = () => app.copiarExportacionDocsMarkdown();
+window.descargarExportacionDocsMarkdown = () => app.descargarExportacionDocsMarkdown();
+window.toggleConfiguracionWebhookDocs = () => app.toggleConfiguracionWebhookDocs();
+window.guardarWebhookGDriveUrl = () => app.guardarWebhookGDriveUrl();
+window.sincronizarConGoogleDriveWebhook = () => app.sincronizarConGoogleDriveWebhook();
+
+// Bindings para Respaldo y Restauración JSON
+window.abrirModalBackupJSON = () => app.abrirModalBackupJSON();
+window.cerrarModalBackupJSON = () => app.cerrarModalBackupJSON();
+window.exportarBackupCompletoJSON = () => app.exportarBackupCompletoJSON();
+window.importarBackupDesdeArchivoJSON = () => app.importarBackupDesdeArchivoJSON();
+
+// Bindings para Banco de Libros Gratuitos y Filtro Móvil
+window.setDiaFiltroMovil = (diaId) => app.setDiaFiltroMovil(diaId);
+
+window.filtrarLibrosPorBusqueda = (val) => {
+  app.busquedaLibros = val;
+  app.renderBibliotecaLibros();
+};
+
+window.filtrarLibrosPorMateria = (cod) => {
+  app.filtroMateriaLibros = cod;
+  app.renderBibliotecaLibros();
+};
+
+window.restablecerFiltrosLibros = () => {
+  app.filtroMateriaLibros = 'todas';
+  app.busquedaLibros = '';
+  const input = document.getElementById('input-busqueda-libros');
+  if (input) input.value = '';
+  app.renderBibliotecaLibros();
+};
+
+window.iniciarSesionEnfoqueConLibro = (materiaCod, titulo) => {
+  app.abrirModalTemporizador(materiaCod, `Lectura: ${titulo}`);
+};
+
+window.abrirLibrosDeMateria = (materiaCod) => {
+  app.cambiarVista('biblioteca');
+  app.filtroMateriaLibros = materiaCod;
+  app.renderBibliotecaLibros();
+};
+
+// Bindings para Sincronización Celular y Recordatorios Nativos (.ICS)
+window.abrirModalSincronizarCelular = function() {
+  const modal = document.getElementById('modal-sincronizar-celular');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+};
+
+window.cerrarModalSincronizarCelular = function() {
+  const modal = document.getElementById('modal-sincronizar-celular');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+};
+
+window.copiarUrlMovil = function() {
+  const url = window.location.hostname.includes('github.io')
+    ? 'https://diegodona36-netizen.github.io/cronograma-estudio/'
+    : (window.location.origin + window.location.pathname);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      alert('✅ Enlace copiado al portapapeles: ' + url);
+    }).catch(() => {
+      prompt('Copie el enlace para su teléfono:', url);
+    });
+  } else {
+    prompt('Copie el enlace para su teléfono:', url);
+  }
+};
+
+window.descargarCalendarioICS = function() {
+  window.location.href = 'horario_estudio_notion_axiom.ics';
+};
+
+window.solicitarPermisoNotificaciones = function() {
+  if (!("Notification" in window)) {
+    alert("Este navegador no soporta notificaciones de escritorio.");
+    return;
+  }
+  Notification.requestPermission().then(permission => {
+    if (permission === "granted") {
+      new Notification("🔔 Recordatorios AXIOM Activados", {
+        body: "Te notificaremos cuando inicie cada uno de tus bloques de estudio.",
+        icon: "../assets/logo-migato.png"
+      });
+      const btn = document.getElementById('btn-permiso-notif');
+      if (btn) {
+        btn.textContent = '✅ Avisos Activos';
+        btn.classList.add('bg-emerald-900', 'text-emerald-300');
+      }
+    } else {
+      alert("Permiso de notificaciones denegado en el navegador.");
+    }
+  });
+};
 
 // Arranque
 if (document.readyState === 'loading') {

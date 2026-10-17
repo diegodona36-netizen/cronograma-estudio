@@ -1,0 +1,512 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//AXIOM//Horario de Estudio Inteligente//ES
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Horario de Estudio AXIOM
+X-WR-TIMEZONE:America/Caracas
+BEGIN:VEVENT
+UID:axiom-s1_lun_0@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261019T080000
+DTEND:20261019T083000
+RRULE:FREQ=WEEKLY;BYDAY=MO
+SUMMARY:mic [Castellano, Léxico Culto & Retórica de Negocios] Lectura Diaria: 25 min (Técnica de las 3 palabras - Ruiz Zafón)
+DESCRIPTION:Materia: Castellano, Léxico Culto & Retórica de Negocios\nTema: Lectura Diaria: 25 min (Técnica de las 3 palabras - Ruiz Zafón)\nDuración: 0.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Lectura Diaria: 25 min (Técnica de las 3 palabras - Ruiz Zafón)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_lun_1@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261019T083000
+DTEND:20261019T100000
+RRULE:FREQ=WEEKLY;BYDAY=MO
+SUMMARY:layers [Matemáticas Aplicadas & Lógica Conceptual (No Mecánica)] Álgebra Conceptual: Variables como Modelos de la Realidad (3Blue1Brown)
+DESCRIPTION:Materia: Matemáticas Aplicadas & Lógica Conceptual (No Mecánica)\nTema: Álgebra Conceptual: Variables como Modelos de la Realidad (3Blue1Brown)\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Álgebra Conceptual: Variables como Modelos de la Realidad (3Blue1Brown)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_lun_2@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261019T100000
+DTEND:20261019T103000
+RRULE:FREQ=WEEKLY;BYDAY=MO
+SUMMARY:globe [Inglés Técnico (Redes, CCTV, Winbox & Inversores)] Inglés Técnico: Vocabulario de Interfaces de Red y Winbox
+DESCRIPTION:Materia: Inglés Técnico (Redes, CCTV, Winbox & Inversores)\nTema: Inglés Técnico: Vocabulario de Interfaces de Red y Winbox\nDuración: 0.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Inglés Técnico: Vocabulario de Interfaces de Red y Winbox
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_lun_3@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261019T103000
+DTEND:20261019T120000
+RRULE:FREQ=WEEKLY;BYDAY=MO
+SUMMARY:terminal [Sistemas, Redes MikroTik & CCTV (Dahua / Hikvision)] Fundamentos de Redes IP: Direccionamiento 192.168.x.x, Máscaras y Gateways
+DESCRIPTION:Materia: Sistemas, Redes MikroTik & CCTV (Dahua / Hikvision)\nTema: Fundamentos de Redes IP: Direccionamiento 192.168.x.x, Máscaras y Gateways\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Fundamentos de Redes IP: Direccionamiento 192.168.x.x, Máscaras y Gateways
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_lun_4@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261019T143000
+DTEND:20261019T160000
+RRULE:FREQ=WEEKLY;BYDAY=MO
+SUMMARY:compass [Geopolítica, Guerra y Estrategia] Conceptos Fundamentales de Geopolítica: Territorio y Recursos
+DESCRIPTION:Materia: Geopolítica, Guerra y Estrategia\nTema: Conceptos Fundamentales de Geopolítica: Territorio y Recursos\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Conceptos Fundamentales de Geopolítica: Territorio y Recursos
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_lun_5@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261019T160000
+DTEND:20261019T170000
+RRULE:FREQ=WEEKLY;BYDAY=MO
+SUMMARY:tv [Ocio, Series, Películas & Videojuegos] Tiempo Libre y Videojuegos
+DESCRIPTION:Materia: Ocio, Series, Películas & Videojuegos\nTema: Tiempo Libre y Videojuegos\nDuración: 1h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Tiempo Libre y Videojuegos
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_lun_6@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261019T170000
+DTEND:20261019T183000
+RRULE:FREQ=WEEKLY;BYDAY=MO
+SUMMARY:activity [Acondicionamiento Físico & Gimnasio] Gimnasio (5:00 PM a 6:30 PM)
+DESCRIPTION:Materia: Acondicionamiento Físico & Gimnasio\nTema: Gimnasio (5:00 PM a 6:30 PM)\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Gimnasio (5:00 PM a 6:30 PM)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_mar_0@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261020T080000
+DTEND:20261020T083000
+RRULE:FREQ=WEEKLY;BYDAY=TU
+SUMMARY:mic [Castellano, Léxico Culto & Retórica de Negocios] Lectura Diaria: 25 min (Prosa rica - Carlos Ruiz Zafón)
+DESCRIPTION:Materia: Castellano, Léxico Culto & Retórica de Negocios\nTema: Lectura Diaria: 25 min (Prosa rica - Carlos Ruiz Zafón)\nDuración: 0.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Lectura Diaria: 25 min (Prosa rica - Carlos Ruiz Zafón)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_mar_1@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261020T083000
+DTEND:20261020T100000
+RRULE:FREQ=WEEKLY;BYDAY=TU
+SUMMARY:layers [Matemáticas Aplicadas & Lógica Conceptual (No Mecánica)] Funciones Lógicas: Entradas (Input), Salidas (Output) y Relaciones
+DESCRIPTION:Materia: Matemáticas Aplicadas & Lógica Conceptual (No Mecánica)\nTema: Funciones Lógicas: Entradas (Input), Salidas (Output) y Relaciones\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Funciones Lógicas: Entradas (Input), Salidas (Output) y Relaciones
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_mar_2@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261020T100000
+DTEND:20261020T103000
+RRULE:FREQ=WEEKLY;BYDAY=TU
+SUMMARY:globe [Inglés Técnico (Redes, CCTV, Winbox & Inversores)] Lectura de Datasheet: Router MikroTik hEX (RB750Gr3) en Inglés
+DESCRIPTION:Materia: Inglés Técnico (Redes, CCTV, Winbox & Inversores)\nTema: Lectura de Datasheet: Router MikroTik hEX (RB750Gr3) en Inglés\nDuración: 0.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Lectura de Datasheet: Router MikroTik hEX (RB750Gr3) en Inglés
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_mar_3@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261020T103000
+DTEND:20261020T120000
+RRULE:FREQ=WEEKLY;BYDAY=TU
+SUMMARY:terminal [Sistemas, Redes MikroTik & CCTV (Dahua / Hikvision)] MikroTik RouterOS & Winbox: Conexión por MAC y Primeros Pasos
+DESCRIPTION:Materia: Sistemas, Redes MikroTik & CCTV (Dahua / Hikvision)\nTema: MikroTik RouterOS & Winbox: Conexión por MAC y Primeros Pasos\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: MikroTik RouterOS & Winbox: Conexión por MAC y Primeros Pasos
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_mar_reu@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261020T140000
+DTEND:20261020T160000
+RRULE:FREQ=WEEKLY;BYDAY=TU
+SUMMARY:users [Reunión de Trabajo (Compromiso Presencial)] 🤝 REUNIÓN DE TRABAJO (A las 2:00 PM)
+DESCRIPTION:Materia: Reunión de Trabajo (Compromiso Presencial)\nTema: 🤝 REUNIÓN DE TRABAJO (A las 2:00 PM)\nDuración: 2h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: 🤝 REUNIÓN DE TRABAJO (A las 2:00 PM)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_mar_5@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261020T160000
+DTEND:20261020T170000
+RRULE:FREQ=WEEKLY;BYDAY=TU
+SUMMARY:tv [Ocio, Series, Películas & Videojuegos] Tiempo Libre y Videojuegos
+DESCRIPTION:Materia: Ocio, Series, Películas & Videojuegos\nTema: Tiempo Libre y Videojuegos\nDuración: 1h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Tiempo Libre y Videojuegos
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_mar_6@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261020T170000
+DTEND:20261020T183000
+RRULE:FREQ=WEEKLY;BYDAY=TU
+SUMMARY:activity [Acondicionamiento Físico & Gimnasio] Gimnasio (5:00 PM a 6:30 PM)
+DESCRIPTION:Materia: Acondicionamiento Físico & Gimnasio\nTema: Gimnasio (5:00 PM a 6:30 PM)\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Gimnasio (5:00 PM a 6:30 PM)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_mie_0@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261021T080000
+DTEND:20261021T083000
+RRULE:FREQ=WEEKLY;BYDAY=WE
+SUMMARY:mic [Castellano, Léxico Culto & Retórica de Negocios] Lectura Diaria: 25 min (Técnica de las 3 palabras)
+DESCRIPTION:Materia: Castellano, Léxico Culto & Retórica de Negocios\nTema: Lectura Diaria: 25 min (Técnica de las 3 palabras)\nDuración: 0.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Lectura Diaria: 25 min (Técnica de las 3 palabras)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_mie_1@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261021T083000
+DTEND:20261021T100000
+RRULE:FREQ=WEEKLY;BYDAY=WE
+SUMMARY:layers [Matemáticas Aplicadas & Lógica Conceptual (No Mecánica)] Ecuaciones como Balanzas de Equilibrio: Visualización en Gráficas
+DESCRIPTION:Materia: Matemáticas Aplicadas & Lógica Conceptual (No Mecánica)\nTema: Ecuaciones como Balanzas de Equilibrio: Visualización en Gráficas\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Ecuaciones como Balanzas de Equilibrio: Visualización en Gráficas
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_mie_2@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261021T100000
+DTEND:20261021T103000
+RRULE:FREQ=WEEKLY;BYDAY=WE
+SUMMARY:globe [Inglés Técnico (Redes, CCTV, Winbox & Inversores)] Duolingo (15 min) + Pronunciación de Acrónimos de Red (DHCP, DNS, PoE)
+DESCRIPTION:Materia: Inglés Técnico (Redes, CCTV, Winbox & Inversores)\nTema: Duolingo (15 min) + Pronunciación de Acrónimos de Red (DHCP, DNS, PoE)\nDuración: 0.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Duolingo (15 min) + Pronunciación de Acrónimos de Red (DHCP, DNS, PoE)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_mie_3@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261021T103000
+DTEND:20261021T120000
+RRULE:FREQ=WEEKLY;BYDAY=WE
+SUMMARY:terminal [Sistemas, Redes MikroTik & CCTV (Dahua / Hikvision)] DHCP Server en MikroTik: Asignación Dinámica y Reservas Estáticas
+DESCRIPTION:Materia: Sistemas, Redes MikroTik & CCTV (Dahua / Hikvision)\nTema: DHCP Server en MikroTik: Asignación Dinámica y Reservas Estáticas\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: DHCP Server en MikroTik: Asignación Dinámica y Reservas Estáticas
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_mie_4@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261021T143000
+DTEND:20261021T160000
+RRULE:FREQ=WEEKLY;BYDAY=WE
+SUMMARY:dollar-sign [Negocios de Tecnología, Redes & Seguridad en Venezuela] Estructura de Costos de un Servicio Técnico de Instalación en Monagas
+DESCRIPTION:Materia: Negocios de Tecnología, Redes & Seguridad en Venezuela\nTema: Estructura de Costos de un Servicio Técnico de Instalación en Monagas\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Estructura de Costos de un Servicio Técnico de Instalación en Monagas
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_mie_5@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261021T160000
+DTEND:20261021T173000
+RRULE:FREQ=WEEKLY;BYDAY=WE
+SUMMARY:tv [Ocio, Series, Películas & Videojuegos] Ocio Extendido / Día de Descanso Físico
+DESCRIPTION:Materia: Ocio, Series, Películas & Videojuegos\nTema: Ocio Extendido / Día de Descanso Físico\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Ocio Extendido / Día de Descanso Físico
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_jue_0@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261022T080000
+DTEND:20261022T083000
+RRULE:FREQ=WEEKLY;BYDAY=TH
+SUMMARY:mic [Castellano, Léxico Culto & Retórica de Negocios] Lectura Diaria: 25 min (Ensayo y Retórica - Baltasar Gracián)
+DESCRIPTION:Materia: Castellano, Léxico Culto & Retórica de Negocios\nTema: Lectura Diaria: 25 min (Ensayo y Retórica - Baltasar Gracián)\nDuración: 0.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Lectura Diaria: 25 min (Ensayo y Retórica - Baltasar Gracián)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_jue_1@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261022T083000
+DTEND:20261022T100000
+RRULE:FREQ=WEEKLY;BYDAY=TH
+SUMMARY:layers [Matemáticas Aplicadas & Lógica Conceptual (No Mecánica)] Sistemas de Ecuaciones Lineales: Comprensión Geométrica de Intersección
+DESCRIPTION:Materia: Matemáticas Aplicadas & Lógica Conceptual (No Mecánica)\nTema: Sistemas de Ecuaciones Lineales: Comprensión Geométrica de Intersección\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Sistemas de Ecuaciones Lineales: Comprensión Geométrica de Intersección
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_jue_2@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261022T100000
+DTEND:20261022T103000
+RRULE:FREQ=WEEKLY;BYDAY=TH
+SUMMARY:globe [Inglés Técnico (Redes, CCTV, Winbox & Inversores)] Términos de Diagnóstico: Timeout, Unreachable, Gateway, Broadcast
+DESCRIPTION:Materia: Inglés Técnico (Redes, CCTV, Winbox & Inversores)\nTema: Términos de Diagnóstico: Timeout, Unreachable, Gateway, Broadcast\nDuración: 0.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Términos de Diagnóstico: Timeout, Unreachable, Gateway, Broadcast
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_jue_3@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261022T103000
+DTEND:20261022T120000
+RRULE:FREQ=WEEKLY;BYDAY=TH
+SUMMARY:terminal [Sistemas, Redes MikroTik & CCTV (Dahua / Hikvision)] Cálculo de Consumo Eléctrico de Equipos: Ley de Ohm (Watts = V × I)
+DESCRIPTION:Materia: Sistemas, Redes MikroTik & CCTV (Dahua / Hikvision)\nTema: Cálculo de Consumo Eléctrico de Equipos: Ley de Ohm (Watts = V × I)\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Cálculo de Consumo Eléctrico de Equipos: Ley de Ohm (Watts = V × I)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_jue_4@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261022T143000
+DTEND:20261022T160000
+RRULE:FREQ=WEEKLY;BYDAY=TH
+SUMMARY:compass [Geopolítica, Guerra y Estrategia] Pensamiento Estratégico Clásico: Sun Tzu y Conocimiento del Terreno
+DESCRIPTION:Materia: Geopolítica, Guerra y Estrategia\nTema: Pensamiento Estratégico Clásico: Sun Tzu y Conocimiento del Terreno\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Pensamiento Estratégico Clásico: Sun Tzu y Conocimiento del Terreno
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_jue_5@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261022T160000
+DTEND:20261022T170000
+RRULE:FREQ=WEEKLY;BYDAY=TH
+SUMMARY:tv [Ocio, Series, Películas & Videojuegos] Tiempo Libre y Videojuegos
+DESCRIPTION:Materia: Ocio, Series, Películas & Videojuegos\nTema: Tiempo Libre y Videojuegos\nDuración: 1h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Tiempo Libre y Videojuegos
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_jue_6@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261022T170000
+DTEND:20261022T183000
+RRULE:FREQ=WEEKLY;BYDAY=TH
+SUMMARY:activity [Acondicionamiento Físico & Gimnasio] Gimnasio: Tracción (Espalda, Hombro Posterior y Bíceps)
+DESCRIPTION:Materia: Acondicionamiento Físico & Gimnasio\nTema: Gimnasio: Tracción (Espalda, Hombro Posterior y Bíceps)\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Gimnasio: Tracción (Espalda, Hombro Posterior y Bíceps)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_vie_0@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261023T080000
+DTEND:20261023T083000
+RRULE:FREQ=WEEKLY;BYDAY=FR
+SUMMARY:mic [Castellano, Léxico Culto & Retórica de Negocios] Lectura Diaria: 25 min (Técnica de las 3 palabras)
+DESCRIPTION:Materia: Castellano, Léxico Culto & Retórica de Negocios\nTema: Lectura Diaria: 25 min (Técnica de las 3 palabras)\nDuración: 0.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Lectura Diaria: 25 min (Técnica de las 3 palabras)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_vie_1@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261023T083000
+DTEND:20261023T100000
+RRULE:FREQ=WEEKLY;BYDAY=FR
+SUMMARY:layers [Matemáticas Aplicadas & Lógica Conceptual (No Mecánica)] Taller de Razonamiento Lógico: Modelar 3 Problemas Reales con Ecuaciones
+DESCRIPTION:Materia: Matemáticas Aplicadas & Lógica Conceptual (No Mecánica)\nTema: Taller de Razonamiento Lógico: Modelar 3 Problemas Reales con Ecuaciones\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Taller de Razonamiento Lógico: Modelar 3 Problemas Reales con Ecuaciones
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_vie_2@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261023T100000
+DTEND:20261023T103000
+RRULE:FREQ=WEEKLY;BYDAY=FR
+SUMMARY:globe [Inglés Técnico (Redes, CCTV, Winbox & Inversores)] Lectura de Error Logs: Diagnóstico de Fallas en Equipos de Red
+DESCRIPTION:Materia: Inglés Técnico (Redes, CCTV, Winbox & Inversores)\nTema: Lectura de Error Logs: Diagnóstico de Fallas en Equipos de Red\nDuración: 0.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Lectura de Error Logs: Diagnóstico de Fallas en Equipos de Red
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_vie_3@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261023T103000
+DTEND:20261023T120000
+RRULE:FREQ=WEEKLY;BYDAY=FR
+SUMMARY:terminal [Sistemas, Redes MikroTik & CCTV (Dahua / Hikvision)] Laboratorio Semanal: Montaje de Subred Local y Verificación (Ping/Tracert)
+DESCRIPTION:Materia: Sistemas, Redes MikroTik & CCTV (Dahua / Hikvision)\nTema: Laboratorio Semanal: Montaje de Subred Local y Verificación (Ping/Tracert)\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Laboratorio Semanal: Montaje de Subred Local y Verificación (Ping/Tracert)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_vie_4@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261023T143000
+DTEND:20261023T153000
+RRULE:FREQ=WEEKLY;BYDAY=FR
+SUMMARY:mic [Castellano, Léxico Culto & Retórica de Negocios] Pitch Técnico en Nota de Voz (Telegram): Explicar la Red a un Cliente
+DESCRIPTION:Materia: Castellano, Léxico Culto & Retórica de Negocios\nTema: Pitch Técnico en Nota de Voz (Telegram): Explicar la Red a un Cliente\nDuración: 1h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Pitch Técnico en Nota de Voz (Telegram): Explicar la Red a un Cliente
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_vie_5@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261023T153000
+DTEND:20261023T170000
+RRULE:FREQ=WEEKLY;BYDAY=FR
+SUMMARY:tv [Ocio, Series, Películas & Videojuegos] Tarde Libre y Espacio de Juegos
+DESCRIPTION:Materia: Ocio, Series, Películas & Videojuegos\nTema: Tarde Libre y Espacio de Juegos\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Tarde Libre y Espacio de Juegos
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_vie_6@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261023T170000
+DTEND:20261023T183000
+RRULE:FREQ=WEEKLY;BYDAY=FR
+SUMMARY:activity [Acondicionamiento Físico & Gimnasio] Gimnasio: Fullbody / Acondicionamiento Físico
+DESCRIPTION:Materia: Acondicionamiento Físico & Gimnasio\nTema: Gimnasio: Fullbody / Acondicionamiento Físico\nDuración: 1.5h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Gimnasio: Fullbody / Acondicionamiento Físico
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_sab_1@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261024T093000
+DTEND:20261024T103000
+RRULE:FREQ=WEEKLY;BYDAY=SA
+SUMMARY:dollar-sign [Negocios de Tecnología, Redes & Seguridad en Venezuela] Logística de Cobros Multimoneda (Pago Móvil, Zelle, USDT) en Venezuela
+DESCRIPTION:Materia: Negocios de Tecnología, Redes & Seguridad en Venezuela\nTema: Logística de Cobros Multimoneda (Pago Móvil, Zelle, USDT) en Venezuela\nDuración: 1h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Logística de Cobros Multimoneda (Pago Móvil, Zelle, USDT) en Venezuela
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:axiom-s1_sab_2@notion-estudio
+DTSTAMP:20261016T220000Z
+DTSTART:20261024T103000
+DTEND:20261024T113000
+RRULE:FREQ=WEEKLY;BYDAY=SA
+SUMMARY:globe [Inglés Técnico (Redes, CCTV, Winbox & Inversores)] Inmersión en Video de Redes MikroTik en Inglés (NetworkChuck)
+DESCRIPTION:Materia: Inglés Técnico (Redes, CCTV, Winbox & Inversores)\nTema: Inmersión en Video de Redes MikroTik en Inglés (NetworkChuck)\nDuración: 1h\nSistema de Estudio AXIOM Notion
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:🔔 En 10 min inicia: Inmersión en Video de Redes MikroTik en Inglés (NetworkChuck)
+END:VALARM
+END:VEVENT
+END:VCALENDAR
